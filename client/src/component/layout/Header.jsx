@@ -6,7 +6,7 @@ import {
     Toolbar,
     Tooltip,
     Avatar,
-    Select,
+    
     MenuItem,
     Container,
     IconButton,
@@ -37,7 +37,7 @@ const Header = () => {
         setAnchorElUser(null);
       };
     return (
-        <Box style={{position:'absolute', top:0,left:0,width:'100%'}}>
+        <Box style={{position:'absolute', top:0,left:0,width:'100%',flexGrow:1}}>
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
