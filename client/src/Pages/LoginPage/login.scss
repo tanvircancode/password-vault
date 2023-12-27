@@ -1,0 +1,58 @@
+// Variables
+$primary-color: #007bff;
+$font-family: sans-serif;
+
+.login-container {
+  // Basic layout styles
+  width: 365px;
+  margin: 20px auto;
+  padding: 20px 50px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  // Responsiveness
+  @media (max-width: 575px) {
+    width: 60%;
+    padding: 20px ;
+  }
+}
+
+// Form styles
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.bottom-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    
+    button {
+        background-color: $primary-color;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+      
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+}
+
