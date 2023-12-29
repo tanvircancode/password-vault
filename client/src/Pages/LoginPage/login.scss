@@ -3,80 +3,85 @@ $primary-color: #007bff;
 $font-family: sans-serif;
 
 .login-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 25px;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .right-section {
-  width: 50%;
-  background: rgba(229, 229, 229, 0.41);
-  flex: 1; // Allow the right section to grow
-  max-height: 100vh; // Set a maximum height
-  img{
-    height: auto;
-    max-width: 100%;
-  }
+    background: rgba(229, 229, 229, 0.41);
+    height: 100vh;
+    display: flex;
+    img {
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+    }
+    @media (max-width: 991px) {
+        display: none;
+    }
 }
 
 .left-section {
-  width: 365px;
-  flex: 1; // Allow the right section to grow
-  max-height: 100vh; // Set a maximum height
-  // margin: 8em auto;
-  padding: 20px 50px;
-  // border: 1px solid #ccc;
-  // border-radius: 5px;
-  display: flex;
+    width: 365px;
+    flex: 1;
+    height: 100vh;
+    display: flex;
     flex-direction: column;
     justify-content: center;
-  background-color: #ffffff;
+    background-color: #ffffff;
 
-  // Responsiveness
-  @media (max-width: 575px) {
-    width: 60%;
-    padding: 20px ;
-  }
+    @media (max-width: 767px) {
+        width: 100%;
+        padding: 20px;
+    }
 }
 
-
-
 .form-top-section {
-  display: flex;
+    display: flex;
     align-items: center;
     gap: 0.5em;
     justify-content: center;
 }
 
+.form-input {
+    width: 50%;
+    margin: 0 auto;
+
+    @media (max-width: 767px) {
+        width: 100%;
+    }
+}
+
 // Form styles
 .form-group {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 label {
-  display: block;
-  margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
 }
 
 input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 .bottom-section {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    
+
     button {
         background-color: $primary-color;
         color: white;
@@ -86,10 +91,9 @@ input {
         cursor: pointer;
         width: 100%;
         box-sizing: border-box;
-      
-        &:hover {
-          background-color: darken($primary-color, 10%);
-        }
-      }
-}
 
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+}
