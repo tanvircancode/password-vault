@@ -1,62 +1,36 @@
-
-import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import { Accordion as MuiAccordion, AccordionSummary as MuiAccordionSummary,  Typography, Button } from '@mui/material';
-import { useState } from 'react';
-
-const Accordion = styled((props) => (
-    <MuiAccordion disableGutters elevation={0} square {...props} />
-  ))(({ theme }) => ({
-   
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-  }));
-  
-  const AccordionSummary = styled((props) => (
-    <MuiAccordionSummary
-      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    
-    flexDirection: 'row-reverse',
-    '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
-    },
-    '& .MuiAccordionSummary-content': {
-      marginLeft: theme.spacing(1),
-    },
-  }));
-  
-  
-  
+import { BsFillPeopleFill, BsFillPersonFill } from "react-icons/bs";
 
 const OrganizationsBar = () => {
-    const [expanded, setExpanded] = useState('panel1');
-
-    const handleChange = (panel) => (event, newExpanded) => {
-      setExpanded(newExpanded ? panel : false);
-    };
-  
     return (
-      <div style={{marginBottom: 10}}>
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary  aria-controls="panel1d-content" id="panel1d-header" style={{paddingLeft:8}}>
-            <Typography style={{fontWeight:'bold', color:'#175DDC'}}>All Vaults</Typography>
-          </AccordionSummary>
-          <div style={{marginTop:-10,marginLeft: 32}}>
-          <Button style={{padding:0}}>My Vault</Button>
-          <br />
-          <Button style={{padding:0}}>New Organization</Button>
-          </div>
-        </Accordion>
-        
-      </div>
-    )
-}
+        <div className="accordion-item">
+            <h2 className="accordion-header">
+                <button
+                    className="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                >
+                    Vaults
+                </button>
+            </h2>
+            <div
+                id="collapseOne"
+                className="accordion-collapse collapse show"
+                data-bs-parent="#accordionExample"
+            >
+                <div className="accordion-body">
+                    <BsFillPeopleFill />
+                    All Vaults
+                </div>
+                <div className="accordion-body">
+                    <BsFillPersonFill />
+                    My Vault
+                </div>
+            </div>
+        </div>
+    );
+};
 
-export default OrganizationsBar
+export default OrganizationsBar;
