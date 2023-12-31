@@ -8,7 +8,7 @@ const Home = () => {
         <div className="container text-center">
             <div className="row">
                 <div className="col-xs-12 col-sm-4 col-md-3">
-                    <div className="card" style="width: 18rem;">
+                    <div className="card" style={{width: '18rem'}}>
                         <div className="card-header text-uppercase">Filter</div>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item"><OrganizationsBar /></li>

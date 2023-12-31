@@ -1,1 +1,15 @@
 
+.hr-line{
+    width: 85%;
+    margin: 0.5em auto;
+}
+
+.custom-accordion-button {
+    background-color: transparent;
+    border: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: transparent;
+}
+
