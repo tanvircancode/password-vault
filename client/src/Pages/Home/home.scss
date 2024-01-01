@@ -4,12 +4,15 @@
     margin: 0.5em auto;
 }
 
-.custom-accordion-button {
-    background-color: transparent;
-    border: none !important;
-}
-
 .accordion-button:not(.collapsed) {
     background-color: transparent;
 }
+
+.card
+{
+    @media(max-width:991px) and (min-width:768px) {
+        width: 15rem;;
+    }
+}
+
 

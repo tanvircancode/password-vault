@@ -3,7 +3,7 @@ import "../home.scss";
 
 const OrganizationsBar = () => {
     return (
-        <div className="accordion" id="accordionExample">
+        <div className="accordion" >
             <div className="accordion-item">
                 <h2 className="accordion-header">
                     <button
@@ -14,8 +14,8 @@ const OrganizationsBar = () => {
                 </h2>
                 <div
                     id="collapseOne"
-                    className="accordion-collapse collapse show"
-                    data-bs-parent="#accordionExample"
+                    className="accordion-collapse collapse show mt-3"
+                    
                 >
                     <div className="accordion-body p-0" style={{marginRight: 80}}>
                         <BsFillPeopleFill style={{marginRight: 8}}/>
@@ -27,7 +27,7 @@ const OrganizationsBar = () => {
                 <div
                     id="collapseOne"
                     className="accordion-collapse collapse show"
-                    data-bs-parent="#accordionExample"
+                    
                 >
                     <div className="accordion-body p-0" style={{marginRight: 80}}>
                         <BsFillPersonFill style={{marginRight: 8}}/>
@@ -37,14 +37,14 @@ const OrganizationsBar = () => {
                 </div>
                 <div
                     id="collapseOne"
-                    className="accordion-collapse collapse show"
-                    data-bs-parent="#accordionExample"
+                    className="accordion-collapse collapse show mb-3"
+                    
                 >
-                    <div className="accordion-body p-0" style={{marginRight: 80}}>
+                    <div className="accordion-body p-0" style={{marginRight: 22}}>
                         <BsPlusCircle  style={{marginRight: 8}}/>
                         Add Organization
                     </div>
-                    {/* <hr className="hr-line" /> */}
+                    
                 </div>
                 
             </div>

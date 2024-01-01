@@ -1,68 +1,109 @@
-import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import { Accordion as MuiAccordion, AccordionSummary as MuiAccordionSummary, AccordionDetails as MuiAccordionDetails, Typography, Button } from '@mui/material';
-import { useState } from 'react';
+import {
+    BsBricks,
+    BsStar,
+    BsArrowDownLeftCircle,
+    BsCardChecklist,
+    BsFileEarmarkPerson,
+    BsSuitcaseLg,
+} from "react-icons/bs";
 
-const Accordion = styled((props) => (
-    <MuiAccordion disableGutters elevation={0} square {...props} />
-  ))(({ theme }) => ({
-    
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-  }));
-  
-  const AccordionSummary = styled((props) => (
-    <MuiAccordionSummary
-      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    flexDirection: 'row-reverse',
-    '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
-    },
-    '& .MuiAccordionSummary-content': {
-      marginLeft: theme.spacing(1),
-    },
-  }));
-  
-  
 const ItemsBar = () => {
-
-    const [expanded, setExpanded] = useState('panel1');
-
-    const handleChange = (panel) => (event, newExpanded) => {
-      setExpanded(newExpanded ? panel : false);
-    };
-  
     return (
-      <div>
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{paddingLeft:8}}>
-            <Typography style={{fontWeight:'bold', color:'#175DDC'}}>All Items</Typography>
-          </AccordionSummary>
-          <div style={{marginTop:-10,marginLeft:32}}>
-          <Button style={{padding:0}}>Favourites</Button>
-          <br/>
-          <Button style={{padding:0 ,marginLeft: -12}}>Login</Button>
-          <br />
-          <Button style={{padding:0,marginLeft: -12}}>Card</Button>
-          <br/>
-          <Button style={{padding:0}}>Identity</Button>
-          <br/>
-          <Button style={{padding:0}}>Secure Note</Button>
-          </div>
-          
-      
-        </Accordion>
-        
-      </div>
-    )
-  
-}
+        <div className="accordion">
+            <div className="accordion-item">
+                <h2 className="accordion-header">
+                    <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo"
+                        aria-expanded="true"
+                        aria-controls="collapseTwo"
+                    >
+                        Items
+                    </button>
+                </h2>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show mt-3"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: 80 }}
+                    >
+                        <BsBricks style={{ marginRight: 8 }} />
+                        All Items
+                    </div>
+                    <hr className="hr-line" />
+                </div>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: 80 }}
+                    >
+                        <BsStar style={{ marginRight: 8 }} />
+                        Favorites
+                    </div>
+                    <hr className="hr-line" />
+                </div>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight:'7em' }}
+                    >
+                        <BsArrowDownLeftCircle style={{ marginRight: 8 }} />
+                        Login
+                    </div>
+                    <hr className="hr-line" />
+                </div>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: '7em' }}
+                    >
+                        <BsCardChecklist style={{ marginRight: 8 }} />
+                        Card
+                    </div>
+                    <hr className="hr-line" />
+                </div>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: '6em' }}
+                    >
+                        <BsFileEarmarkPerson style={{ marginRight: 8 }} />
+                        Identity
+                    </div>
+                    <hr className="hr-line" />
+                </div>
+                <div
+                    id="collapseTwo"
+                    className="accordion-collapse collapse show mb-3"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: '4em' }}
+                    >
+                        <BsSuitcaseLg style={{ marginRight: 8 }} />
+                        Secure Note
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    );
+};
 
-export default ItemsBar
+export default ItemsBar;

@@ -1,73 +1,37 @@
-import { styled } from "@mui/material/styles";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import {
-    Accordion as MuiAccordion,
-    AccordionSummary as MuiAccordionSummary,
-    AccordionDetails as MuiAccordionDetails,
-    Typography,
-    Button,
-} from "@mui/material";
-import { useState } from "react";
+import { BsPlusCircle } from "react-icons/bs";
 
-const Accordion = styled((props) => (
-    <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-    
-    "&:not(:last-child)": {
-        borderBottom: 0,
-    },
-    "&:before": {
-        display: "none",
-    },
-}));
-
-const AccordionSummary = styled((props) => (
-    <MuiAccordionSummary
-        expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
-        {...props}
-    />
-))(({ theme }) => ({
-    flexDirection: "row-reverse",
-    "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-        transform: "rotate(90deg)",
-    },
-    "& .MuiAccordionSummary-content": {
-        marginLeft: theme.spacing(1),
-    },
-}));
-
-const ItemsBar = () => {
-    const [expanded, setExpanded] = useState("panel1");
-
-    const handleChange = (panel) => (event, newExpanded) => {
-        setExpanded(newExpanded ? panel : false);
-    };
-
+const FoldersBar = () => {
     return (
-        <div>
-            <Accordion
-                expanded={expanded === "panel1"}
-                onChange={handleChange("panel1")}
-            >
-                <AccordionSummary
-                    aria-controls="panel1d-content"
-                    id="panel1d-header"
-                    style={{paddingLeft:8}}
-                >
-                    <Typography
-                        style={{ fontWeight: "bold", color: "#175DDC" }}
+        <div className="accordion">
+            <div className="accordion-item">
+                <h2 className="accordion-header">
+                    <button
+                        className="accordion-button custom-accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree"
+                        aria-expanded="true"
+                        aria-controls="collapseThree"
                     >
                         Folders
-                    </Typography>
-                </AccordionSummary>
-                <div style={{ marginTop: -10, marginLeft: 24 }}>
-                    <Button style={{ padding: 0, marginLeft: 7 }}>
-                        No Folder
-                    </Button>
+                    </button>
+                </h2>
+
+                <div
+                    id="collapseThree"
+                    className="accordion-collapse collapse show mt-3 mb-3"
+                >
+                    <div
+                        className="accordion-body p-0"
+                        style={{ marginRight: 70 }}
+                    >
+                        <BsPlusCircle style={{ marginRight: 8 }} />
+                        Add Folder
+                    </div>
                 </div>
-            </Accordion>
+            </div>
         </div>
     );
 };
 
-export default ItemsBar;
+export default FoldersBar;

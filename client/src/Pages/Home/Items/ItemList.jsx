@@ -1,49 +1,43 @@
-import { Button, Typography, MenuItem, Card, Menu ,useMediaQuery} from "@mui/material";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import "./item.scss";
 import { useState } from "react";
-import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
+import AddItemModal from "../../../Modal/ItemModals/AddItemModal";
 
 const ItemList = () => {
-    const smallScreen = useMediaQuery('(max-width:700px)');
+    const [ openNewItemModal , setOpenNewItemModal ] = useState(false);  
 
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleNewItemClick = () => {
+        setOpenNewItemModal(true);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
     return (
-        <div style={{ marginTop: 80 }}>
-            <Card style={{ display: "flex", gap : smallScreen ? '8em':"15em", boxShadow: "none" }}>
-                <Typography variant="h5">My Vault</Typography>
+        <div className="container text-center">
+            <div className="row">
+                <div className="col text-start" style={{fontSize: 25}}>All Items</div>
+                <div className="col text-end">
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleNewItemClick} 
+                    >
+                        New Item
+                    </button>
+                </div>
+            </div>
 
-                <Button
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    style={{
-                        backgroundColor: "#1252A3",
-                        color: "#ffffff",
-                        fontWeight: 600,
-                    }}
-                    onClick={handleClick}
-                >
-                    New
-                    <ArrowDropDownOutlinedIcon />
-                </Button>
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={handleClose}>Option 1</MenuItem>
-                    <MenuItem onClick={handleClose}>Option 2</MenuItem>
-                    <MenuItem onClick={handleClose}>Option 3</MenuItem>
-                </Menu>
-            </Card>
+            <div className="row mt-4 p-2 all-items">
+                <div className="col-2 text-start">All</div>
+                <div className="col-5 text-start">Name</div>
+                <div className="col-3 text-start">Owner</div>
+                <div className="col-2 text-start">
+                    <BsThreeDotsVertical />
+                </div>
+            </div>
+
+           <AddItemModal 
+            openPopup={openNewItemModal}
+            setOpenPopup={setOpenNewItemModal}
+           />
         </div>
     );
 };
