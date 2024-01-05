@@ -1,5 +1,14 @@
+import { useState } from "react";
 import "./tools.scss";
+
 const Generator = () => {
+
+  const [selectedRadio, setSelectedRadio] = useState('password');
+
+    const handleRadioChange = (event) => {
+      setSelectedRadio(event.target.value);
+    };
+
     return (
         <div className="container ">
             <div className="fw-bold border-bottom pb-2">
@@ -22,26 +31,32 @@ const Generator = () => {
                         <input
                             className="form-check-input"
                             type="radio"
+                            value="password"
                             name="flexRadioDefault"
-                            id="flexRadioDefault1"
+                            id="passwordRadioId"
+                            checked={selectedRadio === "password"}
+                            onChange={handleRadioChange}
                         />
                         <label
                             className="form-check-label"
+                            htmlFor="passwordRadioId
                             style={{ marginLeft: 5, marginTop: 3 }}
                         >
                             Password
                         </label>
                     </div>
-                    <div className="form-check">
-                        <input
+                    <div className="form-check"> 
+                        <input 
                             className="form-check-input"
                             type="radio"
+                            value="phrase"
                             name="flexRadioDefault"
-                            id="flexRadioDefault2"
-                            checked
+                            id="passphraseRadioId"
+                            checked={selectedRadio === "phrase"}
                         />
                         <label
                             className="form-check-label"
+                            htmlFor="passphraseRadioId"
                             style={{ marginLeft: 5, marginTop: 3 }}
                         >
                             Passphrase
@@ -52,42 +67,53 @@ const Generator = () => {
             <div className="row pt-3 ">
                 <div className="col-4">
                     <div className="mb-3">
-                        <label className="form-label fw-bold">Length</label>
-                        <div className="input-group">
-                            <input
-                                type="number"
-                                className="form-control"
-                                aria-describedby="basic-addon3 basic-addon4"
-                            />
-                        </div>
+                        <label
+                            className="form-label fw-bold"
+                            htmlFor="inputLength"
+                        >
+                            Length
+                        </label>
+
+                        <input
+                            type="number"
+                            id="inputLength"
+                            className="form-control"
+                            aria-describedby="basic-addon3 basic-addon4"
+                        />
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label className="form-label fw-bold">
+                        <label
+                            className="form-label fw-bold"
+                            htmlFor="inputNumber"
+                        >
                             Minimum Numbers
                         </label>
-                        <div className="input-group">
-                            <input
-                                type="number"
-                                className="form-control"
-                                aria-describedby="basic-addon3 basic-addon4"
-                            />
-                        </div>
+
+                        <input
+                            type="number"
+                            id="inputNumber"
+                            className="form-control"
+                            aria-describedby="basic-addon3 basic-addon4"
+                        />
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label className="form-label fw-bold">
+                        <label
+                            className="form-label fw-bold"
+                            htmlFor="inputSpecial"
+                        >
                             Minimum Specials
                         </label>
-                        <div className="input-group">
-                            <input
-                                type="number"
-                                className="form-control"
-                                aria-describedby="basic-addon3 basic-addon4"
-                            />
-                        </div>
+
+                        <input
+                            type="number"
+                            id="inputSpecial"
+                            className="form-control"
+                            aria-describedby="basic-addon3 basic-addon4"
+                        />
                     </div>
                 </div>
             </div>
@@ -95,15 +121,14 @@ const Generator = () => {
                 <span className="fw-bold">Options</span>
                 <div className="form-check mt-2">
                     <input
-                        className="form-check-input"
+                        className="form-check-input d-0"
                         type="checkbox"
-                        value=""
-                        id="flexCheckDefault"
+                        id="checkCap"
                         style={{ transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label custom-checkbox"
-                        htmlFor="flexCheckDefault"
+                        htmlFor="checkCap"
                     >
                         A-Z
                     </label>
@@ -113,12 +138,12 @@ const Generator = () => {
                         className="form-check-input"
                         type="checkbox"
                         value=""
-                        id="flexCheckDefault"
+                        id="checkSml"
                         style={{ transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label custom-checkbox"
-                        htmlFor="flexCheckDefault"
+                        htmlFor="checkSml"
                     >
                         a-z
                     </label>
@@ -128,12 +153,12 @@ const Generator = () => {
                         className="form-check-input"
                         type="checkbox"
                         value=""
-                        id="flexCheckDefault"
+                        id="checkNum"
                         style={{ transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label custom-checkbox"
-                        htmlFor="flexCheckDefault"
+                        htmlFor="checkNum"
                     >
                         0-9
                     </label>
@@ -143,12 +168,12 @@ const Generator = () => {
                         className="form-check-input"
                         type="checkbox"
                         value=""
-                        id="flexCheckDefault"
+                        id="checkSpc"
                         style={{ transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label custom-checkbox"
-                        htmlFor="flexCheckDefault"
+                        htmlFor="checkSpc"
                     >
                         !@#$%^&*
                     </label>
@@ -158,12 +183,12 @@ const Generator = () => {
                         className="form-check-input"
                         type="checkbox"
                         value=""
-                        id="flexCheckDefault"
+                        id="checkAvd"
                         style={{ transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label custom-checkbox"
-                        htmlFor="flexCheckDefault"
+                        htmlFor="checkAvd"
                     >
                         Avoid ambiguous characters
                     </label>
@@ -177,7 +202,11 @@ const Generator = () => {
                 >
                     Regenerate Password
                 </button>
-                <button type="button" className="btn btn-outline-secondary" style={{color:'black'}}>
+                <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    style={{ color: "black" }}
+                >
                     Copy Password
                 </button>
             </div>
