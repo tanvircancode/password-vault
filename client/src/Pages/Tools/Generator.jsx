@@ -4,87 +4,128 @@ import "./tools.scss";
 const Generator = () => {
     const [selectedRadio, setSelectedRadio] = useState("password");
 
-    const [isSymbol, setIsSymbol] = useState(false);
+    const [isSymbol, setIsSymbol] = useState(true);
     const [isNumber, setIsNumber] = useState(true);
     const [isUppercase, setIsUppercase] = useState(true);
-    const [isLowercase, setIsLowercase] = useState(false);
+    const [isLowercase, setIsLowercase] = useState(true);
     const [minNumber, setMinNumber] = useState(1);
     const [minSpecial, setMinSpecial] = useState(1);
 
-    const [passwordLength, setPasswordLength] = useState(5);
+    const [numberOfWord, setNumberOfWord] = useState(2);
+    const [wordSeparator, setWordSeparator] = useState("-");
+
+    let [passwordLength, setPasswordLength] = useState(5);
     const [password, setPassword] = useState("");
 
-    // const [isAmbi, setIsAmbi] = useState(false);
+    const [isAmbiguous, setIsAmbiguous] = useState(false);
 
     const generatePassword = () => {
+        
         let charSet = "";
         let newPassword = "";
 
-        if (isSymbol) {
-            charSet += "!@#$%^&*()_+~`}{[]:;?><,./-=";
+        const numberChars = "0123456789";
+        const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+        const specialChars = "!@#$%^&*()_+~`}{[]:;?><,./-=";
+
+        if (selectedRadio === "phrase") {
+            const digits = "23456789";
+            let randomWord = "";
+            let randomNumber;
+            for (let k = 0; k < numberOfWord; k++) {
+                randomNumber = digits[Math.floor(Math.random() * digits.length)];
+                for (let i = 0; i < randomNumber; i++) {
+                    const randomIndex = Math.floor(
+                        Math.random() * lowerChars.length
+                    );
+                    randomWord += lowerChars[randomIndex];
+                }
+                if(numberOfWord-k !== 1) {
+                    randomWord += wordSeparator;
+                }
+            }
+            setPassword(randomWord)
+            console.log(randomWord)
+            return;
         }
-        if (isNumber) {
-            charSet += "0123456789";
+
+        if (!isSymbol && !isNumber && !isLowercase && !isUppercase) {
+            setIsLowercase(true);
         }
+
+        for (let j = 0; j < minSpecial; j++) {
+            newPassword += specialChars[Math.floor(Math.random() * 28)];
+        }
+
+        for (let i = 0; i < minNumber; i++) {
+            newPassword += numberChars[Math.floor(Math.random() * 10)];
+        }
+
         if (isUppercase) {
-            charSet += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            charSet += upperChars;
+            newPassword += upperChars[Math.floor(Math.random() * 26)];
         }
         if (isLowercase) {
-            charSet += "abcdefghijklmnopqrstuvwxyz";
+            charSet += lowerChars;
+            newPassword += lowerChars[Math.floor(Math.random() * 26)];
         }
-        // if(isAmbi) {
-        //     charSet += '!@#$%^&*';
-        // }
 
-       
-            for (let i = 0; i < minNumber; i++) {
-                newPassword += "0123456789"[Math.floor(Math.random() * 10)];
+        if (isSymbol) {
+            charSet += specialChars;
+
+            if (minSpecial === 0) {
+                newPassword += specialChars[Math.floor(Math.random() * 28)];
             }
-        
+        }
 
-       
-            for (let  j= 0; j < minSpecial; j++) {
-                newPassword += "!@#$%^&*()_+~`}{[]:;?><,./-="[Math.floor(Math.random() * 28)];
-                console.log(newPassword)
+        if (isNumber) {
+            charSet += numberChars;
+
+            if (minNumber === 0) {
+                newPassword += numberChars[Math.floor(Math.random() * 10)];
             }
-        
-        
+        }
 
-        for (let i = newPassword.length; i < passwordLength; i++) {
+        while (newPassword.length < passwordLength) {
             newPassword += charSet[Math.floor(Math.random() * charSet.length)];
         }
-        
-        
-        // console.log(isSymbol)
-        // console.log(isNumber)
+        setPasswordLength(newPassword.length);
 
+        if (isAmbiguous) {
+            newPassword = newPassword.replace(
+                /0O|5S|8B|2Z|Il|1l|O0|S5|B8|Z2|lI|l1/g,
+                "3H"
+            );
+        }
 
-        // const arrayPass = newPassword.split("");
-        // const shuffledPassword = arrayPass
-        //     .sort(() => Math.random() - 0.5)
-        //     .join("");
-        setPassword(newPassword);
+        const arrayString = newPassword.split("");
+        const shuffledPassword = arrayString
+            .sort(() => Math.random() - 0.5)
+            .join("");
+        setPassword(shuffledPassword);
     };
 
-    const fetchData = async() => {
-        
-            await generatePassword();
-        
-      };
+    const handleMinNumberChange = (e) => {
+        setMinNumber(e.target.value);
+    };
 
+    const handleMinSpecialChange = (e) => {
+        setMinSpecial(e.target.value);
+    };
 
-    
-        useEffect(() => {
-            fetchData(); 
-        },[ isNumber,
-            isSymbol,
-            isUppercase,
-            isLowercase,
-            passwordLength,
-            minNumber,
-            minSpecial,]);
-    
-    
+    useEffect(() => {
+        generatePassword();
+    }, [
+        isNumber,
+        isSymbol,
+        isUppercase,
+        isLowercase,
+        isAmbiguous,
+        passwordLength,
+        minNumber,
+        minSpecial,
+    ]);
 
     const handleRadioChange = (event) => {
         setSelectedRadio(event.target.value);
@@ -171,6 +212,8 @@ const Generator = () => {
                                 <input
                                     type="number"
                                     id="inputLength"
+                                    min="5"
+                                    max="60"
                                     value={passwordLength}
                                     onChange={(e) =>
                                         setPasswordLength(e.target.value)
@@ -192,10 +235,10 @@ const Generator = () => {
                                 <input
                                     type="number"
                                     id="inputNumber"
+                                    min="0"
+                                    max="9"
                                     value={minNumber}
-                                    onChange={(e) =>
-                                        setMinNumber(e.target.value)
-                                    }
+                                    onChange={handleMinNumberChange}
                                     className="form-control"
                                     aria-describedby="basic-addon3 basic-addon4"
                                 />
@@ -213,10 +256,10 @@ const Generator = () => {
                                 <input
                                     type="number"
                                     id="inputSpecial"
+                                    min="0"
+                                    max="9"
                                     value={minSpecial}
-                                    onChange={(e) =>
-                                        setMinSpecial(e.target.value)
-                                    }
+                                    onChange={handleMinSpecialChange}
                                     className="form-control"
                                     aria-describedby="basic-addon3 basic-addon4"
                                 />
@@ -237,6 +280,12 @@ const Generator = () => {
                                 <input
                                     type="number"
                                     id="numberOfWord"
+                                    min="1"
+                                    max="20"
+                                    value={numberOfWord}
+                                    onChange={(e) =>
+                                        setNumberOfWord(e.target.value)
+                                    }
                                     className="form-control"
                                     aria-describedby="basic-addon3 basic-addon4"
                                 />
@@ -254,7 +303,10 @@ const Generator = () => {
                                 <input
                                     type="text"
                                     id="wordSeparator"
-                                    maxLength="1"
+                                    value={wordSeparator}
+                                    onChange={(e) =>
+                                        setWordSeparator(e.target.value)
+                                    }
                                     className="form-control"
                                     aria-describedby="basic-addon3 basic-addon4"
                                 />
@@ -338,6 +390,7 @@ const Generator = () => {
                             type="checkbox"
                             value=""
                             id="checkAvd"
+                            onChange={() => setIsAmbiguous(!isAmbiguous)}
                             style={{ transform: "scale(0.6)" }}
                         />
                         <label
