@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import "./tools.scss";
 
 const Generator = () => {
@@ -18,9 +19,9 @@ const Generator = () => {
     const [password, setPassword] = useState("");
 
     const [isAmbiguous, setIsAmbiguous] = useState(false);
+    const [copiedPassword, setCopiedPassword] = useState(false);
 
     const generatePassword = () => {
-        
         let charSet = "";
         let newPassword = "";
 
@@ -34,19 +35,25 @@ const Generator = () => {
             let randomWord = "";
             let randomNumber;
             for (let k = 0; k < numberOfWord; k++) {
-                randomNumber = digits[Math.floor(Math.random() * digits.length)];
+                randomNumber =
+                    digits[Math.floor(Math.random() * digits.length)];
                 for (let i = 0; i < randomNumber; i++) {
                     const randomIndex = Math.floor(
                         Math.random() * lowerChars.length
                     );
+                    if ((k === 0) & (i === 0)) {
+                        randomWord += lowerChars[randomIndex].toUpperCase();
+                    }
                     randomWord += lowerChars[randomIndex];
                 }
-                if(numberOfWord-k !== 1) {
+
+                if (numberOfWord - k !== 1) {
                     randomWord += wordSeparator;
                 }
             }
-            setPassword(randomWord)
-            console.log(randomWord)
+
+            setPassword(randomWord);
+            console.log(randomWord);
             return;
         }
 
@@ -114,6 +121,15 @@ const Generator = () => {
         setMinSpecial(e.target.value);
     };
 
+    const handleCopyToClipboard = () => {
+        
+            setCopiedPassword(true);
+
+            setTimeout(() => {
+                setCopiedPassword(false);
+            }, 50000);
+    };
+
     useEffect(() => {
         generatePassword();
     }, [
@@ -125,10 +141,13 @@ const Generator = () => {
         passwordLength,
         minNumber,
         minSpecial,
+        wordSeparator,
+        numberOfWord,
     ]);
 
     const handleRadioChange = (event) => {
         setSelectedRadio(event.target.value);
+        setPassword("");
     };
 
     return (
@@ -307,6 +326,7 @@ const Generator = () => {
                                     onChange={(e) =>
                                         setWordSeparator(e.target.value)
                                     }
+                                    maxLength={1}
                                     className="form-control"
                                     aria-describedby="basic-addon3 basic-addon4"
                                 />
@@ -405,25 +425,39 @@ const Generator = () => {
 
             <div
                 className={
-                    selectedRadio === "password" ? "mt-4 pb-2" : "mt-2 pb-2"
+                    selectedRadio === "password" ? "mt-4 pb-2 generator-button" : "mt-2 pb-2 generator-button"
                 }
             >
                 <button
                     type="button"
-                    className="btn btn-dark mr-2 generate-pass"
+                    className="btn btn-dark mr-2 regenerate-pass"
                     style={{ marginRight: 10 }}
                     onClick={generatePassword}
                 >
                     Regenerate Password
                 </button>
-                <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    style={{ color: "black" }}
-                >
-                    Copy Password
-                </button>
+
+                <CopyToClipboard text={password} onCopy={handleCopyToClipboard}>
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        style={{ color: "black" }}
+                    >
+                        Copy Password
+                    </button>
+                </CopyToClipboard>
+                {copiedPassword && (
+                <div className="copied-text">
+                    <span >
+                        Copied.
+                    </span>
+                </div>
+            )}
+               
             </div>
+          
+            
+            
         </div>
     );
 };

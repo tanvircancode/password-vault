@@ -4,8 +4,28 @@
     padding-top: 3px;
 }
 
-.generate-pass{
-    @media (max-width: 375px) {
-        margin-bottom: 10px;
+
+.generator-button {
+    display: flex;
+    @media (max-width: 515px) {
+        flex-direction: column;
+    }
+
+    .regenerate-pass{
+        @media (max-width: 515px) {
+            margin-bottom: 10px;
+            margin-right: 0 !important;
+        }
+    }
+
+    .copied-text{
+        color:#00cf10f2;
+        font-size:  16px;
+        margin-top: 8px;
+        margin-left: 10px;
+        @media (max-width: 515px) {
+            text-align: center;
+        }
     }
 }
+
