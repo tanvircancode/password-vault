@@ -1,9 +1,10 @@
 
 
+import "./layout.scss";
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <div>Copyright @ 2024</div>
   )
 }
 

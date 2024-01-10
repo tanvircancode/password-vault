@@ -8,11 +8,13 @@ import "./item.scss";
 import { useState } from "react";
 import AddItemModal from "../../../Modal/ItemModals/AddItemModal";
 import MoveFolderModal from "../../../Modal/FolderModals/MoveFolderModal";
+import MoveOrgModal from "../../../Modal/OrgModals/MoveOrgModal";
 
 const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
+    const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
@@ -51,29 +53,26 @@ const ItemList = () => {
                             <BsThreeDotsVertical />
                         </button>
                         <ul className="dropdown-menu">
-                            <li className="dropdown-list dropdown-item" onClick={() => setOpenMoveFolderModal(true)}>
-                                {/* <a className="dropdown-item" href="#"> */}
-                                    <BsUpload style={{ marginRight: 5 }} />
-                                    <span> Move Selected</span>
-                                {/* </a> */}
+                            <li
+                                className="dropdown-item dropdown-list"
+                                onClick={() => setOpenMoveFolderModal(true)}
+                            >
+                                <BsUpload style={{ marginRight: 5 }} />
+                                <span> Move Selected</span>
                             </li>
-                            <li className="dropdown-list">
-                                <a className="dropdown-item" href="#">
-                                    <BsArrow90DegUp
-                                        style={{ marginRight: 5 }}
-                                    />
-                                    <span>Move Selected To Org..</span>
-                                </a>
+                            <li
+                                className="dropdown-list dropdown-item"
+                                onClick={() => setOpenMoveOrgModal(true)}
+                            >
+                                <BsArrow90DegUp style={{ marginRight: 5 }} />
+                                <span>Move Selected To Org..</span>
                             </li>
-                            <li className="dropdown-list">
-                                <a
-                                    className="dropdown-item"
-                                    style={{ color: "red" }}
-                                    href="#"
-                                >
-                                    <BsTrash3 style={{ marginRight: 5 }} />
-                                    <span>Delete Selected</span>
-                                </a>
+                            <li
+                                className="dropdown-list dropdown-item"
+                                style={{ color: "red" }}
+                            >
+                                <BsTrash3 style={{ marginRight: 5 }} />
+                                <span>Delete Selected</span>
                             </li>
                         </ul>
                     </div>
@@ -84,9 +83,14 @@ const ItemList = () => {
                 openPopup={openNewItemModal}
                 setOpenPopup={setOpenNewItemModal}
             />
-            <MoveFolderModal 
+
+            <MoveFolderModal
                 openPopup={openMoveFolderModal}
                 setOpenPopup={setOpenMoveFolderModal}
+            />
+            <MoveOrgModal
+                openPopup={openMoveOrgModal}
+                setOpenPopup={setOpenMoveOrgModal}
             />
         </div>
     );

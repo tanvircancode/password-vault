@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
+
 import "../modal.scss";
 
-const MoveFolderModal = ({ openPopup, setOpenPopup }) => {
-    return (
-        <div
+const MoveOrgModal = ({ openPopup, setOpenPopup }) => {
+  return (
+    <div
             className={`modal fade ${openPopup ? "show" : ""}`}
             tabIndex="-1"
             role="dialog"
@@ -13,7 +14,7 @@ const MoveFolderModal = ({ openPopup, setOpenPopup }) => {
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Move To Folder</h5>
+                        <h5 className="modal-title">Move To Organization</h5>
                         <button
                             type="button"
                             className="btn-close"
@@ -23,7 +24,7 @@ const MoveFolderModal = ({ openPopup, setOpenPopup }) => {
                         ></button>
                     </div>
                     <div className="modal-body pt-4 pb-4" style={{ textAlign: "left" }}>
-                        <h5>Folders</h5>
+                        <h5>Organizations</h5>
                         <div className="dropdown">
                             <button
                                 className="btn btn-primary dropdown-toggle custom-dropdown"
@@ -71,7 +72,7 @@ const MoveFolderModal = ({ openPopup, setOpenPopup }) => {
                 </div>
             </div>
         </div>
-    );
-};
+  )
+}
 
-export default MoveFolderModal;
+export default MoveOrgModal
