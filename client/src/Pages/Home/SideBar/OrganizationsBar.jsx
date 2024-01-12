@@ -1,14 +1,22 @@
 import { BsFillPeopleFill, BsFillPersonFill, BsPlusCircle  } from "react-icons/bs";
 import "../home.scss";
 
-const OrganizationsBar = () => {
+const OrganizationsBar = ({selectMenu, setSelectMenu}) => {
+
+    const handleSelectMenu = (orgId,type) => {
+       setSelectMenu({
+        menuType:type,  
+        typeValue: orgId
+       })
+    }
+
     return (
         <div className="accordion" >
             <div className="accordion-item">
                 <h2 className="accordion-header">
                     <button
                     className="accordion-button custom-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    
+                        
                         Vaults
                     </button>
                 </h2>
@@ -17,7 +25,7 @@ const OrganizationsBar = () => {
                     className="accordion-collapse collapse show mt-3"
                     
                 >
-                    <div className="accordion-body p-0" style={{marginRight: 80}}>
+                    <div className=`{accordion-body p-0 ${selectMenu.menuType === 'orgs' ? 'active-menu' : ''}}` onClick={() => handleSelectMenu(0, 'orgs')} style={{marginRight: 80}}>
                         <BsFillPeopleFill style={{marginRight: 8}}/>
                         All Vaults
                     </div>
@@ -27,11 +35,10 @@ const OrganizationsBar = () => {
                 <div
                     id="collapseOne"
                     className="accordion-collapse collapse show"
-                    
                 >
                     <div className="accordion-body p-0" style={{marginRight: 80}}>
                         <BsFillPersonFill style={{marginRight: 8}}/>
-                        My Vault
+                        My Vault  
                     </div>
                     <hr className="hr-line" />
                 </div>

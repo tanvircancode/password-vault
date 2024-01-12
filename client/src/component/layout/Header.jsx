@@ -1,14 +1,37 @@
-// import { useNavigate } from "react-router-dom";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import "./layout.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { setLogout } from "../../store";
 
 const Header = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    // const token = useSelector((state) => state.token);
+    // const userData = useSelector((state) => state.user);
+
+    // const dispatch = useDispatch();
+
+    // console.log(token);
+    // console.log(userData);
+
+    // useEffect(() => {
+    //     if (userData === null) {
+    //         navigate("/login");
+    //     }
+    // }, [userData]);
+
+    // let loggedUserName = "";
+
+    // if (userData !== null) {
+    //     // loggedUserName = userData.firstName + " " + userData.lastName;
+    // }
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
-                <a className="navbar-brand" style={{marginBottom:4}}>
+                <a className="navbar-brand" style={{ marginBottom: 4 }}>
                     <BsFillShieldLockFill style={{ color: "#0D6EFD" }} />
                 </a>
                 <button
@@ -53,22 +76,24 @@ const Header = () => {
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
-                            style={{color:'black', border:'none',padding:0}}
+                            style={{
+                                color: "black",
+                                border: "none",
+                                padding: 0,
+                            }}
                         >
-                           Username
+                            {/* Hi, {userData !== null && loggedUserName} */}
                         </button>
                         <ul className="dropdown-menu">
-                            <li>
-                                <a className="dropdown-item" href="#">
-                                Logged in as Username
-                                </a>
+                            {/* <li>Logged in as {userData.firstName}</li> */}
+                            <li
+                                onClick={() => {
+                                    localStorage.setItem("token", null);
+                                    dispatch(setLogout());
+                                }}
+                            >
+                                Logout
                             </li>
-                            <li>
-                                <a className="dropdown-item" href="#">
-                                    Logout
-                                </a>
-                            </li>
-                            
                         </ul>
                     </div>
                 </div>
