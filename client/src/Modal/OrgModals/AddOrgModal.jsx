@@ -2,29 +2,28 @@
 
 import { useState } from "react";
 import "../modal.scss";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
-
-    const [orgname, setOrgname] = useState('');
-    const [email, setEmail] = useState('');
+    const [orgname, setOrgname] = useState("");
+    const [email, setEmail] = useState("");
 
     const handleAddOrg = () => {
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidEmail = emailRegex.test(email);
 
-        if(!isValidEmail) {
-            toast.error('invalid email');
-        }
-        else if(orgname.length === 0 || orgname.length > 50) {
+        if (!isValidEmail) {
+            toast.error("invalid email");
+        } else if (orgname.length === 0 || orgname.length > 50) {
             toast.error("Invalid Name");
+        } else {
+            var formData = new FormData();
+            formData.append("orgname", orgname);
+            formData.append("email", email);
+            //api
+            setOpenAddModal(false);
         }
-        else {
-            
-        }
-
-    }
+    };
 
     return (
         <div
@@ -79,7 +78,11 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                         className="modal-footer"
                         style={{ justifyContent: "flex-start" }}
                     >
-                        <button type="button" className="btn btn-primary" onClick={handleAddOrg}>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleAddOrg}
+                        >
                             Save
                         </button>
                         <button
