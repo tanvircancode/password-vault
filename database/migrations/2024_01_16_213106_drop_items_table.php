@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('items');
+
     }
 
     /**
      * Reverse the migrations.
      */
-    
     public function down(): void
     {
         //
