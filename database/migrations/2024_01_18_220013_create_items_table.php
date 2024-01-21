@@ -27,13 +27,13 @@ return new class extends Migration
             ->references('id')->on('users')
             ->onDelete('cascade');
 
-            $table->foreign('folder_id')
-            ->references('id')->on('folders')
-            ->onDelete('cascade');
+            // $table->foreign('folder_id')
+            // ->references('id')->on('folders')
+            // ->onDelete('cascade');
 
-            $table->foreign('organization_id')
-            ->references('id')->on('organizations')
-            ->onDelete('cascade');
+            // $table->foreign('organization_id')
+            // ->references('id')->on('organizations')
+            // ->onDelete('cascade');
         });
     }
 

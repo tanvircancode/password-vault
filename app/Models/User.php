@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_hint'
     ];
 
     /**
@@ -39,7 +40,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'name' => 'string',
+        'email' => 'string',
+        'password' => 'string',
+        'password_hint' => 'string',
     ];
 }
