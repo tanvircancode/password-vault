@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,7 +25,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
-            <ToastContainer />
+            <ToastContainer 
+            position="top-center"
+            autoClose={2000}
+            closeOnClick
+            />
 
                 <App />
             </BrowserRouter>

@@ -3,9 +3,9 @@ import "./register.scss";
 import { BsPersonFillUp } from "react-icons/bs";
 import rightImage from "../../assets/register.jpg";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { REGISTER_TOKEN, BASE_URL } from "../../config";
 
 function Register() {
     const navigate = useNavigate();
@@ -16,41 +16,46 @@ function Register() {
     const [password, setPassword] = useState("");
     const [passwordHint, setPasswordHint] = useState("");
 
-    // eslint-disable-next-line no-undef
-    // const registerToken = process.env.REACT_APP_REGISTER_TOKEN;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (name.length === 0) {
+            toast.error("Name is too short");
+        } else if (name.length === 0) {
+            toast.error("Name is too short");
+        } else if (password.length === 0 || password.length < 5) {
+            toast.error("Name is too short");
+        } else {
+            var formData = new FormData();
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("password_hint", passwordHint);
+            formData.append("token", REGISTER_TOKEN);
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .min(2, "Name must be minimum 2")
-            .max(30, "Name must not be more than 30 characters")
-            .required("Name is required"),
-        email: Yup.string()
-            .email("Invalid email")
-            .required("Email is required"),
-        password: Yup.string()
-            .min(6, "Password must be at least 6 characters")
-            .required("Password is required"),
-        passwordHint: Yup.string().required("Password Hint is required"),
-    });
-    const initialValues = {
-        name: "",
-        email: "",
-        password: "",
-        passwordHint: "",
-    };
+            const response = await axios
+                .post(`${BASE_URL}/api/register`, formData)
+                .then((res) => {
+                    console.log(res.data.status);
+                    if(res.data.status){
+                        toast.success("Registration Successful")
+                        navigate("/login")
+                    }
+                    else  {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                   
+                    if(error.response && error.response.status === 401) {
+                        toast.error(error.response.data.message)
+                    }else{
+                        toast.error("Server is not responding");
+                    }
+                });
+            // navigate("/signin");
+        }
 
-    // Handle form submission logic here
-    const handleSubmit =  () => {
-        // const response = await axios.post(
-        //     `process.env.REACT_APP_BASE_URL/signup`,
-        //     {
-        //         name,
-        //         password,
-        //         passwordHint
-        //     }
-        // );
-        // navigate("/signin");
-        alert('asd');
+        // alert('asd');
     };
 
     return (
@@ -63,81 +68,69 @@ function Register() {
                     <BsPersonFillUp style={{ fontSize: 30, marginBottom: 6 }} />
                     <h2>Register</h2>
                 </div>
-                <Formik
-                    initialValues={initialValues} 
-                    validationSchema={validationSchema} 
-                    onSubmit={handleSubmit} 
-                >
-                    {({ isSubmitting, errors, handleSubmit }) => (
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-3 form-input">
-                                <label className="form-label" htmlFor="name">Name</label>
-                                <input  
-                                    type="text"
-                                    name="name"
-                                    className="form-control"
-                                    id="exampleInputName"
-                                    onChange={(e) => setName(e.target.value)}
-                                />  
-                            </div>
-                            <div className="mb-3 form-input">
-                                <label className="form-label">
-                                    Email address
-                                </label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="exampleInputEmail1"
-                                    aria-describedby="emailHelp"
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                               
 
-                                <div id="emailHelp" className="form-text">
-                                    We will never share your email with anyone
-                                    else.
-                                </div>
-                                
-                            </div>
-                            <div className="mb-3 form-input">
-                                <label className="form-label">Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="exampleInputPassword1"
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
-                                />
-                               
-                            </div>
-                            <div className="mb-4 form-input">
-                                <label className="form-label">
-                                    Password Hint
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="exampleInputPasswordHint"
-                                    onChange={(e) =>
-                                        setPasswordHint(e.target.value)
-                                    }
-                                />
-                              
-                            </div>
-                            <div className="form-input">
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="btn btn-primary"
-                                    style={{ width: "100%" }}
-                                >
-                                    Register
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </Formik>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3 form-input">
+                        <label className="form-label" htmlFor="name">
+                            Name
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="exampleInputName"
+                            value={name}
+                            required
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3 form-input">
+                        <label className="form-label">Email address</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="exampleInputEmail1"
+                            value={email}
+                            aria-describedby="emailHelp"
+                            required
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+
+                        <div id="emailHelp" className="form-text">
+                            We will never share your email with anyone else.
+                        </div>
+                    </div>
+                    <div className="mb-3 form-input">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            id="exampleInputPassword1"
+                            required
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-4 form-input">
+                        <label className="form-label">Password Hint</label>
+                        <input
+                            type="text"
+                            value={passwordHint}
+                            className="form-control"
+                            id="exampleInputPasswordHint"
+                            required
+                            onChange={(e) => setPasswordHint(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-input">
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            style={{ width: "100%" }}
+                        >
+                            Register
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );
