@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-
 
 class UsersController extends Controller
 {
@@ -48,5 +48,42 @@ class UsersController extends Controller
         ];
 
         return response()->json($response, 200);
+    }
+
+    public function login(Request $request)
+    {
+        $input = $request->all();
+
+        $credentials = [
+            'email' => $input['email'],
+            'password' => $input['password']
+        ];
+        
+        if (Auth::attempt($credentials)) {
+
+            // $request->session()->regenerate();
+            $user = Auth::user();
+
+            $token = $user->createToken('MyAppToken')->plainTextToken;
+
+            $response = [
+                'status' => true,
+                'user' => $user,
+                'token' => $token,
+            ];
+
+            return response()->json($response, 200);
+ 
+            // return redirect()->intended('dashboard');
+        }
+ 
+        // return back()->withErrors([
+        //     'email' => 'The provided credentials do not match our records.',
+        // ])->onlyInput('email');
+        $response = [
+            'status' => false,
+            'message' => 'Invalid Credentials'
+        ];
+        return response()->json($response, 404);
     }
 }

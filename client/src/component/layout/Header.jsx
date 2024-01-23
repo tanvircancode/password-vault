@@ -8,25 +8,25 @@ import { setLogout } from "../../store";
 const Header = () => {
     const navigate = useNavigate();
 
-    // const token = useSelector((state) => state.token);
-    // const userData = useSelector((state) => state.user);
+    const token = useSelector((state) => state.token);
+    const userData = useSelector((state) => state.user);
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    // console.log(token);
-    // console.log(userData);
+    console.log(token);
+    console.log(userData);
 
-    // useEffect(() => {
-    //     if (userData === null) {
-    //         navigate("/login");
-    //     }
-    // }, [userData]);
+    useEffect(() => {
+        if (userData === null) {
+            navigate("/login");
+        }
+    }, [userData]);
 
-    // let loggedUserName = "";
+    let loggedUserName = "";
 
-    // if (userData !== null) {
-    //     // loggedUserName = userData.firstName + " " + userData.lastName;
-    // }
+    if (userData !== null) {
+        loggedUserName = userData.name;
+    }
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -82,7 +82,7 @@ const Header = () => {
                                 padding: 0,
                             }}
                         >
-                            {/* Hi, {userData !== null && loggedUserName} */}
+                            Hi, {userData !== null && loggedUserName}
                         </button>
                         <ul className="dropdown-menu">
                             {/* <li>Logged in as {userData.firstName}</li> */}

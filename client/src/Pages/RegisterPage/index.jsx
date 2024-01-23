@@ -19,11 +19,11 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (name.length === 0) {
-            toast.error("Name is too short");
-        } else if (name.length === 0) {
-            toast.error("Name is too short");
+            toast.error("Name is Required");
+        } else if (email.length === 0) {
+            toast.error("Email is Required");
         } else if (password.length === 0 || password.length < 5) {
-            toast.error("Name is too short");
+            toast.error("Password should be at least 5 character");
         } else {
             var formData = new FormData();
             formData.append("name", name);
@@ -31,8 +31,9 @@ function Register() {
             formData.append("password", password);
             formData.append("password_hint", passwordHint);
             formData.append("token", REGISTER_TOKEN);
+            console.log(formData)
 
-            const response = await axios
+             await axios
                 .post(`${BASE_URL}/api/register`, formData)
                 .then((res) => {
                     console.log(res.data.status);
@@ -55,7 +56,7 @@ function Register() {
             // navigate("/signin");
         }
 
-        // alert('asd');
+       
     };
 
     return (
