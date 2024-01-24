@@ -24,6 +24,6 @@ export const vaultSlice = createSlice({
   },
 })
 
-export const { setLogin, setLogout } = vaultSlice.actions
+export const { setLogin, setLogout } = vaultSlice.actions;
 
 export default vaultSlice.reducer

@@ -48,6 +48,7 @@ function Login() {
                             token: res.data.token,
                         })
                     );
+                    localStorage.setItem('token',res.data.token)
                     navigate("/home");
                 }
                 else  {
@@ -56,7 +57,7 @@ function Login() {
             })
             .catch((error) => {
                 // console.log(error)
-                if(error.response.status === 404 && !error.response.data.status) {
+                if(error.response && error.response.status === 404 && !error.response.data.status) {
                     toast.error(error.response.data.message)
                 }else{
                     toast.error("Server is not responding");

@@ -15,11 +15,15 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) { 
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function()  { 
+    // Route::post('/logout',[UsersController::class, 'logout']);  
+    
+
 });
 
 
 Route::post('/register',[UsersController::class, 'store']);  
-Route::post('/login',[UsersController::class, 'login']);  
+Route::post('/login',[UsersController::class, 'login']);
+// Route::get('/checktoken', [UsersController::class, 'checkToken'])->middleware('auth');  
+
 
