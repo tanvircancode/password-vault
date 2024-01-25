@@ -3,20 +3,42 @@
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
-
+import { useSelector, useDispatch } from "react-redux";
 import "../modal.scss";
+import { Types } from "../../constants/variables";
+import AddLoginModal from "./AddLoginModal";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [copiedUsername, setCopiedUsername] = useState(false);
     const [copiedPassword, setCopiedPassword] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
+
+    const userId = useSelector((state) => state.user.id);
+    const types = Types;
+    // console.log(userId);
+
+    const fieldValues = {
+        selectItemType: 1,
+        orgId: "",
+        itemName: "",
+        folderId: "",
+        userName: "",
+        password: "",
+        loginUrl: [],
+        note: "",
+        favorite: "",
+        cardHolderName: "",
+        brand: "",
+    };
+
+    const [stateValues, setStateValues] = useState({ ...fieldValues });
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
+
 
     const handleCopyToClipboard = (val) => {
         return () => {
@@ -65,8 +87,17 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 <select
                                     className="form-select"
                                     aria-label="Default select example"
+                                    value={fieldValues.selectItemType}
+                                    onChange={(e) => setStateValues({
+                                        ...stateValues,
+                                        selectItemType: parseInt(e.target.value)
+                                    })}
                                 >
-                                    <option value="1">One</option>
+                                    {types.map((type) => (
+                                        <option key={type.id} value={type.id}>
+                                            {type.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -95,40 +126,51 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                             </div>
                         </div>
                         <div className="row mb-4">
-                            <div className="col-6 position-relative">
-                                <label className="form-label fw-bold label-text">
-                                    Username
-                                </label>
+                            {fieldValues.selectItemType === 1 && 
+                                <AddLoginModal 
+                                stateValues={stateValues}
+                                setStateValues={setStateValues}
+                                />
+                                }
+                                
+                                    <div className="col-6 position-relative">
+                                        <label className="form-label fw-bold label-text">
+                                            Username
+                                        </label>
 
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        onChange={(e) =>
-                                            setUsername(e.target.value)
-                                        }
-                                        aria-label="Name"
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-light"
-                                    >
-                                        <CopyToClipboard
-                                            text={username}
-                                            onCopy={handleCopyToClipboard(0)}
-                                        >
-                                            <BsCopy />
-                                        </CopyToClipboard>
-                                    </button>
-                                </div>
-                                {copiedUsername && (
-                                    <div className="position-absolute top-0 end-0 me-2">
-                                        <span style={{ color: "red" }}>
-                                            Copied.
-                                        </span>
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                onChange={(e) =>
+                                                    setUsername(e.target.value)
+                                                }
+                                                aria-label="Name"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn btn-light"
+                                            >
+                                                <CopyToClipboard
+                                                    text={username}
+                                                    onCopy={handleCopyToClipboard(
+                                                        0
+                                                    )}
+                                                >
+                                                    <BsCopy />
+                                                </CopyToClipboard>
+                                            </button>
+                                        </div>
+                                        {copiedUsername && (
+                                            <div className="position-absolute top-0 end-0 me-2">
+                                                <span style={{ color: "red" }}>
+                                                    Copied.
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
+                               
+                           
                             <div className="col-6 position-relative">
                                 <label className="form-label fw-bold label-text">
                                     Password
@@ -196,7 +238,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     Notes
                                 </label>
                                 <textarea
-                                    className="form-control" style={{resize:'none'}}
+                                    className="form-control"
+                                    style={{ resize: "none" }}
                                     rows="4"
                                     aria-label="With textarea"
                                 ></textarea>
