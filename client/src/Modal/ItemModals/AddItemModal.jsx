@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import "../modal.scss";
 import { Types } from "../../constants/variables";
 import AddLoginModal from "./AddLoginModal";
+import AddCardModal from "./AddCardModal";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -31,6 +32,19 @@ function AddItemModal({ openPopup, setOpenPopup }) {
         favorite: "",
         cardHolderName: "",
         brand: "",
+        cardNumber: "",
+        expMonth: "",
+        expYear: "",
+        securityCode: "",
+        title: "",
+        identityEmail: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        phone: "",
+        security: "",
+        license: "",
+        address: "",
     };
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
@@ -38,7 +52,6 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
-
 
     const handleCopyToClipboard = (val) => {
         return () => {
@@ -86,15 +99,18 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    aria-label="Default select example"
-                                    value={fieldValues.selectItemType}
-                                    onChange={(e) => setStateValues({
-                                        ...stateValues,
-                                        selectItemType: parseInt(e.target.value)
-                                    })}
+                                    value={stateValues.selectItemType}
+                                    onChange={(e) =>
+                                        setStateValues({
+                                            ...stateValues,
+                                            selectItemType: parseInt(
+                                                e.target.value
+                                            ),
+                                        })
+                                    }
                                 >
-                                    {types.map((type) => (
-                                        <option key={type.id} value={type.id}>
+                                    {types.map((type, index) => (
+                                        <option key={index} value={type.id}>
                                             {type.name}
                                         </option>
                                     ))}
@@ -125,112 +141,20 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </select>
                             </div>
                         </div>
-                        <div className="row mb-4">
-                            {fieldValues.selectItemType === 1 && 
-                                <AddLoginModal 
+
+                        {stateValues.selectItemType === 1 && (
+                            <AddLoginModal
                                 stateValues={stateValues}
                                 setStateValues={setStateValues}
-                                />
-                                }
-                                
-                                    <div className="col-6 position-relative">
-                                        <label className="form-label fw-bold label-text">
-                                            Username
-                                        </label>
+                            />
+                        )}
 
-                                        <div className="input-group">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                onChange={(e) =>
-                                                    setUsername(e.target.value)
-                                                }
-                                                aria-label="Name"
-                                            />
-                                            <button
-                                                type="button"
-                                                className="btn btn-light"
-                                            >
-                                                <CopyToClipboard
-                                                    text={username}
-                                                    onCopy={handleCopyToClipboard(
-                                                        0
-                                                    )}
-                                                >
-                                                    <BsCopy />
-                                                </CopyToClipboard>
-                                            </button>
-                                        </div>
-                                        {copiedUsername && (
-                                            <div className="position-absolute top-0 end-0 me-2">
-                                                <span style={{ color: "red" }}>
-                                                    Copied.
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                               
-                           
-                            <div className="col-6 position-relative">
-                                <label className="form-label fw-bold label-text">
-                                    Password
-                                </label>
-                                <div className="input-group">
-                                    <input
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
-                                        className="form-control"
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
-                                        aria-label="Password"
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-light"
-                                    >
-                                        <CopyToClipboard
-                                            text={password}
-                                            onCopy={handleCopyToClipboard(1)}
-                                        >
-                                            <BsCopy />
-                                        </CopyToClipboard>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-light"
-                                        onClick={handleTogglePassword}
-                                    >
-                                        {showPassword ? (
-                                            <BsEye />
-                                        ) : (
-                                            <BsEyeSlash />
-                                        )}
-                                    </button>
-                                </div>
-                                {copiedPassword && (
-                                    <div className="position-absolute top-0 end-0 me-2">
-                                        <span style={{ color: "red" }}>
-                                            Copied.
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="row mb-4">
-                            <div className="col-6">
-                                <label className="form-label fw-bold label-text">
-                                    URL
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="https://google.com"
-                                    aria-label="URL"
-                                />
-                            </div>
-                        </div>
+                        {stateValues.selectItemType === 2 && (
+                            <AddCardModal
+                                stateValues={stateValues}
+                                setStateValues={setStateValues}
+                            />
+                        )}
 
                         <div className="row mb-4">
                             <div className="col-12">
@@ -243,6 +167,49 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     rows="4"
                                     aria-label="With textarea"
                                 ></textarea>
+                            </div>
+                        </div>
+                        <div className="row mb-4">
+                            <div className="col-sm-12 col-md-8 col-lg-6">
+                                <label className="form-label fw-bold label-text">
+                                    Who owns this item?
+                                </label>
+                                <select
+                                    className="form-select"
+                                    value={stateValues.selectItemType}
+                                    onChange={(e) =>
+                                        setStateValues({
+                                            ...stateValues,
+                                            selectItemType: parseInt(
+                                                e.target.value
+                                            ),
+                                        })
+                                    }
+                                >
+                                    {types.map((type, index) => (
+                                        <option key={index} value={type.id}>
+                                            {type.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row mb-4">
+                            <div className="col-12">
+                                <div className="form-check">
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        value=""
+                                        id="flexCheckDefault"
+                                    />
+                                    <label
+                                        className="form-check-label pl-2"  style={{textAlign:'left', paddingTop: 3,marginLeft:5}}
+                                        htmlFor="flexCheckDefault"
+                                    >
+                                       Favorite
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -260,7 +227,6 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         >
                             Close
                         </button>
-                        {/* Add additional modal action buttons if needed */}
                     </div>
                 </div>
             </div>

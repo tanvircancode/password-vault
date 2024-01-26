@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
@@ -31,11 +31,9 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
     };
 
     return (
-        
-          
+        <>
             <div className="row mb-4">
-
-                <div className="col-6 position-relative">
+                <div className="col-sm-12 col-md-6 position-relative">
                     <label className="form-label fw-bold label-text">
                         Username
                     </label>
@@ -44,12 +42,17 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
                         <input
                             type="text"
                             className="form-control"
-                            onChange={(e) => setStateValues({...stateValues, userName : e.target.value})}
+                            onChange={(e) =>
+                                setStateValues({
+                                    ...stateValues,
+                                    userName: e.target.value,
+                                })
+                            }
                             aria-label="Name"
                         />
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={username}
+                                text={stateValues.userName}
                                 onCopy={handleCopyToClipboard(0)}
                             >
                                 <BsCopy />
@@ -63,20 +66,25 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
                     )}
                 </div>
 
-                <div className="col-6 position-relative">
+                <div className="col-sm-12 col-md-6 position-relative">
                     <label className="form-label fw-bold label-text">
                         Password
                     </label>
                     <div className="input-group">
                         <input
-                            type={showPassword ? "text" : "password"}  
+                            type={showPassword ? "text" : "password"}
                             className="form-control"
-                            onChange={(e) => setStateValues({...stateValues, password : e.target.value})}
+                            onChange={(e) =>
+                                setStateValues({
+                                    ...stateValues,
+                                    password: e.target.value,
+                                })
+                            }
                             aria-label="Password"
                         />
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={password}
+                                text={stateValues.password}
                                 onCopy={handleCopyToClipboard(1)}
                             >
                                 <BsCopy />
@@ -97,7 +105,18 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
                     )}
                 </div>
             </div>
-       
+            <div className="row mb-4">
+                <div className="col-sm-12 col-md-8 col-lg-6">
+                    <label className="form-label fw-bold label-text">URL</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="https://google.com"
+                        aria-label="URL"
+                    />
+                </div>
+            </div>
+        </>
     );
 };
 
