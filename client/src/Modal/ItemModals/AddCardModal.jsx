@@ -46,7 +46,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
 
     return (
         <div className="row mb-4 mt-4">
-            <div className="col-6 position-relative">
+            <div className="col-sm-12 col-lg-6 position-relative">
                 <label className="form-label fw-bold label-text">
                     Cardholder Name
                 </label>
@@ -55,6 +55,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                     <input
                         type="text"
                         className="form-control"
+                        value={stateValues.cardHolderName}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -79,7 +80,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                 )}
             </div>
 
-            <div className="col-6 position-relative">
+            <div className="col-sm-12 col-lg-6 position-relative">
                 <label className="form-label fw-bold label-text">Brand</label>
                 <select
                     className="form-select"
@@ -101,7 +102,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                 </select>
             </div>
             <div className="row mt-4">
-                <div className="col-sm-12  col-lg-6 position-relative mb-4">
+                <div className="col-sm-12 col-md-6 position-relative mb-4">
                     <label className="form-label fw-bold label-text">
                         Number
                     </label>
@@ -109,6 +110,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                         <input
                             type={showNumber ? "text" : "password"}
                             className="form-control"
+                            value={stateValues.cardNumber}
                             onChange={(e) =>
                                 setStateValues({
                                     ...stateValues,
@@ -140,7 +142,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                         </div>
                     )}
                 </div>
-                <div className="col-sm-12 col-lg-3 mb-4">
+                <div className="col-sm-12 col-md-3 mb-4">
                 <label className="form-label fw-bold label-text">Expiration Month</label>
                 <select
                     className="form-select"
@@ -161,7 +163,7 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                 ))}
                 </select>
                 </div>
-                <div className="col-sm-12 col-lg-3 mb-4">
+                <div className="col-sm-12 col-md-3 mb-4">
                     <label className="form-label fw-bold label-text">
                         Expiration Year
                     </label>
@@ -169,7 +171,13 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                         type="text"
                         className="form-control"
                         placeholder="ex:- 2024"
-                        aria-label="URL"
+                        value={stateValues.expYear}
+                        onChange={(e) =>
+                            setStateValues({
+                                ...stateValues,
+                                expYear: e.target.value,
+                            })
+                        }
                     />
                 </div>
             </div>
@@ -183,13 +191,14 @@ const AddCardModal = ({ stateValues, setStateValues }) => {
                         <input
                             type={showCode ? "text" : "password"}
                             className="form-control"
+                            value={stateValues.securityCode}
                             onChange={(e) =>
                                 setStateValues({
                                     ...stateValues,
                                     securityCode: e.target.value,
                                 })
                             }
-                            aria-label="Password"
+                            
                         />
 
                         <button type="button" className="btn btn-light">

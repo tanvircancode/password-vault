@@ -8,6 +8,7 @@ import "../modal.scss";
 import { Types } from "../../constants/variables";
 import AddLoginModal from "./AddLoginModal";
 import AddCardModal from "./AddCardModal";
+import AddIdentityModal from "./AddIdentityModal";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -27,7 +28,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
         folderId: "",
         userName: "",
         password: "",
-        loginUrl: [],
+        loginUrl: "",
         note: "",
         favorite: "",
         cardHolderName: "",
@@ -71,6 +72,14 @@ function AddItemModal({ openPopup, setOpenPopup }) {
         };
     };
 
+    // useEffect(() => {
+    //     console.log(stateValues.favorite);
+    // }, [stateValues.favorite]);
+
+   const handleAddItem = () => {
+      
+   }
+
     return (
         <div
             className={`modal fade ${openPopup ? "show" : ""}`}
@@ -91,9 +100,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         ></button>
                     </div>
                     <div className="modal-body">
-                        {/* Add your modal content here */}
-                        <div className="row mb-4">
-                            <div className="col-6">
+                        <div className="row mb-2">
+                            <div className="col-md-12 col-lg-6">
                                 <label className="form-label fw-bold label-text">
                                     What type of item is this?
                                 </label>
@@ -117,8 +125,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </select>
                             </div>
                         </div>
-                        <div className="row mb-4">
-                            <div className="col-6">
+                        <div className="row ">
+                            <div className="col-sm-12 col-md-6 mb-2">
                                 <label className="form-label fw-bold label-text">
                                     Name
                                 </label>
@@ -126,16 +134,28 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     type="text"
                                     className="form-control"
                                     placeholder="Name"
-                                    aria-label="Username"
+                                    value={stateValues.itemName}
+                                    onChange={(e) =>
+                                        setStateValues({
+                                            ...stateValues,
+                                            itemName: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-sm-12 col-md-6 mb-2">
                                 <label className="form-label fw-bold label-text">
                                     Folder
                                 </label>
                                 <select
                                     className="form-select"
-                                    aria-label="Default select example"
+                                    value={stateValues.folderId}
+                                    onChange={(e) =>
+                                        setStateValues({
+                                            ...stateValues,
+                                            folderId: e.target.value,
+                                        })
+                                    }
                                 >
                                     <option value="1">--Select--</option>
                                 </select>
@@ -156,6 +176,13 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                             />
                         )}
 
+                        {stateValues.selectItemType === 3 && (
+                            <AddIdentityModal
+                                stateValues={stateValues}
+                                setStateValues={setStateValues}
+                            />
+                        )}
+
                         <div className="row mb-4">
                             <div className="col-12">
                                 <label className="form-label fw-bold label-text">
@@ -165,7 +192,13 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     className="form-control"
                                     style={{ resize: "none" }}
                                     rows="4"
-                                    aria-label="With textarea"
+                                    value={stateValues.note}
+                                    onChange={(e) =>
+                                        setStateValues({
+                                            ...stateValues,
+                                            note: e.target.value,
+                                        })
+                                    }
                                 ></textarea>
                             </div>
                         </div>
@@ -176,13 +209,11 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={stateValues.selectItemType}
+                                    value={stateValues.orgId}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
-                                            selectItemType: parseInt(
-                                                e.target.value
-                                            ),
+                                            orgId: e.target.value,
                                         })
                                     }
                                 >
@@ -200,14 +231,28 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     <input
                                         className="form-check-input"
                                         type="checkbox"
-                                        value=""
+                                        value={stateValues.favorite}
                                         id="flexCheckDefault"
+                                        onChange={(e) =>
+                                            setStateValues({
+                                                ...stateValues,
+                                                favorite: e.target.checked
+                                                    ? 1
+                                                    : 0,
+                                            })
+                                        }
                                     />
+
                                     <label
-                                        className="form-check-label pl-2"  style={{textAlign:'left', paddingTop: 3,marginLeft:5}}
+                                        className="form-check-label pl-2"
+                                        style={{
+                                            textAlign: "left",
+                                            paddingTop: 3,
+                                            marginLeft: 5,
+                                        }}
                                         htmlFor="flexCheckDefault"
                                     >
-                                       Favorite
+                                        Favorite
                                     </label>
                                 </div>
                             </div>
@@ -217,7 +262,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         className="modal-footer"
                         style={{ justifyContent: "flex-start" }}
                     >
-                        <button type="button" className="btn btn-success">
+                        <button type="button" className="btn btn-success" onClick={handleAddItem}>
                             Save
                         </button>
                         <button

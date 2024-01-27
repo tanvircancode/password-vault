@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
@@ -42,6 +42,7 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
                         <input
                             type="text"
                             className="form-control"
+                            value={stateValues.userName}
                             onChange={(e) =>
                                 setStateValues({
                                     ...stateValues,
@@ -74,6 +75,7 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
                         <input
                             type={showPassword ? "text" : "password"}
                             className="form-control"
+                            value={stateValues.password}
                             onChange={(e) =>
                                 setStateValues({
                                     ...stateValues,
@@ -108,11 +110,17 @@ const AddLoginModal = ({ stateValues, setStateValues }) => {
             <div className="row mb-4">
                 <div className="col-sm-12 col-md-8 col-lg-6">
                     <label className="form-label fw-bold label-text">URL</label>
-                    <input
+                    <input  
                         type="text"
                         className="form-control"
                         placeholder="https://google.com"
-                        aria-label="URL"
+                        value={stateValues.loginUrl}
+                        onChange={(e) =>
+                            setStateValues({
+                                ...stateValues,
+                                loginUrl: e.target.value,
+                            })
+                        }
                     />
                 </div>
             </div>
