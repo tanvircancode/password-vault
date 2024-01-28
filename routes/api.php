@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ItemsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +18,8 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::middleware('auth:sanctum')->group(function()  { 
-    // Route::post('/logout',[UsersController::class, 'logout']);  
+    // item apis
+    // Route::post('/item',[ItemsController::class, 'store']);  
     
 
 });
@@ -24,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function()  {
 
 Route::post('/register',[UsersController::class, 'store']);  
 Route::post('/login',[UsersController::class, 'login']);
-// Route::get('/checktoken', [UsersController::class, 'checkToken'])->middleware('auth');  
+
+Route::post('/item',[ItemsController::class, 'store']);  
 
 

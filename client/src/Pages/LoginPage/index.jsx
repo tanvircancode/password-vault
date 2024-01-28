@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../store";
 
@@ -104,6 +104,8 @@ function Login() {
                             Login
                         </button>
                     </div>
+                 
+                     <Link to="/register">Go to Other Page</Link>
                 </form>
             </div>
             <div className="right-section" style={{ width: "50%" }}>

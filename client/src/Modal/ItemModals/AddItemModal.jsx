@@ -9,6 +9,8 @@ import { Types } from "../../constants/variables";
 import AddLoginModal from "./AddLoginModal";
 import AddCardModal from "./AddCardModal";
 import AddIdentityModal from "./AddIdentityModal";
+import axios from "axios";
+import { BASE_URL } from "../../config";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -50,35 +52,71 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
-    const handleTogglePassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleCopyToClipboard = (val) => {
-        return () => {
-            if (val === 0) {
-                setCopiedUsername(true);
-
-                setTimeout(() => {
-                    setCopiedUsername(false);
-                }, 2000);
-            } else {
-                setCopiedPassword(true);
-
-                setTimeout(() => {
-                    setCopiedPassword(false);
-                }, 2000);
-            }
-        };
-    };
-
     // useEffect(() => {
     //     console.log(stateValues.favorite);
     // }, [stateValues.favorite]);
 
-   const handleAddItem = () => {
-      
-   }
+    const handleAddItem = async (e) => {
+        e.preventDefault();
+        var formData = new FormData();
+        formData.append("user_id", userId);
+        formData.append("type", stateValues.selectItemType);
+        formData.append("name", stateValues.itemName);
+        formData.append("folder_id", stateValues.folderId);
+        formData.append("notes", stateValues.note);
+        formData.append("organization_id", stateValues.orgId);
+        formData.append("favorite", stateValues.favorite);
+
+        if (stateValues.selectItemType === 1) {
+            formData.append("username", stateValues.userName);
+            formData.append("password", stateValues.password);
+            formData.append("url", stateValues.loginUrl);
+        }else if(stateValues.selectItemType === 2) {
+            formData.append("cardholder_name", stateValues.cardHolderName);
+            formData.append("brand", stateValues.brand);
+            formData.append("number", stateValues.cardNumber);
+            formData.append("exp_month", stateValues.expMonth);
+            formData.append("exp_year", stateValues.expYear);
+            formData.append("security_code", stateValues.securityCode);
+        }
+        else if(stateValues.selectItemType === 3) {  
+            formData.append("title", stateValues.title);
+            formData.append("email", stateValues.brand);
+            formData.append("first_name", stateValues.cardNumber);
+            formData.append("middle_name", stateValues.expMonth);
+            formData.append("last_name", stateValues.expYear);
+            formData.append("phone", stateValues.securityCode);
+            formData.append("security", stateValues.expMonth);
+            formData.append("license", stateValues.expYear);
+            formData.append("address", stateValues.securityCode);
+        }
+        await axios
+        .post(`${BASE_URL}/api/item`, formData)
+        .then((res) => {
+            console.log(res.data);
+            console.log(formData);
+
+            // if(res.data.status){
+            //     toast.success("Registration Successful")
+            //     navigate("/login")
+            // }
+            // else  {
+            //     toast.error("Server is not responding");
+            // }
+        })
+        .catch((error) => {
+            console.log(error);
+            console.log(formData);
+
+            // if(error.response && error.response.status === 401) {
+            //     toast.error(error.response.data.message)
+            // }else{
+            //     toast.error("Server is not responding");
+            // }
+        });
+
+
+    };
 
     return (
         <div
@@ -158,6 +196,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     }
                                 >
                                     <option value="1">--Select--</option>
+                                    <option value="2">change</option>
+
                                 </select>
                             </div>
                         </div>
@@ -262,7 +302,11 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         className="modal-footer"
                         style={{ justifyContent: "flex-start" }}
                     >
-                        <button type="button" className="btn btn-success" onClick={handleAddItem}>
+                        <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={handleAddItem}
+                        >
                             Save
                         </button>
                         <button

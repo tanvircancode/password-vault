@@ -1,3 +1,5 @@
+items
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -13,27 +15,26 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id');
-            $table->integer('type');
-            $table->string('name');
-            $table->uuid('folder_id');
-            $table->uuid('organization_id');
-            $table->string('password');
-            $table->text('notes');
-            $table->boolean('favorite');
+            $table->uuid('user_id')->nullable(false);
+            $table->uuid('folder_id')->nullable();
+            $table->uuid('organization_id')->nullable();
+            $table->integer('type')->nullable();
+            $table->string('name')->nullable();
+            $table->text('notes')->nullable();
+            $table->boolean('favorite')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')
             ->references('id')->on('users')
             ->onDelete('cascade');
 
-            // $table->foreign('folder_id')
-            // ->references('id')->on('folders')
-            // ->onDelete('cascade');
+            $table->foreign('folder_id')
+            ->references('id')->on('folders')
+            ->onDelete('cascade');
 
-            // $table->foreign('organization_id')
-            // ->references('id')->on('organizations')
-            // ->onDelete('cascade');
+            $table->foreign('organization_id')
+            ->references('id')->on('organizations')
+            ->onDelete('cascade');
         });
     }
 
