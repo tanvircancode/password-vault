@@ -73,6 +73,7 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                     <div
                         className="accordion-body p-0"
                         style={{ marginRight: 22 }}
+                        
                     >
                         <BsPlusCircle style={{ marginRight: 8 }} />
                         Add Organization

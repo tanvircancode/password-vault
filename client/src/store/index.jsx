@@ -5,7 +5,7 @@ const initialState = {
   token:null,
   loading:false,
   orgData:"",
-  folderData:"",
+  folders:[],
 }
 
 export const vaultSlice = createSlice({
@@ -21,9 +21,12 @@ export const vaultSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+    setFolders: (state, action) => {
+      state.folders = action.payload.folders;
+    },
   },
 })
 
-export const { setLogin, setLogout } = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders } = vaultSlice.actions;
 
 export default vaultSlice.reducer

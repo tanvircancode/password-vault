@@ -61,4 +61,14 @@ class User extends Authenticatable
         'password' => 'string',
         'password_hint' => 'string',
     ];
+
+    public function folders() {
+        return $this->hasMany(Folder::class);
+    }
+    public function organizations() {
+        return $this->hasMany(Organization::class);
+    }
+    public function items() {
+        return $this->hasMany(Item::class)->withTrashed();
+    }
 }

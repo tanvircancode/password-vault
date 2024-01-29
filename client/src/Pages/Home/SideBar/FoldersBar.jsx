@@ -1,6 +1,35 @@
 import { BsPlusCircle } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import AddFolderModal from "../../../Modal/FolderModals/AddFolderModal";
+import axios from "axios";
+import { BASE_URL } from "../../../config";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const FoldersBar = () => {
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const id = useSelector((state) => state.user.id);
+
+
+    const dispatch = useDispatch();
+
+    const getFolders = async () => {
+
+        await axios.get(`${BASE_URL}/api/user/`+id,
+        ).then((res) => {
+            // const data = res.data;
+            console.log(res)
+
+            // dispatch(setFolders({ posts: data }));
+        })
+            .catch((error) => alert(error.response.data.message));
+    }
+
+    useEffect(() => {
+        getFolders();
+        console.log(userId)
+    },[]);
+
     return (
         <div className="accordion">
             <div className="accordion-item">
@@ -20,6 +49,7 @@ const FoldersBar = () => {
                 <div
                     id="collapseThree"
                     className="accordion-collapse collapse show mt-3 mb-3"
+                    onClick={() => setOpenAddModal(true)}
                 >
                     <div
                         className="accordion-body p-0"
@@ -29,6 +59,10 @@ const FoldersBar = () => {
                         Add Folder
                     </div>
                 </div>
+                <AddFolderModal 
+                 openAddModal={openAddModal}
+                 setOpenAddModal={setOpenAddModal}
+                /> 
             </div>
         </div>
     );

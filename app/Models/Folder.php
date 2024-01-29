@@ -2,24 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Login extends Model
+
+class Folder extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $table = 'logins';
+
+    protected $table = 'folders';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'item_id',
-        'username',
-        'password',
-        'url',
-        
+        'user_id','foldername'
     ];
 
     protected static function boot()
@@ -32,14 +33,15 @@ class Login extends Model
     }
 
     protected $casts = [
-        'item_id' => 'string',
-        'username' => 'string',
-        'password' => 'string',
-        'url' => 'string',
+        'user_id' => 'string',
+        'foldername' => 'string',
     ];
 
-    public function item()
+    public function user()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(User::class);
     }
+
+
+   
 }

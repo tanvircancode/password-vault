@@ -102,22 +102,13 @@ class UsersController extends Controller
         // return redirect('/login');
     }
 
-    public function checkToken(Request $request)
+    public function show($id)
     {
-        try {
-            if (!$request->bearerToken()) {
-                return response()->json(['error' => 'Token not provided'], 401);
-            }
-    
-            $user = $request->user(); // Authenticate using Laravel's built-in authentication
-            $data = $request->bearerToken();
-            if ($user) {
-                return response()->json(['user' => $user, 'data' => $data]); // Return user data on success
-            } else {
-                return response()->json(['user' => $user,'data' => $data, 'error' => 'Invalid token'], 401);
-            }
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if($id !== Auth::user()->id) {
+            return response()->json(['status' => false], 403);
         }
+
+        $folders = User::with('folders')->find($id);
+        return response()->json($folders,200);
     }
 }
