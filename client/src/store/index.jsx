@@ -4,7 +4,7 @@ const initialState = {
   user:null,
   token:null,
   loading:false,
-  orgData:"",
+  organizations:[],
   folders:[],
 }
 
@@ -22,6 +22,9 @@ export const vaultSlice = createSlice({
       state.token = null;
     },
     setFolders: (state, action) => {
+      state.folders = action.payload.folders;
+    },
+    setOrganizations: (state, action) => {
       state.folders = action.payload.folders;
     },
   },

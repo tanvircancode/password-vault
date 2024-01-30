@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    
+   
+
     public function store(Request $request)
     {
 
@@ -64,6 +66,7 @@ class UsersController extends Controller
             // $request->session()->regenerate();
             $user = Auth::user();
 
+
             $token = $user->createToken('MyAppToken')->plainTextToken;
 
             $response = [
@@ -104,11 +107,25 @@ class UsersController extends Controller
 
     public function show($id)
     {
+
         if($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }
 
-        $folders = User::with('folders')->find($id);
-        return response()->json($folders,200);
+        $user = User::with('organizations','folders')->find($id);
+        if(!$user) {
+            $response = [
+                'success' => false,
+                'message' => 'User not found'
+            ]; 
+            return response()->json($response,404);
+        }
+       
+        $response = [
+            'success' => true,
+            'data' => $user
+        ]; 
+        
+        return response()->json($response,200);
     }
 }

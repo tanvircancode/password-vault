@@ -21,25 +21,27 @@ use App\Http\Controllers\FoldersController;
 
 Route::middleware('auth:sanctum')->group(function()  { 
    
-    // Route::post('/item',[ItemsController::class, 'store']);  
-    
+    // user apis
+ Route::get('/user/{id}',[UsersController::class, 'show']);  
+
+  // item apis
+Route::post('/item',[ItemsController::class, 'store']);  
+
+// folder apis
+//  Route::get('/folders/{userId}',[FoldersController::class, 'index']);  
+Route::post('/folder',[FoldersController::class, 'store']);  
+Route::post('/logout',[UsersController::class, 'logout']);
 
 });
 
 
 Route::post('/register',[UsersController::class, 'store']);  
 Route::post('/login',[UsersController::class, 'login']);
-Route::post('/logout',[UsersController::class, 'logout']);
-
- // user apis
- Route::get('/user/{id}',[UsersController::class, 'show']);  
 
 
- // item apis
-Route::post('/item',[ItemsController::class, 'store']);  
 
- // folder apis
-//  Route::get('/folders/{userId}',[FoldersController::class, 'index']);  
- Route::post('/folder',[FoldersController::class, 'store']);  
+
+
+
 
 

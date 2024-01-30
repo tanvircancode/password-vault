@@ -5,30 +5,33 @@ import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { useDispatch, useSelector } from "react-redux";
 
-
 const FoldersBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
-    const id = useSelector((state) => state.user.id);
+    const userId = useSelector((state) => state.user.id);
+    const token = useSelector((state) => state.token);
 
 
     const dispatch = useDispatch();
 
     const getFolders = async () => {
-
-        await axios.get(`${BASE_URL}/api/user/`+id,
-        ).then((res) => {
-            // const data = res.data;
-            console.log(res)
-
-            // dispatch(setFolders({ posts: data }));
-        })
-            .catch((error) => alert(error.response.data.message));
-    }
+        await axios
+            .get(`${BASE_URL}/api/user/` + userId, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                // const data = res.data;
+                console.log(res);
+                // dispatch(setFolders({ posts: data }));
+            })
+            .catch((error) => console.log(error));
+    };
 
     useEffect(() => {
         getFolders();
-        console.log(userId)
-    },[]);
+        // console.log(userId)
+    }, []);
 
     return (
         <div className="accordion">
@@ -59,10 +62,10 @@ const FoldersBar = () => {
                         Add Folder
                     </div>
                 </div>
-                <AddFolderModal 
-                 openAddModal={openAddModal}
-                 setOpenAddModal={setOpenAddModal}
-                /> 
+                <AddFolderModal
+                    openAddModal={openAddModal}
+                    setOpenAddModal={setOpenAddModal}
+                />
             </div>
         </div>
     );
