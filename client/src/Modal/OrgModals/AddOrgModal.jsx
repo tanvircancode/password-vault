@@ -1,14 +1,22 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../modal.scss";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setOrganizations } from "../../store";
+import { BASE_URL } from "../../config";
 
 const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
     const [orgname, setOrgname] = useState("");
     const [email, setEmail] = useState("");
+    const token = useSelector((state) => state.token);
+    const userId = useSelector((state) => state.user.id);
 
-    const handleAddOrg = () => {
+    const dispatch = useDispatch();
+
+    const handleAddOrg = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidEmail = emailRegex.test(email);
 
@@ -20,9 +28,52 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
             var formData = new FormData();
             formData.append("orgname", orgname);
             formData.append("email", email);
+            formData.append("user_id", userId);
+
             //api
+            await axios
+                .post(`${BASE_URL}/api/organization`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-type": "application/json",
+                    },
+                })
+                .then((res) => {
+                    //    console.log(res);
+
+                    if (res.data.status && res.status === 200) {
+                        dispatch(
+                            setOrganizations({
+                                organizations: res.data.data.organizations,
+                            })
+                        );
+                        toast.success(res.data.message);
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    // console.log(error)
+                    if (
+                        error.response &&
+                        error.response.status === 404 &&
+                        !error.response.data.status
+                    ) {
+                        toast.error(error.response.data.message);
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                });
+            setEmail("");
+            setOrgname("");
             setOpenAddModal(false);
         }
+    };
+
+    const cancelModal = () => {
+        setEmail("");
+        setOrgname("");
+        setOpenAddModal(false);
     };
 
     return (
@@ -41,7 +92,7 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                             className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                            onClick={() => setOpenAddModal(false)}
+                            onClick={cancelModal}
                         ></button>
                     </div>
                     <div
@@ -56,6 +107,7 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                                 type="text"
                                 className="form-control"
                                 placeholder="Name"
+                                value={orgname}
                                 aria-label="Username"
                                 onChange={(e) => setOrgname(e.target.value)}
                             />
@@ -69,6 +121,7 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                                 type="email"
                                 className="form-control"
                                 placeholder="Email"
+                                value={email}
                                 aria-label="Email"
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -89,7 +142,7 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                             type="button"
                             className="btn btn-danger"
                             data-bs-dismiss="modal"
-                            onClick={() => setOpenAddModal(false)}
+                            onClick={cancelModal}
                         >
                             Cancel
                         </button>

@@ -25,11 +25,11 @@ export const vaultSlice = createSlice({
       state.folders = action.payload.folders;
     },
     setOrganizations: (state, action) => {
-      state.folders = action.payload.folders;
+      state.organizations = action.payload.organizations;
     },
   },
 })
 
-export const { setLogin, setLogout,setFolders } = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders ,setOrganizations} = vaultSlice.actions;
 
 export default vaultSlice.reducer

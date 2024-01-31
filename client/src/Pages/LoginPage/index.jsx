@@ -39,7 +39,7 @@ function Login() {
                 }
             )
             .then((res) => {
-               console.log(res)
+            //    console.log(res)
                 if(res.data.status && res.data.token){
                     toast.success("Logged in Successfully")
                     dispatch(

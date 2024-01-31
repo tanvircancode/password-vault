@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\FoldersController;
+use App\Http\Controllers\OrganizationsController;
+
 
 
 
@@ -28,8 +30,11 @@ Route::middleware('auth:sanctum')->group(function()  {
 Route::post('/item',[ItemsController::class, 'store']);  
 
 // folder apis
-//  Route::get('/folders/{userId}',[FoldersController::class, 'index']);  
 Route::post('/folder',[FoldersController::class, 'store']);  
+
+// orgs apis
+Route::post('/organization',[OrganizationsController::class, 'store']);  
+
 Route::post('/logout',[UsersController::class, 'logout']);
 
 });

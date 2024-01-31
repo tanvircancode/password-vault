@@ -115,14 +115,14 @@ class UsersController extends Controller
         $user = User::with('organizations','folders')->find($id);
         if(!$user) {
             $response = [
-                'success' => false,
+                'status' => false,
                 'message' => 'User not found'
             ]; 
             return response()->json($response,404);
         }
        
         $response = [
-            'success' => true,
+            'status' => true,
             'data' => $user
         ]; 
         

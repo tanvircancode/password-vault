@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import "../modal.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-
 import { toast } from "react-toastify";
+import { setFolders } from "../../store";
 
 const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
 
     const [folderName, setFolderName] = useState("");
     const userId = useSelector((state) => state.user.id);
+    const token = useSelector((state) => state.token);
+    const dispatch = useDispatch();
+
 
     const handleAddFolder = async() => {
 
@@ -28,15 +31,17 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                 formData,
                 {
                     headers: {
+                    'Authorization': `Bearer ${token}`,
                         "Content-type": "application/json",
                     },
                 }
             )
             .then((res) => {
                console.log(res)
+
                 if(res.data.status && res.status === 200){
+                    dispatch(setFolders({ folders: res.data.data.folders }));
                     toast.success(res.data.message)
-                   
                 }
                 else  {
                     toast.error("Server is not responding");
@@ -56,6 +61,11 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
         }
     };
 
+    const cancelModal = () => {
+        setFolderName("");
+        setOpenAddModal(false);
+    }
+
     return (
         <div
             className={`modal fade ${openAddModal ? "show" : ""}`}
@@ -72,7 +82,7 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                             className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                            onClick={() => setOpenAddModal(false)}
+                            onClick={cancelModal}
                         ></button>
                     </div>
                     <div
@@ -109,7 +119,7 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                             type="button"
                             className="btn btn-danger"
                             data-bs-dismiss="modal"
-                            onClick={() => setOpenAddModal(false)}
+                            onClick={cancelModal}
                         >
                             Cancel
                         </button>

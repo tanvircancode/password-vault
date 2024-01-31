@@ -25,10 +25,10 @@ const ItemsBar = () => {
                 </h2>
                 <div
                     id="collapseTwo"
-                    className="accordion-collapse collapse show mt-3"
+                    className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                        className="accordion-body p-0 mt-3"
                         style={{ marginRight: 80 }}
                     >
                         <BsBricks style={{ marginRight: 8 }} />
@@ -90,10 +90,10 @@ const ItemsBar = () => {
                 </div>
                 <div
                     id="collapseTwo"
-                    className="accordion-collapse collapse show mb-3"
+                    className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                        className="accordion-body p-0 mb-3"
                         style={{ marginRight: '4em' }}
                     >
                         <BsSuitcaseLg style={{ marginRight: 8 }} />

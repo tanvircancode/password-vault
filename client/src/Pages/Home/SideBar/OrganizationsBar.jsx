@@ -2,13 +2,16 @@ import {
     BsFillPeopleFill,
     BsFillPersonFill,
     BsPlusCircle,
+    BsGlobe,
 } from "react-icons/bs";
 import "../home.scss";
 import { useState } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
+import { useSelector } from "react-redux";
 
 const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
     const [openAddModal, setOpenAddModal] = useState(false);
+    const organizations = useSelector((state) => state.organizations);
 
     const handleSelectMenu = (orgId, type) => {
         setSelectMenu({
@@ -34,10 +37,10 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                 </h2>
                 <div
                     id="collapseOne"
-                    className="accordion-collapse collapse show mt-3"
+                    className="accordion-collapse collapse show"
                 >
                     <div
-                        className={`accordion-body p-0 ${
+                        className={`accordion-body p-0 mt-3 ${
                             selectMenu.menuType === "orgs" ? "active-menu" : ""
                         }`}
                         onClick={() => handleSelectMenu(0, "orgs")}
@@ -67,19 +70,37 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                 </div>
                 <div
                     id="collapseOne"
-                    className="accordion-collapse collapse show mb-3"
-                    onClick={() => setOpenAddModal(true)}
+                    className="accordion-collapse collapse show"                    
                 >
-                    <div
-                        className="accordion-body p-0"
-                        style={{ marginRight: 22 }}
-                        
-                    >
-                        <BsPlusCircle style={{ marginRight: 8 }} />
-                        Add Organization
+                    {organizations.length > 0 && (
+                        <div
+                            className="accordion-body p-0 mt-2 custom-accordion-body"
+                            style={{ marginRight: 22 }}
+                        >
+                            <ul style={{ listStyleType: "none" , textAlign:'start', marginRight:'67px' }}>
+                                {organizations.map((organization) => (
+                                    <li
+                                        key={organization.id}
+                                        style={{ marginBottom: 5 , width:'112px' }}
+                                    >
+                                        <BsGlobe style={{ marginRight: 8 }} />
+                                        {organization.orgname}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    <div onClick={() => setOpenAddModal(true)}>
+                        <div
+                            className="accordion-body p-0 mb-3"
+                            style={{ marginRight: 22 }}
+                        >
+                            <BsPlusCircle style={{ marginRight: 8 }} />
+                            Add Organization
+                        </div>
                     </div>
                 </div>
-                <AddOrgModal  
+                <AddOrgModal
                     openAddModal={openAddModal}
                     setOpenAddModal={setOpenAddModal}
                 />
