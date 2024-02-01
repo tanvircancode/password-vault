@@ -80,7 +80,7 @@ const FoldersBar = () => {
                                 {folders.map((folder) => (
                                     <li key={folder.id} style={{ marginBottom: 5 , width:'112px' }}>
                                         <BsFolder style={{ marginRight: 8 }} />
-                                        {folder.foldername}
+                                        {folder.foldername.split(" ")[0]}
                                     </li>
                                 ))}
                             </ul>

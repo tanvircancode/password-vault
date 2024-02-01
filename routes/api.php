@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function()  {
 
   // item apis
 Route::post('/item',[ItemsController::class, 'store']);  
+Route::get('/items/{id}',[ItemsController::class, 'index']);  
+
 
 // folder apis
 Route::post('/folder',[FoldersController::class, 'store']);  
@@ -35,7 +37,7 @@ Route::post('/folder',[FoldersController::class, 'store']);
 // orgs apis
 Route::post('/organization',[OrganizationsController::class, 'store']);  
 
-Route::post('/logout',[UsersController::class, 'logout']);
+Route::get('/logout',[UsersController::class, 'logout']);
 
 });
 

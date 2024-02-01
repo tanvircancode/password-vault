@@ -10,6 +10,7 @@ import AddLoginModal from "./AddLoginModal";
 import AddCardModal from "./AddCardModal";
 import AddIdentityModal from "./AddIdentityModal";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
@@ -21,7 +22,10 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     const userId = useSelector((state) => state.user.id);
     const types = Types;
-    // console.log(userId);
+    const token = useSelector((state) => state.token);
+    const folders = useSelector((state) => state.folders);
+    const organizations = useSelector((state) => state.organizations);
+    const userData = useSelector((state) => state.user);
 
     const fieldValues = {
         selectItemType: 1,
@@ -65,21 +69,20 @@ function AddItemModal({ openPopup, setOpenPopup }) {
         formData.append("folder_id", stateValues.folderId);
         formData.append("notes", stateValues.note);
         formData.append("organization_id", stateValues.orgId);
-        formData.append("favorite", stateValues.favorite);
+        formData.append("favorite", stateValues.favorite ? 1 : 0);
 
         if (stateValues.selectItemType === 1) {
             formData.append("username", stateValues.userName);
             formData.append("password", stateValues.password);
             formData.append("url", stateValues.loginUrl);
-        }else if(stateValues.selectItemType === 2) {
+        } else if (stateValues.selectItemType === 2) {
             formData.append("cardholder_name", stateValues.cardHolderName);
             formData.append("brand", stateValues.brand);
             formData.append("number", stateValues.cardNumber);
             formData.append("exp_month", stateValues.expMonth);
             formData.append("exp_year", stateValues.expYear);
             formData.append("security_code", stateValues.securityCode);
-        }
-        else if(stateValues.selectItemType === 3) {  
+        } else if (stateValues.selectItemType === 3) {
             formData.append("title", stateValues.title);
             formData.append("email", stateValues.brand);
             formData.append("first_name", stateValues.cardNumber);
@@ -91,31 +94,33 @@ function AddItemModal({ openPopup, setOpenPopup }) {
             formData.append("address", stateValues.securityCode);
         }
         await axios
-        .post(`${BASE_URL}/api/item`, formData)
-        .then((res) => {
-            console.log(res.data);
-            console.log(formData);
+            .post(`${BASE_URL}/api/item`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                console.log(formData);
 
-            // if(res.data.status){
-            //     toast.success("Registration Successful")
-            //     navigate("/login")
-            // }
-            // else  {
-            //     toast.error("Server is not responding");
-            // }
-        })
-        .catch((error) => {
-            console.log(error);
-            console.log(formData);
+                if (res.data.status) {
+                    toast.success("Item Added Successful");
+                } else {
+                    toast.error("Server is not responding");
+                }
+            })
+            .catch((error) => {
+                
 
-            // if(error.response && error.response.status === 401) {
-            //     toast.error(error.response.data.message)
-            // }else{
-            //     toast.error("Server is not responding");
-            // }
-        });
+                if(error.response && error.response.status === 401) {
+                    toast.error(error.response.data.message)
+                }else{
+                    toast.error("Server is not responding");
+                }
+            });
 
-
+        setStateValues({ ...fieldValues });
+        setOpenPopup(false);
     };
 
     return (
@@ -195,9 +200,15 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                         })
                                     }
                                 >
-                                    <option value="1">--Select--</option>
-                                    <option value="2">change</option>
-
+                                    <option value={null}>--Select--</option>
+                                    {folders.map((folder) => (
+                                        <option
+                                            key={folder.id}
+                                            value={folder.id}
+                                        >
+                                            {folder.foldername.split(" ")[0]}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -257,9 +268,13 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                         })
                                     }
                                 >
-                                    {types.map((type, index) => (
-                                        <option key={index} value={type.id}>
-                                            {type.name}
+                                    <option value="">{userData.name}</option>
+                                    {organizations.map((organization) => (
+                                        <option
+                                            key={organization.id}
+                                            value={organization.id}
+                                        >
+                                            {organization.orgname.split(" ")[0]}
                                         </option>
                                     ))}
                                 </select>

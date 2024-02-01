@@ -21,21 +21,23 @@ const Header = () => {
 
     const handleLogout = async () => {
         await axios
-            .post(`${BASE_URL}/api/logout`)
+            .get(`${BASE_URL}/api/logout`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
             .then((res) => {
-                console.log(res);
+                // console.log(res);
                 if (res.data.status) {
+                    localStorage.removeItem("token");
                     toast.success(res.data.message);
                     dispatch(setLogout());
-                    localStorage.removeItem(token);
-
-                    navigate('/login')
+                    navigate("/login");
                 }
             })
             .catch((error) => {
-                console.log(error);
+                toast.success("Server is not responding");
             });
-        
     };
 
     useEffect(() => {
@@ -104,7 +106,9 @@ const Header = () => {
                                 padding: 0,
                             }}
                         >
-                            {userData !== null && <span> Hi,{loggedUserName}</span>}
+                            {userData !== null && (
+                                <span> Hi,{loggedUserName}</span>
+                            )}
                         </button>
                         <ul className="dropdown-menu">
                             {/* <li>Logged in as {userData.firstName}</li> */}

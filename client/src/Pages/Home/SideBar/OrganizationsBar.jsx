@@ -5,20 +5,21 @@ import {
     BsGlobe,
 } from "react-icons/bs";
 import "../home.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectMenu } from "../../../store";
 
-const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
+const OrganizationsBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
     const organizations = useSelector((state) => state.organizations);
+    const selectMenu = useSelector((state) => state.selectMenu);
 
-    const handleSelectMenu = (orgId, type) => {
-        setSelectMenu({
-            menuType: type,
-            typeValue: orgId,
-        });
-    };
+    const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     console.log(selectMenu);
+    // }, [selectMenu]);
 
     return (
         <div className="accordion">
@@ -43,7 +44,14 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                         className={`accordion-body p-0 mt-3 ${
                             selectMenu.menuType === "orgs" ? "active-menu" : ""
                         }`}
-                        onClick={() => handleSelectMenu(0, "orgs")}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    typeValue: 0,
+                                    menuType: "orgs",
+                                })
+                            )
+                        }
                         style={{ marginRight: 80 }}
                     >
                         <BsFillPeopleFill style={{ marginRight: 8 }} />
@@ -60,7 +68,11 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                         className={`accordion-body p-0 ${
                             selectMenu.menuType === "me" ? "active-menu" : ""
                         }`}
-                        onClick={() => handleSelectMenu(0, "me")}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({ typeValue: 0, menuType: "me" })
+                            )
+                        }
                         style={{ marginRight: 80 }}
                     >
                         <BsFillPersonFill style={{ marginRight: 8 }} />
@@ -70,21 +82,44 @@ const OrganizationsBar = ({ selectMenu, setSelectMenu }) => {
                 </div>
                 <div
                     id="collapseOne"
-                    className="accordion-collapse collapse show"                    
+                    className="accordion-collapse collapse show"
                 >
                     {organizations.length > 0 && (
                         <div
                             className="accordion-body p-0 mt-2 custom-accordion-body"
                             style={{ marginRight: 22 }}
                         >
-                            <ul style={{ listStyleType: "none" , textAlign:'start', marginRight:'67px' }}>
+                            <ul
+                                style={{
+                                    listStyleType: "none",
+                                    textAlign: "start",
+                                    marginRight: "67px",
+                                }}
+                            >
                                 {organizations.map((organization) => (
                                     <li
                                         key={organization.id}
-                                        style={{ marginBottom: 5 , width:'112px' }}
+                                        className={`${
+                                            selectMenu.typeValue ===
+                                            organization.id
+                                                ? "active-menu"
+                                                : ""
+                                        }`}
+                                        style={{
+                                            marginBottom: 5,
+                                            width: "112px",
+                                        }}
+                                        onClick={() =>
+                                            dispatch(
+                                                setSelectMenu({
+                                                    typeValue: organization.id,
+                                                    menuType: "org",
+                                                })
+                                            )
+                                        }
                                     >
                                         <BsGlobe style={{ marginRight: 8 }} />
-                                        {organization.orgname}
+                                        {organization.orgname.split(" ")[0]}
                                     </li>
                                 ))}
                             </ul>

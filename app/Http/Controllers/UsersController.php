@@ -91,11 +91,10 @@ class UsersController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::logout();
-
-        // $request->session()->invalidate();
-
-        // $request->session()->regenerateToken();
+        Auth::guard('web')->logout();
+        $request->user()->tokens()->delete();
+        // Auth::logout();
+    
         $response = [
             'status' => true,
             'message' => 'Logged out successfully'
@@ -107,7 +106,6 @@ class UsersController extends Controller
 
     public function show($id)
     {
-
         if($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }

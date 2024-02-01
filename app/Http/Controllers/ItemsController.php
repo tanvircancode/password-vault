@@ -5,7 +5,7 @@ use App\Models\Item;
 use App\Models\Login;
 use App\Models\Card;
 use App\Models\Identity;
-
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -39,6 +39,29 @@ class ItemsController extends Controller
             'data' => $item,
         ];
 
+        return response()->json($response,200);
+    }
+
+    public function index($id)
+    {
+        if($id !== Auth::user()->id) {
+            return response()->json(['status' => false], 403);
+        }
+
+        $user = User::with('organizations','folders')->find($id);
+        if(!$user) {
+            $response = [
+                'status' => false,
+                'message' => 'User not found'
+            ]; 
+            return response()->json($response,404);
+        }
+       
+        $response = [
+            'status' => true,
+            'data' => $user
+        ]; 
+        
         return response()->json($response,200);
     }
 }

@@ -4,8 +4,10 @@ const initialState = {
   user:null,
   token:null,
   loading:false,
+  selectMenu:{menuType:'', typeValue:''},
   organizations:[],
   folders:[],
+
 }
 
 export const vaultSlice = createSlice({
@@ -17,7 +19,6 @@ export const vaultSlice = createSlice({
       state.token = action.payload.token;
     },
     setLogout: (state) => {
-      
       state.user = null;
       state.token = null;
     },
@@ -27,9 +28,13 @@ export const vaultSlice = createSlice({
     setOrganizations: (state, action) => {
       state.organizations = action.payload.organizations;
     },
+    setSelectMenu: (state, action) => {
+      state.selectMenu.menuType = action.payload.menuType;
+      state.selectMenu.typeValue = action.payload.typeValue;
+    },
   },
 })
 
-export const { setLogin, setLogout,setFolders ,setOrganizations} = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders ,setOrganizations, setSelectMenu} = vaultSlice.actions;
 
 export default vaultSlice.reducer
