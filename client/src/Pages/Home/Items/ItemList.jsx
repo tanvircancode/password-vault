@@ -5,7 +5,7 @@ import {
     BsTrash3,
 } from "react-icons/bs";
 import "./item.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItemModal from "../../../Modal/ItemModals/AddItemModal";
 import MoveFolderModal from "../../../Modal/FolderModals/MoveFolderModal";
 import MoveOrgModal from "../../../Modal/OrgModals/MoveOrgModal";
@@ -14,53 +14,55 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
 
-
 const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
     const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
     const selectMenu = useSelector((state) => state.selectMenu);
-    
+
     const userId = useSelector((state) => state.user.id);
     const token = useSelector((state) => state.token);
 
+    const [itemsData, setItemsData] = useState("");
+
     const dispatch = useDispatch();
 
-    const getItemsData = async () => {  
+    const getItemsData = async () => {
         await axios
             .get(`${BASE_URL}/api/items/` + userId, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             })
             .then((res) => {
-                // console.log(res);
+                console.log(res);
                 if (res.data.status && res.status === 200) {
-                    dispatch(setFolders({ folders: res.data.data.folders }));
-                    dispatch(
-                        setOrganizations({
-                            organizations: res.data.data.organizations,
-                        })
-                    );
+                    setItemsData(res.data.data.items);
                 }
             })
             .catch((error) => {
-                if (
-                    error.response &&
-                    error.response.status === 404 &&
-                    !error.response.data.status
-                ) {
-                    toast.error(error.response.data.message);
-                } else {
-                    toast.error("Server is not responding");
-                }
+                console.log(error);
+
+                // if (
+                //     error.response &&
+                //     error.response.status === 404 &&
+                //     !error.response.data.status
+                // ) {
+                //     toast.error(error.response.data.message);
+                // } else {
+                //     toast.error("Server is not responding");
+                // }
             });
     };
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
     };
+
+    useEffect(() => {
+        getItemsData();
+    }, []);
 
     return (
         <div className="container text-center">
@@ -84,7 +86,15 @@ const ItemList = () => {
             </div>
 
             <div className="row mt-4 p-2 all-items">
-                <div className="col-2 text-start">All</div>
+                <div className="col-2 text-start d-flex">
+                    <input
+                        className="form-check-input small-checkbox"
+                        type="checkbox"
+                        id="select-all"
+                        // onChange={handleSelectAll}
+                    />
+                     <label className="form-check-label" style={{marginTop:'2px'}} htmlFor="select-all">All</label>
+                </div>
                 <div className="col-5 text-start">Name</div>
                 <div className="col-3 text-start">Owner</div>
                 <div className="col-2 text-start">

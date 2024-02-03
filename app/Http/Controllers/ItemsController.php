@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Login;
+use App\Models\User;
 use App\Models\Card;
 use App\Models\Identity;
+use App\Models\Folder;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
 {
+
     public function store(Request $request)
     {
         $input = $request->only(['user_id', 'type', 'name', 'folder_id', 'notes', 'organization_id', 'favorite']);
@@ -41,27 +45,21 @@ class ItemsController extends Controller
 
         return response()->json($response,200);
     }
-
-    public function index($id)
-    {
+      
+    public function index($id)  
+    {  
         if($id !== Auth::user()->id) {
-            return response()->json(['status' => false], 403);
-        }
-
-        $user = User::with('organizations','folders')->find($id);
-        if(!$user) {
-            $response = [
-                'status' => false,
-                'message' => 'User not found'
-            ]; 
-            return response()->json($response,404);
-        }
+            return response()->json(['status' => false], 403);  
+        }         
+        
+        $items = User::with(['items.organization','items.folder','items.login','items.identity','items.card'])->find($id);
        
         $response = [
             'status' => true,
-            'data' => $user
+            'data' => $items
         ]; 
-        
+              
         return response()->json($response,200);
+       
     }
 }

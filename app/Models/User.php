@@ -8,6 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+// use App\Models\Item;
+// use App\Models\Folder;
+// use App\Models\Organization;
+
+
 
 class User extends Authenticatable
 {
@@ -65,10 +70,12 @@ class User extends Authenticatable
     public function folders() {
         return $this->hasMany(Folder::class);
     }
+
     public function organizations() {
         return $this->hasMany(Organization::class);
     }
+
     public function items() {
-        return $this->hasMany(Item::class)->withTrashed();
+        return $this->hasMany(Item::class);
     }
 }
