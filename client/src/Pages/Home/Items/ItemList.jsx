@@ -36,7 +36,7 @@ const ItemList = () => {
                 },
             })
             .then((res) => {
-                console.log(res);
+                // console.log(res);
                 if (res.data.status && res.status === 200) {
                     setItemsData(res.data.data.items);
                 }
@@ -63,6 +63,10 @@ const ItemList = () => {
     useEffect(() => {
         getItemsData();
     }, []);
+
+    useEffect(() => {
+        console.log(itemsData);
+    }, [itemsData]);
 
     return (
         <div className="container text-center">
@@ -93,7 +97,13 @@ const ItemList = () => {
                         id="select-all"
                         // onChange={handleSelectAll}
                     />
-                     <label className="form-check-label" style={{marginTop:'2px'}} htmlFor="select-all">All</label>
+                    <label
+                        className="form-check-label"
+                        style={{ marginTop: "2px" }}
+                        htmlFor="select-all"
+                    >
+                        All
+                    </label>
                 </div>
                 <div className="col-5 text-start">Name</div>
                 <div className="col-3 text-start">Owner</div>
@@ -152,17 +162,106 @@ const ItemList = () => {
                     </div>
                 </div>
             </div>
+            {itemsData.length > 0 &&
+                itemsData.map((item, index) => (
+                    <div className="row mt-2" key={index}>
+                        <div className="col">
+                            <div className="d-flex ">
+                                <div className="col-2 ">
+                                    <input
+                                       
+                                        type="checkbox"
+                                        id={`item-${item.id}`}
+                                        checked={item.favorite}
+                                        // onChange={handleSelectAll}
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        style={{ marginTop: "2px" }}
+                                        htmlFor={`item-${item.id}`}
+                                    ></label>
+                                </div>
+                                <div className="col-5 text-start">
+                                    <p>{item.name}</p>
+                                    <span>
+                                        {item.type === 1
+                                            ? "Login item"
+                                            : item.type === 2
+                                            ? "Card item"
+                                            : item.type === 3
+                                            ? "identity item"
+                                            : "Secure item"}
+                                    </span>
+                                </div>
 
-            <div className="row mt-2">
-                <div className="col">
-                    <div className="d-flex flex-row text-left">
-                        <div className="col-2 text-start">Item 1</div>
-                        <div className="col-5 text-start">Item 2</div>
-                        <div className="col-3 text-start">Item 3</div>
-                        <div className="col-2 text-start">Item 4</div>
+                                <div className="col-3 text-start">
+                                    {item.organization
+                                        ? item.organization.orgname || "Me"
+                                        : "Me"}
+                                </div>
+                                <div className="col-2 text-start">
+                                    <div className="dropdown">
+                                        <button
+                                            className="btn btn-secondary bg-transparent"
+                                            style={{ border: "none" }}
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <BsThreeDotsVertical
+                                                style={{ color: "00000" }}
+                                            />
+                                        </button>
+                                        <ul className="dropdown-menu">
+                                            {selectMenu.menuType === "trash" ? (
+                                                <div>
+                                                    <li className="dropdown-item dropdown-list">
+                                                        <BsTrash3
+                                                            style={{
+                                                                marginRight: 5,
+                                                            }}
+                                                        />
+                                                        <span>
+                                                            Restore Item
+                                                        </span>
+                                                    </li>
+                                                    <li className="dropdown-item dropdown-list">
+                                                        <BsTrash3
+                                                            style={{
+                                                                marginRight: 5,
+                                                            }}
+                                                        />
+                                                        <span>
+                                                            Permanently Delete
+                                                        </span>
+                                                    </li>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <li
+                                                        className="dropdown-item dropdown-list"
+                                                        onClick={() =>
+                                                            setOpenMoveFolderModal(
+                                                                true
+                                                            )
+                                                        }
+                                                    >
+                                                        <BsTrash3
+                                                            style={{
+                                                                marginRight: 5,
+                                                            }}
+                                                        />
+                                                        <span> Delete </span>
+                                                    </li>
+                                                </div>
+                                            )}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                ))}
 
             <AddItemModal
                 openPopup={openNewItemModal}

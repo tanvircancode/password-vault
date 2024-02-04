@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import ItemList from "./Items/ItemList";
+import { BsTrash3 } from "react-icons/bs";
 import FoldersBar from "./SideBar/FoldersBar";
 import ItemsBar from "./SideBar/ItemsBar";
 import OrganizationsBar from "./SideBar/OrganizationsBar";
@@ -8,16 +9,13 @@ import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setFolders, setOrganizations } from "../../store";
+import { setSelectMenu } from "../../store";
 
 const Home = () => {
-    // const [selectMenu, setSelectMenu] = useState({
-    //     menuType: "",
-    //     typeValue: "",
-    // });
+   
     const userId = useSelector((state) => state.user.id);
     const token = useSelector((state) => state.token);
     const selectMenu = useSelector((state) => state.selectMenu);
-  
 
     const dispatch = useDispatch();
 
@@ -25,7 +23,7 @@ const Home = () => {
         await axios
             .get(`${BASE_URL}/api/user/` + userId, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             })
             .then((res) => {
@@ -64,15 +62,29 @@ const Home = () => {
                         <div className="card-header text-uppercase">Filter</div>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item mt-3">
-                                <OrganizationsBar
-                                    
-                                />
+                                <OrganizationsBar />
                             </li>
                             <li className="list-group-item mt-3">
                                 <ItemsBar />
                             </li>
                             <li className="list-group-item mt-3">
                                 <FoldersBar />
+                            </li>
+                            <li className="list-group-item d-flex align-items-center justify-content-center"
+                             onClick={() =>
+                                dispatch(
+                                    setSelectMenu({ typeValue: '', menuType: "trash" })
+                                )
+                            }
+                            >
+                                <BsTrash3
+                                    style={{ color: "red", marginRight: 5 }}
+                                />
+                                <span
+                                    style={{ color: "red", fontWeight: "bold" }}
+                                >
+                                    Trash
+                                </span>
                             </li>
                         </ul>
                     </div>
