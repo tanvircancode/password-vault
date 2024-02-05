@@ -7,7 +7,7 @@ const initialState = {
   selectMenu:{menuType:'', typeValue:''},
   organizations:[],
   folders:[],
-
+  reloadPage:false
 }
 
 export const vaultSlice = createSlice({
@@ -32,9 +32,12 @@ export const vaultSlice = createSlice({
       state.selectMenu.menuType = action.payload.menuType;
       state.selectMenu.typeValue = action.payload.typeValue;
     },
+    setReloadPage:(state, action) => {
+      state.reloadPage = action.payload.reloadPage;
+    }
   },
 })
 
-export const { setLogin, setLogout,setFolders ,setOrganizations, setSelectMenu} = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders ,setOrganizations, setSelectMenu, setReloadPage} = vaultSlice.actions;
 
 export default vaultSlice.reducer

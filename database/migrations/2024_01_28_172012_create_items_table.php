@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->boolean('favorite')->default(false);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')
             ->references('id')->on('users')

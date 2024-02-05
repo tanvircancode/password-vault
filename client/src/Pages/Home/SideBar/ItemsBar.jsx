@@ -6,8 +6,15 @@ import {
     BsFileEarmarkPerson,
     BsSuitcaseLg,
 } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectMenu } from "../../../store";
+
 
 const ItemsBar = () => {
+    const selectMenu = useSelector((state) => state.selectMenu);
+
+    const dispatch = useDispatch();
+
     return (
         <div className="accordion">
             <div className="accordion-item">
@@ -28,8 +35,20 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0 mt-3"
                         style={{ marginRight: 80 }}
+                        className={`accordion-body p-0 mt-3 ${
+                            selectMenu.menuType === "items"
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "items",
+                                    typeValue: "",
+                                })
+                            )
+                        }
                     >
                         <BsBricks style={{ marginRight: 8 }} />
                         All Items
@@ -41,7 +60,19 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                         className={`accordion-body p-0 ${
+                            selectMenu.menuType === "favorite"
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "favorite",
+                                    typeValue: "",
+                                })
+                            )
+                        }
                         style={{ marginRight: 80 }}
                     >
                         <BsStar style={{ marginRight: 8 }} />
@@ -54,7 +85,19 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                          className={`accordion-body p-0 ${
+                            selectMenu.typeValue === 1
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "type",
+                                    typeValue: 1,
+                                })
+                            )
+                        }
                         style={{ marginRight:'7em' }}
                     >
                         <BsArrowDownLeftCircle style={{ marginRight: 8 }} />
@@ -67,7 +110,19 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                          className={`accordion-body p-0 ${
+                            selectMenu.typeValue === 2
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "type",
+                                    typeValue: 2,
+                                })
+                            )
+                        }
                         style={{ marginRight: '7em' }}
                     >
                         <BsCardChecklist style={{ marginRight: 8 }} />
@@ -80,7 +135,19 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0"
+                         className={`accordion-body p-0 ${
+                            selectMenu.typeValue === 3
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "type",
+                                    typeValue: 3,
+                                })
+                            )
+                        }
                         style={{ marginRight: '6em' }}
                     >
                         <BsFileEarmarkPerson style={{ marginRight: 8 }} />
@@ -93,7 +160,19 @@ const ItemsBar = () => {
                     className="accordion-collapse collapse show"
                 >
                     <div
-                        className="accordion-body p-0 mb-3"
+                         className={`accordion-body p-0 mb-3 ${
+                            selectMenu.typeValue === 4
+                                ? "active-menu"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            dispatch(
+                                setSelectMenu({
+                                    menuType: "type",
+                                    typeValue: 4,
+                                })
+                            )
+                        }
                         style={{ marginRight: '4em' }}
                     >
                         <BsSuitcaseLg style={{ marginRight: 8 }} />

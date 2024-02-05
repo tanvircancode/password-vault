@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
+import { setReloadPage } from "../../../store";
 
 const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
@@ -23,8 +24,11 @@ const ItemList = () => {
 
     const userId = useSelector((state) => state.user.id);
     const token = useSelector((state) => state.token);
+    const reloadPage = useSelector((state) => state.reloadPage);
 
     const [itemsData, setItemsData] = useState("");
+    const [selectedItems, setSelectedItems] = useState("");
+    const [checkAll, setCheckAll] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -54,6 +58,63 @@ const ItemList = () => {
                 //     toast.error("Server is not responding");
                 // }
             });
+        dispatch(setReloadPage({ reloadPage: false }));
+    };
+
+    const handleSelectAll = (event) => {
+        if (event.target.checked) {
+            const allItemIds = itemsData.map((item) => item.id);
+            setCheckAll(true);
+            setSelectedItems(allItemIds);
+        } else {
+            setSelectedItems([]);
+        }
+    };
+
+    const handleCheckboxChange = (itemId) => {
+        if (selectedItems.includes(itemId)) {
+            setSelectedItems(selectedItems.filter((id) => id !== itemId));
+        } else {
+            setSelectedItems([...selectedItems, itemId]);
+        }
+    };
+
+    const filteredItems = () => {
+        if (itemsData.length > 0) {
+            if (
+                selectMenu.menuType === "orgs" ||
+                selectMenu.menuType === "items"
+            ) {
+                return itemsData.filter((item) => !item.deleted_at);
+            } else if (selectMenu.menuType === "me") {
+                return itemsData.filter(
+                    (item) => !item.deleted_at && !item.organization
+                );
+            } else if (selectMenu.menuType === "org") {
+                return itemsData.filter(
+                    (item) =>
+                        !item.deleted_at &&
+                        item.organization_id === selectMenu.typeValue
+                );
+            } else if (selectMenu.menuType === "favorite") {
+                return itemsData.filter(
+                    (item) => !item.deleted_at && item.favorite
+                );
+            } else if (selectMenu.menuType === "type") {
+                return itemsData.filter(
+                    (item) =>
+                        !item.deleted_at && item.type === selectMenu.typeValue
+                );
+            } else if (selectMenu.menuType === "folder") {
+                return itemsData.filter(
+                    (item) =>
+                        !item.deleted_at &&
+                        item.folder_id === selectMenu.typeValue
+                );
+            } else if (selectMenu.menuType === "trash") {
+                return itemsData.filter((item) => item.deleted_at);
+            }
+        }
     };
 
     const handleNewItemClick = () => {
@@ -62,10 +123,11 @@ const ItemList = () => {
 
     useEffect(() => {
         getItemsData();
-    }, []);
+    }, [reloadPage]);
 
     useEffect(() => {
         console.log(itemsData);
+        console.log(filteredItems());
     }, [itemsData]);
 
     return (
@@ -77,6 +139,14 @@ const ItemList = () => {
                     {selectMenu.menuType === "org" && (
                         <h2>Organization Items</h2>
                     )}
+                    {selectMenu.menuType === "items" && <h2>All Items</h2>}
+                    {selectMenu.menuType === "type" && <h2>Category Items</h2>}
+                    {selectMenu.menuType === "folder" && <h2>Folder Items</h2>}
+                    {selectMenu.menuType === "favorite" && (
+                        <h2>Favorite Items</h2>
+                    )}
+
+                    {selectMenu.menuType === "trash" && <h2>Trash Items</h2>}
                 </div>
                 <div className="col text-end">
                     <button
@@ -89,16 +159,20 @@ const ItemList = () => {
                 </div>
             </div>
 
-            <div className="row mt-4 p-2 all-items">
+            <div className="row mt-4 p-2 d-flex align-items-center all-items">
                 <div className="col-2 text-start d-flex">
                     <input
                         className="form-check-input small-checkbox"
                         type="checkbox"
                         id="select-all"
-                        // onChange={handleSelectAll}
+                        checked={
+                            checkAll &&
+                            selectedItems.length === itemsData.length
+                        }
+                        onChange={handleSelectAll}
                     />
                     <label
-                        className="form-check-label"
+                        className="form-check-label mb-0"
                         style={{ marginTop: "2px" }}
                         htmlFor="select-all"
                     >
@@ -163,17 +237,20 @@ const ItemList = () => {
                 </div>
             </div>
             {itemsData.length > 0 &&
-                itemsData.map((item, index) => (
+                filteredItems().map((item, index) => (
                     <div className="row mt-2" key={index}>
                         <div className="col">
                             <div className="d-flex ">
                                 <div className="col-2 ">
                                     <input
-                                       
                                         type="checkbox"
                                         id={`item-${item.id}`}
-                                        checked={item.favorite}
-                                        // onChange={handleSelectAll}
+                                        checked={selectedItems.includes(
+                                            item.id
+                                        )}
+                                        onChange={() =>
+                                            handleCheckboxChange(item.id)
+                                        }
                                     />
                                     <label
                                         className="form-check-label"
@@ -182,7 +259,7 @@ const ItemList = () => {
                                     ></label>
                                 </div>
                                 <div className="col-5 text-start">
-                                    <p>{item.name}</p>
+                                    <p className="m-0">{item.name}</p>
                                     <span>
                                         {item.type === 1
                                             ? "Login item"

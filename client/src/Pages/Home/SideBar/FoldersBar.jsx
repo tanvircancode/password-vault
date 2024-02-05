@@ -5,47 +5,15 @@ import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations } from "../../../store";
+import { setFolders, setOrganizations, setSelectMenu } from "../../../store";
 import "../home.scss";
 
 const FoldersBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
-    const userId = useSelector((state) => state.user.id);
-    const token = useSelector((state) => state.token);
     const folders = useSelector((state) => state.folders);
+    const selectMenu = useSelector((state) => state.selectMenu);
 
-    // const dispatch = useDispatch();
-
-    // const getFolders = async () => {
-    //     await axios
-    //         .get(`${BASE_URL}/api/user/` + userId, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             // console.log(res);
-    //             if (res.data.status && res.status === 200) {
-    //                 dispatch(setFolders({ folders: res.data.data.folders }));
-    //                 dispatch(
-    //                     setOrganizations({
-    //                         organizations: res.data.data.organizations,
-    //                     })
-    //                 );
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (
-    //                 error.response &&
-    //                 error.response.status === 404 &&
-    //                 !error.response.data.status
-    //             ) {
-    //                 toast.error(error.response.data.message);
-    //             } else {
-    //                 toast.error("Server is not responding");
-    //             }
-    //         });
-    // };
+    const dispatch = useDispatch();
 
     // useEffect(() => {
     //     getFolders();
@@ -69,16 +37,40 @@ const FoldersBar = () => {
                 <div
                     id="collapseThree"
                     className="accordion-collapse collapse show "
-                    
                 >
-                    {folders.length > 0 && (      
+                    {folders.length > 0 && (
                         <div
                             className="accordion-body p-0 mt-3 custom-accordion-body"
-                            style={{ marginRight:22 }}
+                            style={{ marginRight: 22 }}
                         >
-                            <ul style={{ listStyleType: "none",textAlign:'start', marginRight:'67px'}}>
+                            <ul
+                                style={{
+                                    listStyleType: "none",
+                                    textAlign: "start",
+                                    marginRight: "46px",
+                                }}
+                            >
                                 {folders.map((folder) => (
-                                    <li key={folder.id} style={{ marginBottom: 5 , width:'112px' }}>
+                                    <li
+                                        key={folder.id}
+                                        onClick={() =>
+                                            dispatch(
+                                                setSelectMenu({
+                                                    menuType: "folder",
+                                                    typeValue: folder.id,
+                                                })
+                                            )
+                                        }
+                                        className={`${
+                                            selectMenu.typeValue === folder.id
+                                                ? "active-menu"
+                                                : ""
+                                        }`}
+                                        style={{
+                                            marginBottom: 5,
+                                            width: "128px",
+                                        }}
+                                    >
                                         <BsFolder style={{ marginRight: 8 }} />
                                         {folder.foldername.split(" ")[0]}
                                     </li>

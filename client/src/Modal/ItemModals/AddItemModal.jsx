@@ -12,6 +12,7 @@ import AddIdentityModal from "./AddIdentityModal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
+import { setReloadPage } from "../../store";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -26,6 +27,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const folders = useSelector((state) => state.folders);
     const organizations = useSelector((state) => state.organizations);
     const userData = useSelector((state) => state.user);
+
+    const dispatch = useDispatch();
 
     const fieldValues = {
         selectItemType: 1,
@@ -121,6 +124,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
         setStateValues({ ...fieldValues });
         setOpenPopup(false);
+        dispatch(setReloadPage({reloadPage : true}));
     };
 
     return (

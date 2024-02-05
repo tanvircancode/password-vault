@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id');
-            $table->string('orgname');
-            $table->string('email');
+            $table->uuid('user_id')->nullable(false);
+            $table->string('orgname')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')
