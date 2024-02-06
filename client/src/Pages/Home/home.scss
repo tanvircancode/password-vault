@@ -15,13 +15,17 @@
     }
 }
 .active-menu{
-    color: #455fe1;
+    color: rgb(54 54 63 / 84%);
+    font-weight: bold;
 }
-.custom-accordion-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+// .custom-accordion-body {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: column;
+// }
+.active-menu {
+    color: #8FD1F9;
 }
 
 

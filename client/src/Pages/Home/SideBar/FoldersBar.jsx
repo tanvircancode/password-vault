@@ -22,6 +22,7 @@ const FoldersBar = () => {
     return (
         <div className="accordion">
             <div className="accordion-item">
+            <div className="d-flex flex-column">
                 <h2 className="accordion-header">
                     <button
                         className="accordion-button custom-accordion-button"
@@ -30,6 +31,7 @@ const FoldersBar = () => {
                         data-bs-target="#collapseThree"
                         aria-expanded="true"
                         aria-controls="collapseThree"
+                        style={{backgroundColor:'#4bb4f69e'}}
                     >
                         Folders
                     </button>
@@ -37,17 +39,18 @@ const FoldersBar = () => {
                 <div
                     id="collapseThree"
                     className="accordion-collapse collapse show "
+                    style={{ marginLeft: 20 }}
                 >
                     {folders.length > 0 && (
                         <div
-                            className="accordion-body p-0 mt-3 custom-accordion-body"
-                            style={{ marginRight: 22 }}
+                            className="accordion-body p-0 mt-3"
+                            // style={{ marginRight: 22 }}
                         >
                             <ul
                                 style={{
                                     listStyleType: "none",
                                     textAlign: "start",
-                                    marginRight: "46px",
+                                    padding: "0px",
                                 }}
                             >
                                 {folders.map((folder) => (
@@ -68,7 +71,7 @@ const FoldersBar = () => {
                                         }`}
                                         style={{
                                             marginBottom: 5,
-                                            width: "128px",
+                                            // width: "136px",
                                         }}
                                     >
                                         <BsFolder style={{ marginRight: 8 }} />
@@ -87,6 +90,7 @@ const FoldersBar = () => {
                         <BsPlusCircle style={{ marginRight: 8 }} />
                         Add Folder
                     </div>
+                </div>
                 </div>
 
                 <AddFolderModal

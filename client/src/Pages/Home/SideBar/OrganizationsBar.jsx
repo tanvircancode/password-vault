@@ -24,7 +24,10 @@ const OrganizationsBar = () => {
     return (
         <div className="accordion">
             <div className="accordion-item">
-                <h2 className="accordion-header">
+            <div className="d-flex flex-column">
+                <h2 className="accordion-header"
+                        style={{ backgroundColor: "#4bb4f69e" }}
+                >
                     <button
                         className="accordion-button custom-accordion-button"
                         type="button"
@@ -36,102 +39,117 @@ const OrganizationsBar = () => {
                         Vaults
                     </button>
                 </h2>
-                <div
-                    id="collapseOne"
-                    className="accordion-collapse collapse show"
-                >
+                
                     <div
-                        className={`accordion-body p-0 mt-3 ${
-                            selectMenu.menuType === "orgs" ? "active-menu" : ""
-                        }`}
-                        onClick={() =>
-                            dispatch(
-                                setSelectMenu({
-                                    typeValue: 0,
-                                    menuType: "orgs",
-                                })
-                            )
-                        }
-                        style={{ marginRight: 80 }}
+                        id="collapseOne"
+                        className="accordion-collapse collapse show"
+                        style={{ marginLeft: 20 }}
                     >
-                        <BsFillPeopleFill style={{ marginRight: 8 }} />
-                        All Vaults
-                    </div>
-                    <hr className="hr-line" />
-                </div>
-
-                <div
-                    id="collapseOne"
-                    className="accordion-collapse collapse show"
-                >
-                    <div
-                        className={`accordion-body p-0 ${
-                            selectMenu.menuType === "me" ? "active-menu" : ""
-                        }`}
-                        onClick={() =>
-                            dispatch(
-                                setSelectMenu({ typeValue: 0, menuType: "me" })
-                            )
-                        }
-                        style={{ marginRight: 80 }}
-                    >
-                        <BsFillPersonFill style={{ marginRight: 8 }} />
-                        My Vault
-                    </div>
-                    <hr className="hr-line" />
-                </div>
-                <div
-                    id="collapseOne"
-                    className="accordion-collapse collapse show"
-                >
-                    {organizations.length > 0 && (
                         <div
-                            className="accordion-body p-0 mt-2 custom-accordion-body"
-                            style={{ marginRight: 22 }}
+                            className={`accordion-body p-0 mt-3 ${
+                                selectMenu.menuType === "orgs"
+                                    ? "active-menu"
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                dispatch(
+                                    setSelectMenu({
+                                        typeValue: 0,
+                                        menuType: "orgs",
+                                    })
+                                )
+                            }
+                           
                         >
-                            <ul
-                                style={{
-                                    listStyleType: "none",
-                                    textAlign: "start",
-                                    marginRight: "67px",
-                                }}
-                            >
-                                {organizations.map((organization) => (
-                                    <li
-                                        key={organization.id}
-                                        className={`${
-                                            selectMenu.typeValue ===
-                                            organization.id
-                                                ? "active-menu"
-                                                : ""
-                                        }`}
-                                        style={{
-                                            marginBottom: 5,
-                                            width: "112px",
-                                        }}
-                                        onClick={() =>
-                                            dispatch(
-                                                setSelectMenu({
-                                                    typeValue: organization.id,
-                                                    menuType: "org",
-                                                })
-                                            )
-                                        }
-                                    >
-                                        <BsGlobe style={{ marginRight: 8 }} />
-                                        {organization.orgname.split(" ")[0]}
-                                    </li>
-                                ))}
-                            </ul>
+                            <BsFillPeopleFill style={{ marginRight: 8 }} />
+                            All Vaults
                         </div>
-                    )}
-                    <div onClick={() => setOpenAddModal(true)}>
-                        <div
-                            className="accordion-body p-0 mb-3"
-                            style={{ marginRight: 22 }}
+                        <hr className="hr-line" />
+                    </div>
+
+                    <div
+                        id="collapseOne"
+                        className="accordion-collapse collapse show"
+                        style={{ marginLeft: 20 }}  
+                    >  
+                        <div   
+                            className={`accordion-body p-0 ${
+                                selectMenu.menuType === "me"
+                                    ? "active-menu"
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                dispatch(
+                                    setSelectMenu({
+                                        typeValue: 0,
+                                        menuType: "me",
+                                    })
+                                )
+                            }
+                           
                         >
-                            <BsPlusCircle style={{ marginRight: 8 }} />
-                            Add Organization
+                            <BsFillPersonFill style={{ marginRight: 8 }} />
+                            My Vault
+                        </div>
+                        <hr className="hr-line" />
+                    </div>
+                    <div
+                        id="collapseOne"
+                        className="accordion-collapse collapse show"
+                        style={{ marginLeft: 20 }}
+                    >
+                        {organizations.length > 0 && (
+                            <div
+                                className="accordion-body p-0 mt-2"
+                                // style={{ marginRight: 22 }}
+                            >
+                                <ul
+                                    style={{
+                                        listStyleType: "none",
+                                        textAlign: "start",
+                                        padding: "0px",
+                                    }}
+                                >
+                                    {organizations.map((organization) => (
+                                        <li
+                                            key={organization.id}
+                                            className={`${
+                                                selectMenu.typeValue ===
+                                                organization.id
+                                                    ? "active-menu"
+                                                    : ""
+                                            }`}
+                                            style={{
+                                                marginBottom: 5,
+                                                // width: "112px",
+                                            }}
+                                            onClick={() =>
+                                                dispatch(
+                                                    setSelectMenu({
+                                                        typeValue:
+                                                            organization.id,
+                                                        menuType: "org",
+                                                    })
+                                                )
+                                            }
+                                        >
+                                            <BsGlobe
+                                                style={{ marginRight: 8 }}
+                                            />
+                                            {organization.orgname.split(" ")[0]}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        <div onClick={() => setOpenAddModal(true)}>
+                            <div
+                                className="accordion-body p-0 mb-3"
+                                style={{ marginRight: 22 }}
+                            >
+                                <BsPlusCircle style={{ marginRight: 8 }} />
+                                Add Organization
+                            </div>
                         </div>
                     </div>
                 </div>

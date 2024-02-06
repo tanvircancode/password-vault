@@ -32,6 +32,17 @@ const ItemList = () => {
 
     const dispatch = useDispatch();
 
+    const headings = {
+        orgs: "All Items",
+        me: "My Items",
+        org: "Organization Items",
+        items: "All Items",
+        type: "Category Items",
+        folder: "Folder Items",
+        favorite: "Favorite Items",
+        trash: "Trash Items"
+      };
+
     const getItemsData = async () => {
         await axios
             .get(`${BASE_URL}/api/items/` + userId, {
@@ -134,19 +145,7 @@ const ItemList = () => {
         <div className="container text-center">
             <div className="row">
                 <div className="col text-start" style={{ fontSize: 25 }}>
-                    {selectMenu.menuType === "orgs" && <h2>All Items</h2>}
-                    {selectMenu.menuType === "me" && <h2>My Items</h2>}
-                    {selectMenu.menuType === "org" && (
-                        <h2>Organization Items</h2>
-                    )}
-                    {selectMenu.menuType === "items" && <h2>All Items</h2>}
-                    {selectMenu.menuType === "type" && <h2>Category Items</h2>}
-                    {selectMenu.menuType === "folder" && <h2>Folder Items</h2>}
-                    {selectMenu.menuType === "favorite" && (
-                        <h2>Favorite Items</h2>
-                    )}
-
-                    {selectMenu.menuType === "trash" && <h2>Trash Items</h2>}
+                    {headings[selectMenu.menuType]}
                 </div>
                 <div className="col text-end">
                     <button
@@ -170,18 +169,19 @@ const ItemList = () => {
                             selectedItems.length === itemsData.length
                         }
                         onChange={handleSelectAll}
+                        style={{ margin: "3px",transform: "scale(0.6)"}}
                     />
                     <label
                         className="form-check-label mb-0"
-                        style={{ marginTop: "2px" }}
+                        style={{ marginTop: "2px", fontSize: 18 }}
                         htmlFor="select-all"
                     >
                         All
                     </label>
                 </div>
-                <div className="col-5 text-start">Name</div>
-                <div className="col-3 text-start">Owner</div>
-                <div className="col-2 text-start">
+                <div className="col-5 text-start"  style={{  fontSize: 18 }}>Name</div>
+                <div className="col-3 text-start"  style={{  fontSize: 18 }}>Owner</div>
+                <div className="col-2 text-start"  >
                     <div className="dropdown">
                         <button
                             className="btn btn-secondary bg-transparent"
@@ -237,7 +237,7 @@ const ItemList = () => {
                 </div>
             </div>
             {itemsData.length > 0 &&
-                filteredItems().map((item, index) => (
+                itemsData.map((item, index) => (
                     <div className="row mt-2" key={index}>
                         <div className="col">
                             <div className="d-flex ">
