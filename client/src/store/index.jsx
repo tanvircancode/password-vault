@@ -7,7 +7,8 @@ const initialState = {
   selectMenu:{menuType:'', typeValue:''},
   organizations:[],
   folders:[],
-  reloadPage:false
+  reloadPage:false,
+  makeBlur: false
 }
 
 export const vaultSlice = createSlice({
@@ -34,10 +35,13 @@ export const vaultSlice = createSlice({
     },
     setReloadPage:(state, action) => {
       state.reloadPage = action.payload.reloadPage;
-    }
+    },
+    setMakeBlur: (state, action) => {
+      state.makeBlur = action.payload.makeBlur;
+    },
   },
 })
 
-export const { setLogin, setLogout,setFolders ,setOrganizations, setSelectMenu, setReloadPage} = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders ,setOrganizations, setSelectMenu, setReloadPage,setMakeBlur} = vaultSlice.actions;
 
 export default vaultSlice.reducer

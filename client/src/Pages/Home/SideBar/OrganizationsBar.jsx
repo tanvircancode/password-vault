@@ -24,22 +24,24 @@ const OrganizationsBar = () => {
     return (
         <div className="accordion">
             <div className="accordion-item">
-            <div className="d-flex flex-column">
-                <h2 className="accordion-header"
-                        style={{ backgroundColor: "#4bb4f69e" }}
-                >
-                    <button
-                        className="accordion-button custom-accordion-button"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
+                <div className="d-flex flex-column">
+                    <h2
+                        className="accordion-header"
+                        
                     >
-                        Vaults
-                    </button>
-                </h2>
-                
+                        <button
+                            className="accordion-button custom-accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne"
+                            style={{ backgroundColor: "#4bb4f69e" }}
+                        >
+                            Vaults
+                        </button>
+                    </h2>
+
                     <div
                         id="collapseOne"
                         className="accordion-collapse collapse show"
@@ -59,7 +61,6 @@ const OrganizationsBar = () => {
                                     })
                                 )
                             }
-                           
                         >
                             <BsFillPeopleFill style={{ marginRight: 8 }} />
                             All Vaults
@@ -70,9 +71,9 @@ const OrganizationsBar = () => {
                     <div
                         id="collapseOne"
                         className="accordion-collapse collapse show"
-                        style={{ marginLeft: 20 }}  
-                    >  
-                        <div   
+                        style={{ marginLeft: 20 }}
+                    >
+                        <div
                             className={`accordion-body p-0 ${
                                 selectMenu.menuType === "me"
                                     ? "active-menu"
@@ -86,7 +87,6 @@ const OrganizationsBar = () => {
                                     })
                                 )
                             }
-                           
                         >
                             <BsFillPersonFill style={{ marginRight: 8 }} />
                             My Vault
@@ -99,10 +99,7 @@ const OrganizationsBar = () => {
                         style={{ marginLeft: 20 }}
                     >
                         {organizations.length > 0 && (
-                            <div
-                                className="accordion-body p-0 mt-2"
-                                // style={{ marginRight: 22 }}
-                            >
+                            <div className="accordion-body p-0 ">
                                 <ul
                                     style={{
                                         listStyleType: "none",
@@ -144,7 +141,7 @@ const OrganizationsBar = () => {
                         )}
                         <div onClick={() => setOpenAddModal(true)}>
                             <div
-                                className="accordion-body p-0 mb-3"
+                                className="accordion-body p-0 mb-3 add-org-text"
                                 style={{ marginRight: 22 }}
                             >
                                 <BsPlusCircle style={{ marginRight: 8 }} />

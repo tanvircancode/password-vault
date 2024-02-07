@@ -11,7 +11,6 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "../../store";
 
 function Login() {
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -20,51 +19,53 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-         if (email.length === 0) {
+        if (email.length === 0) {
             toast.error("Email is Required");
-        } else if (password.length === 0 || password.length>255) {
+        } else if (password.length === 0 || password.length > 255) {
             toast.error("Invalid Input For Password");
         } else {
             await axios
-            .post(
-                `${BASE_URL}/api/login`,
-                {
-                    email,
-                    password,
-                },
-                {
-                    headers: {
-                        "Content-type": "application/json",
+                .post(
+                    `${BASE_URL}/api/login`,
+                    {
+                        email,
+                        password,
                     },
-                }
-            )
-            .then((res) => {
-            //    console.log(res)
-                if(res.data.status && res.data.token){
-                    toast.success("Logged in Successfully")
-                    dispatch(
-                        setLogin({
-                            user: res.data.user,
-                            token: res.data.token,
-                        })
-                    );
-                    localStorage.setItem('token',res.data.token)
-                    navigate("/home");
-                }
-                else  {
-                    toast.error("Server is not responding");
-                }
-            })
-            .catch((error) => {
-                // console.log(error)
-                if(error.response && error.response.status === 404 && !error.response.data.status) {
-                    toast.error(error.response.data.message)
-                }else{
-                    toast.error("Server is not responding");
-                }
-            });
+                    {
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                    }
+                )
+                .then((res) => {
+                    //    console.log(res)
+                    if (res.data.status && res.data.token) {
+                        toast.success("Logged in Successfully");
+                        dispatch(
+                            setLogin({
+                                user: res.data.user,
+                                token: res.data.token,
+                            })
+                        );
+                        localStorage.setItem("token", res.data.token);
+                        navigate("/home");
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    // console.log(error)
+                    if (
+                        error.response &&
+                        error.response.status === 404 &&
+                        !error.response.data.status
+                    ) {
+                        toast.error(error.response.data.message);
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                });
         }
-       
     };
 
     // Handle form submission logic here
@@ -87,7 +88,6 @@ function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        
                     </div>
                     <div className="mb-3 form-input">
                         <label className="form-label">Password</label>
@@ -99,13 +99,24 @@ function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
+               
+                        <div className="form-input">
+                            <button type="submit" className="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+                        <div className="form-input">
+                            <button type="submit" className="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+                   
+
                     <div className="form-input">
-                        <button type="submit" className="btn btn-primary">
-                            Login
-                        </button>
+                        <Link to="/register">
+                            Don't have an account? Create Account
+                        </Link>
                     </div>
-                 
-                     <Link to="/register">Go to Other Page</Link>
                 </form>
             </div>
             <div className="right-section" style={{ width: "50%" }}>

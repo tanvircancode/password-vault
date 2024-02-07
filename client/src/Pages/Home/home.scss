@@ -1,31 +1,40 @@
-
-.hr-line{
+.hr-line {
     width: 85%;
-    margin: 0.5em auto;
+    margin: 7px 0px;
 }
 
 .accordion-button:not(.collapsed) {
     background-color: transparent;
 }
 
-.card
-{
-    @media(max-width:991px) and (min-width:768px) {
-        width: 15rem;;
+.card {
+    @media (max-width: 991px) and (min-width: 768px) {
+        width: 15rem;
     }
 }
-.active-menu{
+.active-menu {
     color: rgb(54 54 63 / 84%);
     font-weight: bold;
 }
-// .custom-accordion-body {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     flex-direction: column;
-// }
+
 .active-menu {
-    color: #8FD1F9;
+    color: #8fd1f9;
 }
-
-
+.custom-item-list{
+    @media (max-width: 768px) {
+        margin-top: 30px !important;
+    }
+}
+.add-folder-text {
+    @media (max-width: 1204px) and (min-width: 768px) {
+        margin-right: 56px !important;
+    }
+}
+.add-org-text {
+    @media (max-width: 1204px) and (min-width: 768px) {
+        margin-right: 10px !important;
+    }
+}
+.xxx {
+    opacity: 0.1 ;
+}

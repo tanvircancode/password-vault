@@ -10,12 +10,13 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setFolders, setOrganizations } from "../../store";
 import { setSelectMenu } from "../../store";
+import "./home.scss";
 
 const Home = () => {
     const userId = useSelector((state) => state.user.id);
     const token = useSelector((state) => state.token);
-    const selectMenu = useSelector((state) => state.selectMenu);
-
+    const blur = useSelector((state) => state.makeBlur);
+    
     const dispatch = useDispatch();
 
     const getFoldersAndOrgs = async () => {
@@ -54,7 +55,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="container ">
+        <div className={`container ${blur ? 'xxx' : ' '}`}>
             <div className="row mt-5 d-flex">
                 <div className="col-sm-12 col-md-4 col-lg-3">
                     <div className="card w-100">
@@ -97,7 +98,7 @@ const Home = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="col-sm-12 col-md-8 col-lg-9">
+                <div className="col-sm-12 col-md-8 col-lg-9 custom-item-list">
                     <ItemList />
                 </div>
             </div>

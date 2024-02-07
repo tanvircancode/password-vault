@@ -1,4 +1,4 @@
-cards
+
 
 <?php
 
@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('identities', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('item_id')->nullable(false);
-            $table->string('cardholder_name')->nullable();
-            $table->string('brand')->nullable();
-            $table->string('number',300)->nullable();
-            $table->string('exp_month')->nullable();
-            $table->string('exp_year')->nullable();
-            $table->string('security_code',300)->nullable();
+            $table->string('title')->nullable();
+            $table->string('email')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('security')->nullable(false);
+            $table->string('license')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
 
             $table->foreign('item_id')
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('identities');
     }
 };

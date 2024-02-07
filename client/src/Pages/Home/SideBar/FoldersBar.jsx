@@ -83,7 +83,7 @@ const FoldersBar = () => {
                     )}
 
                     <div
-                        className="accordion-body p-0 mt-2 mb-2"
+                        className="accordion-body p-0 mt-2 mb-2 add-folder-text"
                         style={{ marginRight: 70 }}
                         onClick={() => setOpenAddModal(true)}
                     >

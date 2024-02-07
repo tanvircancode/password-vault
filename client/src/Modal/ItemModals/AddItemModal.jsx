@@ -12,7 +12,7 @@ import AddIdentityModal from "./AddIdentityModal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
-import { setReloadPage } from "../../store";
+import { setReloadPage,setMakeBlur } from "../../store";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -24,6 +24,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const userId = useSelector((state) => state.user.id);
     const types = Types;
     const token = useSelector((state) => state.token);
+    const blur = useSelector((state) => state.makeBlur);
     const folders = useSelector((state) => state.folders);
     const organizations = useSelector((state) => state.organizations);
     const userData = useSelector((state) => state.user);
@@ -59,9 +60,14 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
-    // useEffect(() => {
-    //     console.log(stateValues.favorite);
-    // }, [stateValues.favorite]);
+    useEffect(() => {
+        console.log(blur);
+    }, [blur]);
+
+    const closePopup = () => {
+        setOpenPopup(false);
+        dispatch(setMakeBlur({makeBlur:false}));
+    }
 
     const handleAddItem = async (e) => {
         e.preventDefault();
@@ -124,26 +130,28 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
         setStateValues({ ...fieldValues });
         setOpenPopup(false);
+        dispatch(setMakeBlur({makeBlur:false}));
         dispatch(setReloadPage({reloadPage : true}));
     };
 
     return (
+        
         <div
-            className={`modal fade ${openPopup ? "show" : ""}`}
+            className={`modal fade ${openPopup ? "show" : ""}`} 
             tabIndex="-1"
             role="dialog"
             style={{ display: openPopup ? "block" : "none" }}
             aria-hidden={!openPopup}
         >
             <div className="modal-dialog modal-dialog-scrollable custom-width">
-                <div className="modal-content">
+                <div className={`modal-content ${blur ? "yyy" : ""}`}>
                     <div className="modal-header">
                         <h5 className="modal-title">Add New Item</h5>
                         <button
                             type="button"
                             className="btn-close"
                             aria-label="Close"
-                            onClick={() => setOpenPopup(false)}
+                            onClick={closePopup}
                         ></button>
                     </div>
                     <div className="modal-body">
@@ -331,7 +339,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         <button
                             type="button"
                             className="btn btn-secondary"
-                            onClick={() => setOpenPopup(false)}
+                            onClick={closePopup}
                         >
                             Close
                         </button>

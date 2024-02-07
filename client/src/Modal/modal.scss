@@ -10,8 +10,14 @@
     color: black;
     border: 1px solid #382727;
 }
-.modal-dialog {
-    
-    margin-right: auto;
-    margin-left: auto;
+.modal .supreme-container{
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
+}
+.yyy{
+    opacity: 1 !important;
+    // z-index: 1;
 }

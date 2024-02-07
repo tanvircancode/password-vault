@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
-import { setReloadPage } from "../../../store";
+import { setReloadPage,setMakeBlur } from "../../../store";
 
 const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
@@ -40,8 +40,8 @@ const ItemList = () => {
         type: "Category Items",
         folder: "Folder Items",
         favorite: "Favorite Items",
-        trash: "Trash Items"
-      };
+        trash: "Trash Items",
+    };
 
     const getItemsData = async () => {
         await axios
@@ -130,27 +130,32 @@ const ItemList = () => {
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
-    };
+        dispatch(setMakeBlur({makeBlur:true}));
+    };   
 
     useEffect(() => {
         getItemsData();
     }, [reloadPage]);
 
     useEffect(() => {
-        console.log(itemsData);
-        console.log(filteredItems());
+        // console.log(itemsData);
+        // console.log(filteredItems());
+        console.log(blur);
+
     }, [itemsData]);
 
     return (
-        <div className="container text-center">
+        <div className="container">
             <div className="row">
-                <div className="col text-start" style={{ fontSize: 25 }}>
-                    {headings[selectMenu.menuType]}
+                <div className="col p-0  text-start d-flex">
+                    <h4 className="align-self-end m-0">
+                        {headings[selectMenu.menuType] || "All Items"}
+                    </h4>
                 </div>
-                <div className="col text-end">
+                <div className="col p-0 text-end">
                     <button
                         type="button"
-                        className="btn btn-primary"
+                        className="add-modal-button"
                         onClick={handleNewItemClick}
                     >
                         New Item
@@ -158,7 +163,7 @@ const ItemList = () => {
                 </div>
             </div>
 
-            <div className="row mt-4 p-2 d-flex align-items-center all-items">
+            <div className="row mt-2 p-2 d-flex align-items-center all-items">
                 <div className="col-2 text-start d-flex">
                     <input
                         className="form-check-input small-checkbox"
@@ -169,7 +174,7 @@ const ItemList = () => {
                             selectedItems.length === itemsData.length
                         }
                         onChange={handleSelectAll}
-                        style={{ margin: "3px",transform: "scale(0.6)"}}
+                        style={{ margin: "3px", transform: "scale(0.6)" }}
                     />
                     <label
                         className="form-check-label mb-0"
@@ -179,18 +184,30 @@ const ItemList = () => {
                         All
                     </label>
                 </div>
-                <div className="col-5 text-start"  style={{  fontSize: 18 }}>Name</div>
-                <div className="col-3 text-start"  style={{  fontSize: 18 }}>Owner</div>
-                <div className="col-2 text-start"  >
+                <div className="col-5 text-start" style={{ fontSize: 18 }}>
+                    Name
+                </div>
+                <div className="col-3 text-start" style={{ fontSize: 18 }}>
+                    Owner
+                </div>
+                <div className="col-2 text-start">
                     <div className="dropdown">
                         <button
                             className="btn btn-secondary bg-transparent"
                             style={{ border: "none" }}
                             type="button"
-                            data-bs-toggle="dropdown"
+                            data-bs-toggle={`${
+                                itemsData.length > 0 && "dropdown"
+                            }`}
                             aria-expanded="false"
                         >
-                            <BsThreeDotsVertical />
+                            <BsThreeDotsVertical
+                                style={{
+                                    color: "36363FD6",
+                                    display:
+                                        itemsData.length > 0 ? "block" : "none",
+                                }}
+                            />
                         </button>
                         <ul className="dropdown-menu">
                             {selectMenu.menuType === "trash" ? (

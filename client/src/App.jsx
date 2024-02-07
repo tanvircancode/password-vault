@@ -14,7 +14,7 @@ function App() {
   const authChecked = Boolean(useSelector((state) => state.token));
     return (
         <> 
-            <Layout />
+           {authChecked ? <Layout /> : ""} 
             {/* <InitUser /> */}
             <Routes>
                 <Route path="/home" element={authChecked ? <Home /> : <Navigate to="/login" />} />
