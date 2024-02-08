@@ -35,6 +35,26 @@
         margin-right: 10px !important;
     }
 }
-.xxx {
-    opacity: 0.1 ;
+.is-blur {
+    opacity: 0.5; 
 }
+.custom-modal-bg{
+    background: linear-gradient(0.25turn, #bedeef, #bbdf9f, #8ad6e9);
+}
+.modal-save {
+    padding: 6px 8px;
+    border-radius: 0.5em;
+    background: linear-gradient(0.25turn, #7acdf7, #7fb358, #659fad);
+    color: white;
+    border: none;
+}
+.modal-cancel{
+    padding: 6px 8px;
+    border-radius: 0.5em;
+    color: white;
+    border: none;
+    background-image: linear-gradient(to right, #eba5a5 0%, #ff7c50 51%, #b79d79 100%);
+}
+
+
+

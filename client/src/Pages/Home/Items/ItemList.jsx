@@ -21,8 +21,10 @@ const ItemList = () => {
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
     const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
     const selectMenu = useSelector((state) => state.selectMenu);
+    const blur = useSelector((state) => state.makeBlur);
 
-    const userId = useSelector((state) => state.user.id);
+
+    const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
     const reloadPage = useSelector((state) => state.reloadPage);
 
@@ -69,6 +71,7 @@ const ItemList = () => {
                 //     toast.error("Server is not responding");
                 // }
             });
+       
         dispatch(setReloadPage({ reloadPage: false }));
     };
 
@@ -140,13 +143,13 @@ const ItemList = () => {
     useEffect(() => {
         // console.log(itemsData);
         // console.log(filteredItems());
-        console.log(blur);
+       
 
     }, [itemsData]);
 
     return (
         <div className="container">
-            <div className="row">
+            <div className={`row ${blur ? "is-blur" : ""}`}>
                 <div className="col p-0  text-start d-flex">
                     <h4 className="align-self-end m-0">
                         {headings[selectMenu.menuType] || "All Items"}
@@ -163,12 +166,13 @@ const ItemList = () => {
                 </div>
             </div>
 
-            <div className="row mt-2 p-2 d-flex align-items-center all-items">
+            <div className={`row mt-2 p-2 d-flex align-items-center all-items ${blur ? "is-blur" : ""}`}>
                 <div className="col-2 text-start d-flex">
                     <input
                         className="form-check-input small-checkbox"
                         type="checkbox"
                         id="select-all"
+                        disabled={!token}
                         checked={
                             checkAll &&
                             selectedItems.length === itemsData.length
@@ -180,6 +184,7 @@ const ItemList = () => {
                         className="form-check-label mb-0"
                         style={{ marginTop: "2px", fontSize: 18 }}
                         htmlFor="select-all"
+                        
                     >
                         All
                     </label>
@@ -255,7 +260,7 @@ const ItemList = () => {
             </div>
             {itemsData.length > 0 &&
                 itemsData.map((item, index) => (
-                    <div className="row mt-2" key={index}>
+                    <div className={`row mt-2 ${blur ? "is-blur" : ""}`} key={index}>
                         <div className="col">
                             <div className="d-flex ">
                                 <div className="col-2 ">

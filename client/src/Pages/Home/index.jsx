@@ -8,16 +8,21 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations } from "../../store";
+import { setFolders, setOrganizations, setMakeBlur } from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
 const Home = () => {
-    const userId = useSelector((state) => state.user.id);
+    
+
+    const userId = localStorage.getItem("user_id");
+    console.log(userId)
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
-    
+
     const dispatch = useDispatch();
+
+
 
     const getFoldersAndOrgs = async () => {
         await axios
@@ -52,15 +57,23 @@ const Home = () => {
 
     useEffect(() => {
         getFoldersAndOrgs();
+       
+        if (window.performance) {
+            if (performance.navigation.type == 1) {
+                dispatch(setMakeBlur({ makeBlur: false }));
+            }
+        }
     }, []);
 
     return (
-        <div className={`container ${blur ? 'xxx' : ' '}`}>
-            <div className="row mt-5 d-flex">
-                <div className="col-sm-12 col-md-4 col-lg-3">
+        <div className={`container`}>
+            <div className="row mt-5 d-flex ">
+                <div
+                    className="col-sm-12 col-md-4 col-lg-3 "
+                >
                     <div className="card w-100">
                         <div
-                            className="card-header text-uppercase"
+                            className={`card-header text-uppercase ${blur ? "is-blur" : ""}`}
                             style={{ fontWeight: "bold" }}
                         >
                             Filter
@@ -76,7 +89,7 @@ const Home = () => {
                                 <FoldersBar />
                             </li>
                             <li
-                                className="list-group-item d-flex align-items-center justify-content-center"
+                                className={`list-group-item d-flex align-items-center justify-content-center ${blur ? "is-blur" : ""}`}
                                 onClick={() =>
                                     dispatch(
                                         setSelectMenu({

@@ -13,6 +13,7 @@ const Header = () => {
 
     const token = useSelector((state) => state.token);
     const userData = useSelector((state) => state.user);
+    const blur = useSelector((state) => state.makeBlur);
 
     const dispatch = useDispatch();
 
@@ -30,6 +31,7 @@ const Header = () => {
                 // console.log(res);
                 if (res.data.status) {
                     localStorage.removeItem("token");
+                    localStorage.removeItem("user_id");
                     toast.success(res.data.message);
                     dispatch(setLogout());
                     navigate("/login");
@@ -53,7 +55,7 @@ const Header = () => {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <nav className={`navbar navbar-expand-lg bg-body-tertiary ${blur ? "is-blur" : ""}`}>
             <div className="container-fluid">
                 <a className="navbar-brand" style={{ marginBottom: 4 }}>
                     <BsFillShieldLockFill style={{ color: "#0D6EFD" }} />

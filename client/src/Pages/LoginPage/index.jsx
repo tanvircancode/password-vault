@@ -48,6 +48,8 @@ function Login() {
                             })
                         );
                         localStorage.setItem("token", res.data.token);
+                        localStorage.setItem("user_id", res.data.user.id);
+
                         navigate("/home");
                     } else {
                         toast.error("Server is not responding");

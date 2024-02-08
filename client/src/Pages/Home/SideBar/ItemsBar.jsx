@@ -12,11 +12,13 @@ import { setSelectMenu } from "../../../store";
 
 const ItemsBar = () => {
     const selectMenu = useSelector((state) => state.selectMenu);
+    const blur = useSelector((state) => state.makeBlur);
+
 
     const dispatch = useDispatch();
 
     return (
-        <div className="accordion">
+        <div className={`accordion ${blur ? "is-blur" : ""}`}>
             <div className="accordion-item">
             <div className="d-flex flex-column">
                 <h2 className="accordion-header">

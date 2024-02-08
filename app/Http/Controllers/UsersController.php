@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-    
-   
+
+
 
     public function store(Request $request)
     {
@@ -94,7 +94,7 @@ class UsersController extends Controller
         Auth::guard('web')->logout();
         $request->user()->tokens()->delete();
         // Auth::logout();
-    
+
         $response = [
             'status' => true,
             'message' => 'Logged out successfully'
@@ -104,26 +104,42 @@ class UsersController extends Controller
         // return redirect('/login');
     }
 
+    public function me(Request $request)
+    {
+        if (!Auth::user()) {
+            return response()->json(['status' => false,'message' => 'lav nai'], 403);
+        }
+
+        $user = Auth::user();
+
+        $response = [
+            'user' => $user,
+            'status' => true,
+        ];
+        return response()->json($response, 200);
+
+    }
+
     public function show($id)
     {
-        if($id !== Auth::user()->id) {
+        if ($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }
 
-        $user = User::with('organizations','folders')->find($id);
-        if(!$user) {
+        $user = User::with('organizations', 'folders')->find($id);
+        if (!$user) {
             $response = [
                 'status' => false,
                 'message' => 'User not found'
-            ]; 
-            return response()->json($response,404);
+            ];
+            return response()->json($response, 404);
         }
-       
+
         $response = [
             'status' => true,
             'data' => $user
-        ]; 
-        
-        return response()->json($response,200);
+        ];
+
+        return response()->json($response, 200);
     }
 }

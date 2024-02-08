@@ -8,14 +8,20 @@ import "../home.scss";
 import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectMenu } from "../../../store";
+import { setSelectMenu,setMakeBlur } from "../../../store";
 
 const OrganizationsBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
     const organizations = useSelector((state) => state.organizations);
     const selectMenu = useSelector((state) => state.selectMenu);
+    const blur = useSelector((state) => state.makeBlur);
 
     const dispatch = useDispatch();
+
+    const handleAddOrg = () => {
+        setOpenAddModal(true);
+        dispatch(setMakeBlur({makeBlur:true}));
+    }
 
     // useEffect(() => {
     //     console.log(selectMenu);
@@ -24,7 +30,7 @@ const OrganizationsBar = () => {
     return (
         <div className="accordion">
             <div className="accordion-item">
-                <div className="d-flex flex-column">
+                <div className={`d-flex flex-column ${blur ? "is-blur" : ""}`}>
                     <h2
                         className="accordion-header"
                         
@@ -139,7 +145,7 @@ const OrganizationsBar = () => {
                                 </ul>
                             </div>
                         )}
-                        <div onClick={() => setOpenAddModal(true)}>
+                        <div onClick={handleAddOrg}>
                             <div
                                 className="accordion-body p-0 mb-3 add-org-text"
                                 style={{ marginRight: 22 }}

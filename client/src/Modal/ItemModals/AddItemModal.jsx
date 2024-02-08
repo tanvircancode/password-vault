@@ -12,7 +12,7 @@ import AddIdentityModal from "./AddIdentityModal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
-import { setReloadPage,setMakeBlur } from "../../store";
+import { setReloadPage, setMakeBlur } from "../../store";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
     const [username, setUsername] = useState("");
@@ -21,7 +21,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const [copiedPassword, setCopiedPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const userId = useSelector((state) => state.user.id);
+    const userId = localStorage.getItem("user_id");
     const types = Types;
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
@@ -66,8 +66,8 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     const closePopup = () => {
         setOpenPopup(false);
-        dispatch(setMakeBlur({makeBlur:false}));
-    }
+        dispatch(setMakeBlur({ makeBlur: false }));
+    };
 
     const handleAddItem = async (e) => {
         e.preventDefault();
@@ -119,33 +119,30 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                 }
             })
             .catch((error) => {
-                
-
-                if(error.response && error.response.status === 401) {
-                    toast.error(error.response.data.message)
-                }else{
+                if (error.response && error.response.status === 401) {
+                    toast.error(error.response.data.message);
+                } else {
                     toast.error("Server is not responding");
                 }
             });
 
         setStateValues({ ...fieldValues });
         setOpenPopup(false);
-        dispatch(setMakeBlur({makeBlur:false}));
-        dispatch(setReloadPage({reloadPage : true}));
+        dispatch(setMakeBlur({ makeBlur: false }));
+        dispatch(setReloadPage({ reloadPage: true }));
     };
 
     return (
-        
         <div
-            className={`modal fade ${openPopup ? "show" : ""}`} 
+            className={`modal fade ${openPopup ? "show" : ""}`}
             tabIndex="-1"
             role="dialog"
             style={{ display: openPopup ? "block" : "none" }}
             aria-hidden={!openPopup}
         >
             <div className="modal-dialog modal-dialog-scrollable custom-width">
-                <div className={`modal-content ${blur ? "yyy" : ""}`}>
-                    <div className="modal-header">
+                <div className={`modal-content `}>
+                    <div className="modal-header custom-modal-bg">
                         <h5 className="modal-title">Add New Item</h5>
                         <button
                             type="button"
@@ -280,7 +277,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                         })
                                     }
                                 >
-                                    <option value="">{userData.name}</option>
+                                  {token && <option value="">{userData.name}</option>}  
                                     {organizations.map((organization) => (
                                         <option
                                             key={organization.id}
@@ -326,19 +323,19 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         </div>
                     </div>
                     <div
-                        className="modal-footer"
+                        className="modal-footer custom-modal-bg"
                         style={{ justifyContent: "flex-start" }}
                     >
                         <button
                             type="button"
-                            className="btn btn-success"
+                            className="modal-save"
                             onClick={handleAddItem}
                         >
                             Save
                         </button>
                         <button
                             type="button"
-                            className="btn btn-secondary"
+                            className="modal-cancel"
                             onClick={closePopup}
                         >
                             Close

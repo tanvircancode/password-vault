@@ -36,17 +36,17 @@ export const store = configureStore({
       },
     }),
 });
-const persistor = persistStore(store);
+export const persistor = persistStore(store);
 
 //end
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <BrowserRouter>
                     <ToastContainer
                         position="top-center"
-                        autoClose={2000}
+                        autoClose={1000}
                         closeOnClick
                     />
 
@@ -54,5 +54,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </BrowserRouter>
             </PersistGate>
         </Provider>
-    </React.StrictMode>
+    // </React.StrictMode>
 );

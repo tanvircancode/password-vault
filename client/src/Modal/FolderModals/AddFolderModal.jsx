@@ -6,15 +6,16 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
-import { setFolders } from "../../store";
+import { setFolders,setMakeBlur } from "../../store";
 
 const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
 
     const [folderName, setFolderName] = useState("");
-    const userId = useSelector((state) => state.user.id);
+    const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
-    const dispatch = useDispatch();
+    
 
+    const dispatch = useDispatch();
 
     const handleAddFolder = async() => {
 
@@ -57,13 +58,16 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
             });
             
             setFolderName("")
-            setOpenAddModal(false);
+            
         }
+        setOpenAddModal(false);
+        dispatch(setMakeBlur({makeBlur:false}))
     };
 
     const cancelModal = () => {
         setFolderName("");
         setOpenAddModal(false);
+        dispatch(setMakeBlur({makeBlur:false}))
     }
 
     return (
@@ -71,11 +75,11 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
             className={`modal fade ${openAddModal ? "show" : ""}`}
             tabIndex="-1"
             role="dialog"
-            style={{ display: openAddModal ? "block" : "none" }}
+            style={{ display: openAddModal ? "block" : "none", marginTop:'5em' }}
         >
             <div className="modal-dialog">
                 <div className="modal-content">
-                    <div className="modal-header">
+                    <div className="modal-header custom-modal-bg" >
                         <h5 className="modal-title">Add Folder</h5>
                         <button
                             type="button"
@@ -105,19 +109,19 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                        
                     </div>
                     <div
-                        className="modal-footer"
+                        className="modal-footer btns custom-modal-bg"  
                         style={{ justifyContent: "flex-start" }}
                     >
                         <button
                             type="button"
-                            className="btn btn-primary"
+                            className="modal-save"
                             onClick={handleAddFolder}
                         >
                             Save
                         </button>
                         <button
                             type="button"
-                            className="btn btn-danger"
+                            className="modal-cancel"
                             data-bs-dismiss="modal"
                             onClick={cancelModal}
                         >

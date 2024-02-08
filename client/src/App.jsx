@@ -1,4 +1,4 @@
-import { Routes, Route,Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./Pages/Layout";
 import Home from "./Pages/Home";
 import Login from "./Pages/LoginPage";
@@ -9,77 +9,71 @@ import axios from "axios";
 import { setLogin } from "./store";
 import { useEffect } from "react";
 import { BASE_URL } from "./config";
+// import { Provider } from "react-redux";
+// import { PersistGate } from "redux-persist/integration/react";
+
+// import { store, persistor } from "./main";
 
 function App() {
-  const authChecked = Boolean(useSelector((state) => state.token));
+    const authChecked = Boolean(useSelector((state) => state.token));
     return (
-        <> 
-           {authChecked ? <Layout /> : ""} 
-            {/* <InitUser /> */}
+        <>
+            <Layout />
+            <InitUser />
             <Routes>
-                <Route path="/home" element={authChecked ? <Home /> : <Navigate to="/login" />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/tools" element={authChecked ? <Tools /> : <Navigate to="/login" />} />  
-            </Routes> 
+                <Route path="/tools" element={<Tools />} />
+            </Routes>
         </>
     );
 }
 
-// function InitUser () {
-  
-//     const dispatch = useDispatch();
-//     const token = useSelector((state) => state.token);
-//     console.log(token);
-//     const init = async () => {
-//       try {
-//         const response = await axios.get(`${BASE_URL}/api/checktoken`, {
-//           headers: {
-//             Authorization: `Bearer ${token}`,  
-//           },
-//         }).then((res)=> {
-         
-//           console.log(res)
-//         })
-//         .catch((error)=> {
-      
+function InitUser() {
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.token);
 
-//           console.log(error)
-//         })
-        
-//         console.log(response);
-//         if (response.data.user) {
-          
-//           dispatch(
-//             setLogin({
-//               user: response.data.user,
-//               token: token,
-//             })
-//           );
-//         } else {
-         
-//           dispatch(
-//             setLogin({
-//               user: null,
-//               token: null,
-//             })
-//           );
-//         }
-//       } catch (e) {
-        
-//         dispatch(
-//           setLogin({
-//             user: null,
-//             token: null,
-//           })
-//         );
-//       }
-//     };
-  
-//     useEffect(() => {
-//       init();
-//     }, []);
-  
-//     return <></>;
-// }
+    const init = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/api/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // console.log(response);
+            if (response.data.user) {
+                dispatch(
+                    setLogin({
+                        user: response.data.user,
+                        token: token,
+                    })
+                );
+            } else {
+                dispatch(
+                    setLogin({
+                        user: null,
+                        token: null,
+                    })
+                );
+                localStorage.removeItem("token");
+            }
+        } catch (e) {
+            dispatch(
+                setLogin({
+                    user: null,
+                    token: null,
+                })
+            );
+            localStorage.removeItem("token");
+        }
+    };
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    return <></>;
+}
 export default App;

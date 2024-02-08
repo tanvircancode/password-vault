@@ -5,15 +5,22 @@ import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations, setSelectMenu } from "../../../store";
+import { setFolders, setOrganizations, setSelectMenu, setMakeBlur } from "../../../store";
 import "../home.scss";
 
 const FoldersBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
     const folders = useSelector((state) => state.folders);
     const selectMenu = useSelector((state) => state.selectMenu);
+    const blur = useSelector((state) => state.makeBlur);
+
 
     const dispatch = useDispatch();
+
+    const handleFolderModal = () => {
+        setOpenAddModal(true);
+        dispatch(setMakeBlur({makeBlur:true}));
+    }
 
     // useEffect(() => {
     //     getFolders();
@@ -22,7 +29,7 @@ const FoldersBar = () => {
     return (
         <div className="accordion">
             <div className="accordion-item">
-            <div className="d-flex flex-column">
+            <div className={`d-flex flex-column ${blur ? "is-blur" : ""}`}>
                 <h2 className="accordion-header">
                     <button
                         className="accordion-button custom-accordion-button"
@@ -85,7 +92,7 @@ const FoldersBar = () => {
                     <div
                         className="accordion-body p-0 mt-2 mb-2 add-folder-text"
                         style={{ marginRight: 70 }}
-                        onClick={() => setOpenAddModal(true)}
+                        onClick={handleFolderModal}
                     >
                         <BsPlusCircle style={{ marginRight: 8 }} />
                         Add Folder
