@@ -56,11 +56,13 @@ const Header = () => {
 
     return (
         <nav className={`navbar navbar-expand-lg bg-body-tertiary ${blur ? "is-blur" : ""}`}>
-            <div className="container-fluid">
-                <a className="navbar-brand" style={{ marginBottom: 4 }}>
+            <div className="container-fluid d-flex">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="navbar-brand" style={{ marginBottom: 4 }}>
                     <BsFillShieldLockFill style={{ color: "#0D6EFD" }} />
-                </a>
-                <button
+                </div>
+                
+                {/* <button
                     className="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
@@ -70,7 +72,8 @@ const Header = () => {
                     aria-label="Toggle navigation"
                 >
                     <span className="navbar-toggler-icon"></span>
-                </button>
+                </button> */}
+
                 <div
                     className="collapse navbar-collapse"
                     id="navbarSupportedContent"
@@ -91,6 +94,7 @@ const Header = () => {
                             </a>
                         </li>
                     </ul>
+                </div>
                 </div>
                 <div
                     className="collapse navbar-collapse justify-content-end"

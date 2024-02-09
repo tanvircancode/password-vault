@@ -5,6 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
+import HashLoader from "react-spinners/HashLoader";
 import { setFolders, setOrganizations, setSelectMenu, setMakeBlur } from "../../../store";
 import "../home.scss";
 
@@ -13,6 +14,8 @@ const FoldersBar = () => {
     const folders = useSelector((state) => state.folders);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
+    const [loading, setLoading] = useState(true);
+
 
 
     const dispatch = useDispatch();
@@ -22,9 +25,11 @@ const FoldersBar = () => {
         dispatch(setMakeBlur({makeBlur:true}));
     }
 
-    // useEffect(() => {
-    //     getFolders();
-    // }, []);
+    useEffect(() => {
+        if(folders.length > 0) {
+            setLoading(false);
+        }
+    }, []);
 
     return (
         <div className="accordion">
@@ -43,6 +48,11 @@ const FoldersBar = () => {
                         Folders
                     </button>
                 </h2>
+                {loading && (
+                <div style={{ width: "100px", margin: "auto" }}>
+                    <HashLoader color="#36d7b7" />
+                </div>
+            )}
                 <div
                     id="collapseThree"
                     className="accordion-collapse collapse show "

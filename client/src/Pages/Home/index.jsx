@@ -8,7 +8,7 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations, setMakeBlur } from "../../store";
+import { setFolders, setOrganizations, setMakeBlur, setLoading } from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
@@ -19,10 +19,10 @@ const Home = () => {
     console.log(userId)
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
+    const loading = useSelector((state) => state.loading);
+
 
     const dispatch = useDispatch();
-
-
 
     const getFoldersAndOrgs = async () => {
         await axios
@@ -53,6 +53,7 @@ const Home = () => {
                     // toast.error("Server is not responding");
                 }
             });
+            dispatch(setLoading({ loading: false }));
     };
 
     useEffect(() => {

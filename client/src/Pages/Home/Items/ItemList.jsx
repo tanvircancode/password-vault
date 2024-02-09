@@ -11,11 +11,12 @@ import MoveFolderModal from "../../../Modal/FolderModals/MoveFolderModal";
 import MoveOrgModal from "../../../Modal/OrgModals/MoveOrgModal";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
-import { setReloadPage,setMakeBlur } from "../../../store";
+import { setReloadPage, setMakeBlur } from "../../../store";
+import HashLoader from "react-spinners/HashLoader";
 
 const ItemList = () => {
+    const [loading, setLoading] = useState(true);
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
@@ -23,10 +24,12 @@ const ItemList = () => {
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
 
-
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
     const reloadPage = useSelector((state) => state.reloadPage);
+    
+
+    console.log(loading);
 
     const [itemsData, setItemsData] = useState("");
     const [selectedItems, setSelectedItems] = useState("");
@@ -71,8 +74,10 @@ const ItemList = () => {
                 //     toast.error("Server is not responding");
                 // }
             });
-       
+
         dispatch(setReloadPage({ reloadPage: false }));
+        // dispatch(setLoading({ loading: false }));
+        setLoading(false);
     };
 
     const handleSelectAll = (event) => {
@@ -81,6 +86,7 @@ const ItemList = () => {
             setCheckAll(true);
             setSelectedItems(allItemIds);
         } else {
+            setCheckAll(false);
             setSelectedItems([]);
         }
     };
@@ -133,19 +139,23 @@ const ItemList = () => {
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
-        dispatch(setMakeBlur({makeBlur:true}));
-    };   
+        dispatch(setMakeBlur({ makeBlur: true }));
+    };
 
     useEffect(() => {
         getItemsData();
-    }, [reloadPage]);
-
-    useEffect(() => {
         // console.log(itemsData);
-        // console.log(filteredItems());
-       
+        // console.log(selectedItems);
+        // console.log(checkAll);
+        // console.log(loading);
 
-    }, [itemsData]);
+        if (
+            selectedItems.length === itemsData.length &&
+            selectedItems.length > 0
+        ) {
+            setCheckAll(true);
+        }
+    }, [reloadPage, selectedItems]);
 
     return (
         <div className="container">
@@ -166,8 +176,12 @@ const ItemList = () => {
                 </div>
             </div>
 
-            <div className={`row mt-2 p-2 d-flex align-items-center all-items ${blur ? "is-blur" : ""}`}>
-                <div className="col-2 text-start d-flex">
+            <div
+                className={`row mt-3 mb-3 p-2 d-flex align-items-center all-items ${
+                    blur ? "is-blur" : ""
+                }`}
+            >
+                <div className="col-2 text-start d-flex p-0">
                     <input
                         className="form-check-input small-checkbox"
                         type="checkbox"
@@ -180,22 +194,22 @@ const ItemList = () => {
                         onChange={handleSelectAll}
                         style={{ margin: "3px", transform: "scale(0.6)" }}
                     />
+
                     <label
                         className="form-check-label mb-0"
                         style={{ marginTop: "2px", fontSize: 18 }}
                         htmlFor="select-all"
-                        
                     >
                         All
                     </label>
                 </div>
-                <div className="col-5 text-start" style={{ fontSize: 18 }}>
+                <div className="col-5 text-start p-0" style={{ fontSize: 18 }}>
                     Name
                 </div>
-                <div className="col-3 text-start" style={{ fontSize: 18 }}>
+                <div className="col-3 text-start p-0" style={{ fontSize: 18 }}>
                     Owner
                 </div>
-                <div className="col-2 text-start">
+                <div className="col-2 text-start p-0">
                     <div className="dropdown">
                         <button
                             className="btn btn-secondary bg-transparent"
@@ -258,108 +272,128 @@ const ItemList = () => {
                     </div>
                 </div>
             </div>
+            {loading && (
+                <div style={{ width: "100px", margin: "50px auto auto" }}>
+                    <HashLoader color="#36d7b7" />
+                </div>
+            )}
             {itemsData.length > 0 &&
                 itemsData.map((item, index) => (
-                    <div className={`row mt-2 ${blur ? "is-blur" : ""}`} key={index}>
-                        <div className="col">
-                            <div className="d-flex ">
-                                <div className="col-2 ">
-                                    <input
-                                        type="checkbox"
-                                        id={`item-${item.id}`}
-                                        checked={selectedItems.includes(
-                                            item.id
-                                        )}
-                                        onChange={() =>
-                                            handleCheckboxChange(item.id)
-                                        }
-                                    />
-                                    <label
-                                        className="form-check-label"
-                                        style={{ marginTop: "2px" }}
-                                        htmlFor={`item-${item.id}`}
-                                    ></label>
-                                </div>
-                                <div className="col-5 text-start">
-                                    <p className="m-0">{item.name}</p>
-                                    <span>
-                                        {item.type === 1
-                                            ? "Login item"
-                                            : item.type === 2
-                                            ? "Card item"
-                                            : item.type === 3
-                                            ? "identity item"
-                                            : "Secure item"}
-                                    </span>
-                                </div>
-
-                                <div className="col-3 text-start">
-                                    {item.organization
-                                        ? item.organization.orgname || "Me"
-                                        : "Me"}
-                                </div>
-                                <div className="col-2 text-start">
-                                    <div className="dropdown">
-                                        <button
-                                            className="btn btn-secondary bg-transparent"
-                                            style={{ border: "none" }}
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <BsThreeDotsVertical
-                                                style={{ color: "00000" }}
-                                            />
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            {selectMenu.menuType === "trash" ? (
-                                                <div>
-                                                    <li className="dropdown-item dropdown-list">
-                                                        <BsTrash3
-                                                            style={{
-                                                                marginRight: 5,
-                                                            }}
-                                                        />
-                                                        <span>
-                                                            Restore Item
-                                                        </span>
-                                                    </li>
-                                                    <li className="dropdown-item dropdown-list">
-                                                        <BsTrash3
-                                                            style={{
-                                                                marginRight: 5,
-                                                            }}
-                                                        />
-                                                        <span>
-                                                            Permanently Delete
-                                                        </span>
-                                                    </li>
-                                                </div>
-                                            ) : (
-                                                <div>
-                                                    <li
-                                                        className="dropdown-item dropdown-list"
-                                                        onClick={() =>
-                                                            setOpenMoveFolderModal(
-                                                                true
-                                                            )
-                                                        }
-                                                    >
-                                                        <BsTrash3
-                                                            style={{
-                                                                marginRight: 5,
-                                                            }}
-                                                        />
-                                                        <span> Delete </span>
-                                                    </li>
-                                                </div>
+                    <>
+                        <div
+                            className={`row mb-2 ${blur ? "is-blur" : ""}`}
+                            key={index}
+                        >
+                            <div className="col">
+                                <div className="d-flex">
+                                    <div
+                                        className="col-2"
+                                        style={{ paddingLeft: "4px" }}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            style={{ width: "auto" }}
+                                            id={`item-${item.id}`}
+                                            checked={selectedItems.includes(
+                                                item.id
                                             )}
-                                        </ul>
+                                            onChange={() =>
+                                                handleCheckboxChange(item.id)
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            style={{ marginTop: "2px" }}
+                                            htmlFor={`item-${item.id}`}
+                                        ></label>
+                                    </div>
+                                    <div className="col-5 text-start">
+                                        <p className="m-0">{item.name}</p>
+                                        <span>
+                                            {item.type === 1
+                                                ? "Login item"
+                                                : item.type === 2
+                                                ? "Card item"
+                                                : item.type === 3
+                                                ? "identity item"
+                                                : "Secure item"}
+                                        </span>
+                                    </div>
+
+                                    <div className="col-3 text-start">
+                                        {item.organization
+                                            ? item.organization.orgname || "Me"
+                                            : "Me"}
+                                    </div>
+                                    <div className="col-2 text-start">
+                                        <div className="dropdown">
+                                            <button
+                                                className="btn btn-secondary bg-transparent"
+                                                style={{ border: "none" }}
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <BsThreeDotsVertical
+                                                    style={{ color: "00000" }}
+                                                />
+                                            </button>
+                                            <ul className="dropdown-menu">
+                                                {selectMenu.menuType ===
+                                                "trash" ? (
+                                                    <div>
+                                                        <li className="dropdown-item dropdown-list">
+                                                            <BsTrash3
+                                                                style={{
+                                                                    marginRight: 5,
+                                                                }}
+                                                            />
+                                                            <span>
+                                                                Restore Item
+                                                            </span>
+                                                        </li>
+                                                        <li className="dropdown-item dropdown-list">
+                                                            <BsTrash3
+                                                                style={{
+                                                                    marginRight: 5,
+                                                                }}
+                                                            />
+                                                            <span>
+                                                                Permanently
+                                                                Delete
+                                                            </span>
+                                                        </li>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <li
+                                                            className="dropdown-item dropdown-list"
+                                                            onClick={() =>
+                                                                setOpenMoveFolderModal(
+                                                                    true
+                                                                )
+                                                            }
+                                                        >
+                                                            <BsTrash3
+                                                                style={{
+                                                                    marginRight: 5,
+                                                                }}
+                                                            />
+                                                            <span>
+                                                                {" "}
+                                                                Delete{" "}
+                                                            </span>
+                                                        </li>
+                                                    </div>
+                                                )}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <hr />
+                    </>
                 ))}
 
             <AddItemModal
