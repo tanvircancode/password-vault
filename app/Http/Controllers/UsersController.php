@@ -89,14 +89,20 @@ class UsersController extends Controller
         ];
         return response()->json($response, 404);
     }
+
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
-        $request->user()->tokens()->delete();
-        // Auth::logout();
+        // $request->session()->invalidate();
+        $request->user()->currentAccessToken()->delete();
+        // return response()->json(['data' => $request->user()], 200);
+
+        
+
 
         $response = [
             'status' => true,
+            'data' =>  $request->user(),
+            'user' =>  Auth::user(),
             'message' => 'Logged out successfully'
         ];
         return response()->json($response, 200);
@@ -106,8 +112,10 @@ class UsersController extends Controller
 
     public function me(Request $request)
     {
+        $token = $request->header('Authorization');
+        return response()->json(['user' => $token], 200);
         if (!Auth::user()) {
-            return response()->json(['status' => false,'message' => 'lav nai'], 403);
+            return response()->json(['status' => false], 403);
         }
 
         $user = Auth::user();
@@ -117,11 +125,12 @@ class UsersController extends Controller
             'status' => true,
         ];
         return response()->json($response, 200);
-
     }
 
     public function show($id)
     {
+
+        // return response()->json(['user' => Auth::user()], 200);
         if ($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }

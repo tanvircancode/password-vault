@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->group(function()  {
  Route::get('/user/{id}',[UsersController::class, 'show']);  
  Route::get('/me',[UsersController::class, 'me']);  
 
+ Route::get('/logout',[UsersController::class, 'logout']);
+ 
   // item apis
 Route::post('/item',[ItemsController::class, 'store']);  
 Route::get('/items/{id}',[ItemsController::class, 'index']);  
@@ -38,7 +40,7 @@ Route::post('/folder',[FoldersController::class, 'store']);
 // orgs apis
 Route::post('/organization',[OrganizationsController::class, 'store']);  
 
-Route::get('/logout',[UsersController::class, 'logout']);
+
 
 });
 

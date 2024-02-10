@@ -48,16 +48,18 @@ class ItemsController extends Controller
       
     public function index($id)  
     {  
+        // return response()->json(['user' => Auth::user()],200);
+
         if($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);  
         }         
         
         $items = User::with(['items.organization','items.folder','items.login','items.identity','items.card'])->find($id);
-       
+        
         $response = [
             'status' => true,
             'data' => $items
-        ]; 
+        ];         
               
         return response()->json($response,200);
        

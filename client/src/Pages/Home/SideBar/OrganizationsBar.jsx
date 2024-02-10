@@ -7,11 +7,13 @@ import {
 import "../home.scss";
 import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
+import MoonLoader from "react-spinners/HashLoader";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectMenu,setMakeBlur } from "../../../store";
+import { setSelectMenu, setMakeBlur } from "../../../store";
 
 const OrganizationsBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
+    const [loading, setLoading] = useState(true);
     const organizations = useSelector((state) => state.organizations);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
@@ -20,21 +22,20 @@ const OrganizationsBar = () => {
 
     const handleAddOrg = () => {
         setOpenAddModal(true);
-        dispatch(setMakeBlur({makeBlur:true}));
-    }
+        dispatch(setMakeBlur({ makeBlur: true }));
+    };
 
-    // useEffect(() => {
-    //     console.log(selectMenu);
-    // }, [selectMenu]);
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 100000);
+    }, [organizations]);
 
     return (
         <div className="accordion">
             <div className="accordion-item">
                 <div className={`d-flex flex-column ${blur ? "is-blur" : ""}`}>
-                    <h2
-                        className="accordion-header"
-                        
-                    >
+                    <h2 className="accordion-header">
                         <button
                             className="accordion-button custom-accordion-button"
                             type="button"
@@ -99,12 +100,13 @@ const OrganizationsBar = () => {
                         </div>
                         <hr className="hr-line" />
                     </div>
+                 
                     <div
                         id="collapseOne"
                         className="accordion-collapse collapse show"
                         style={{ marginLeft: 20 }}
                     >
-                        {organizations.length > 0 && (
+                        {organizations.length > 0 ? (
                             <div className="accordion-body p-0 ">
                                 <ul
                                     style={{
@@ -143,6 +145,15 @@ const OrganizationsBar = () => {
                                         </li>
                                     ))}
                                 </ul>
+                            </div>
+                        ) : (
+                            <div
+                                style={{
+                                    margin: "auto",
+                                    
+                                }}
+                            >
+                                <MoonLoader color="#36d7b7" />
                             </div>
                         )}
                         <div onClick={handleAddOrg}>

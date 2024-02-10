@@ -29,7 +29,7 @@ const ItemList = () => {
     const reloadPage = useSelector((state) => state.reloadPage);
     
 
-    console.log(loading);
+    console.log(userId);
 
     const [itemsData, setItemsData] = useState("");
     const [selectedItems, setSelectedItems] = useState("");

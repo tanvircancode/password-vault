@@ -28,7 +28,7 @@ const Header = () => {
                 },
             })
             .then((res) => {
-                // console.log(res);
+                console.log(res);
                 if (res.data.status) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("user_id");
@@ -38,7 +38,7 @@ const Header = () => {
                 }
             })
             .catch((error) => {
-                toast.success("Server is not responding");
+                toast.error("Server is not responding");
             });
     };
 

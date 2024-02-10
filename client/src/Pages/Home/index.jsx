@@ -8,18 +8,16 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations, setMakeBlur, setLoading } from "../../store";
+import { setFolders, setOrganizations, setMakeBlur } from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
 const Home = () => {
-    
 
     const userId = localStorage.getItem("user_id");
     console.log(userId)
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
-    const loading = useSelector((state) => state.loading);
 
 
     const dispatch = useDispatch();
@@ -32,7 +30,7 @@ const Home = () => {
                 },
             })
             .then((res) => {
-                // console.log(res);
+                console.log(res);
                 if (res.data.status && res.status === 200) {
                     dispatch(setFolders({ folders: res.data.data.folders }));
                     dispatch(
@@ -53,7 +51,7 @@ const Home = () => {
                     // toast.error("Server is not responding");
                 }
             });
-            dispatch(setLoading({ loading: false }));
+            
     };
 
     useEffect(() => {
