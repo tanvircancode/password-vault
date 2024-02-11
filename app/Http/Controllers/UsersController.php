@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\HasApiTokens;
+
 
 class UsersController extends Controller
 {
@@ -92,27 +94,23 @@ class UsersController extends Controller
 
     public function logout(Request $request)
     {
-        // $request->session()->invalidate();
-        $request->user()->currentAccessToken()->delete();
-        // return response()->json(['data' => $request->user()], 200);
-
-        
-
-
-        $response = [
-            'status' => true,
-            'data' =>  $request->user(),
-            'user' =>  Auth::user(),
-            'message' => 'Logged out successfully'
-        ];
-        return response()->json($response, 200);
+        if ($request->user()->currentAccessToken()->delete()) {
+            $response = [
+                'status' => true,
+                'message' => 'Logged out successfully'
+            ];
+            return response()->json($response, 200);
+        }
+        else {
+            return response()->json(['status' => false], 404);
+        }   
 
         // return redirect('/login');
     }
 
     public function me(Request $request)
     {
-        $token = $request->header('Authorization');
+        $token = request()->bearerToken();
         return response()->json(['user' => $token], 200);
         if (!Auth::user()) {
             return response()->json(['status' => false], 403);
@@ -130,7 +128,7 @@ class UsersController extends Controller
     public function show($id)
     {
 
-        // return response()->json(['user' => Auth::user()], 200);
+        // return response()->json(['token' => $request->bearerToken(), 'user' => Auth::user()], 200);
         if ($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }

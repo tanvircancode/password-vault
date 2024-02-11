@@ -7,7 +7,7 @@ import {
 import "../home.scss";
 import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
-import MoonLoader from "react-spinners/HashLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectMenu, setMakeBlur } from "../../../store";
 
@@ -17,6 +17,8 @@ const OrganizationsBar = () => {
     const organizations = useSelector((state) => state.organizations);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
+    const orgAndFolderLoading = useSelector((state) => state.orgAndFolderLoading);
+
 
     const dispatch = useDispatch();
 
@@ -100,13 +102,25 @@ const OrganizationsBar = () => {
                         </div>
                         <hr className="hr-line" />
                     </div>
-                 
+
                     <div
                         id="collapseOne"
                         className="accordion-collapse collapse show"
                         style={{ marginLeft: 20 }}
                     >
-                        {organizations.length > 0 ? (
+                        {orgAndFolderLoading && (
+                        <div
+                            style={{
+                                width: "100px",
+                                margin: "15px auto 15px",
+                                display: "block",
+                            }}
+                        >
+                            <MoonLoader color="#52bfd9" />
+                        </div>
+                    )}
+              
+                        {organizations.length > 0 && (
                             <div className="accordion-body p-0 ">
                                 <ul
                                     style={{
@@ -146,16 +160,7 @@ const OrganizationsBar = () => {
                                     ))}
                                 </ul>
                             </div>
-                        ) : (
-                            <div
-                                style={{
-                                    margin: "auto",
-                                    
-                                }}
-                            >
-                                <MoonLoader color="#36d7b7" />
-                            </div>
-                        )}
+                        ) }
                         <div onClick={handleAddOrg}>
                             <div
                                 className="accordion-body p-0 mb-3 add-org-text"

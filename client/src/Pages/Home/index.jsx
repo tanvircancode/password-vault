@@ -8,7 +8,7 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations, setMakeBlur } from "../../store";
+import { setFolders, setOrganizations, setMakeBlur, setOrgAndFolderLoading } from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
@@ -38,6 +38,7 @@ const Home = () => {
                             organizations: res.data.data.organizations,
                         })
                     );
+                    dispatch(setOrgAndFolderLoading({orgAndFolderLoading:false}));
                 }
             })
             .catch((error) => {

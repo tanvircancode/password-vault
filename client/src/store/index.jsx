@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   user:null,
   token:null,
-  
   selectMenu:{menuType:'', typeValue:''},
   organizations:[],
   folders:[],
   reloadPage:false,
-  makeBlur: false
+  makeBlur: false,
+  orgAndFolderLoading: true,
 }
 
 export const vaultSlice = createSlice({
@@ -25,6 +25,9 @@ export const vaultSlice = createSlice({
     },
     setFolders: (state, action) => {
       state.folders = action.payload.folders;
+    },
+    setOrgAndFolderLoading: (state, action) => {
+      state.orgAndFolderLoading = action.payload.orgAndFolderLoading;
     },
     
     setOrganizations: (state, action) => {
@@ -43,6 +46,6 @@ export const vaultSlice = createSlice({
   },
 })
 
-export const { setLogin, setLogout,setFolders ,setOrganizations,setSelectMenu, setReloadPage,setMakeBlur} = vaultSlice.actions;
+export const { setLogin, setLogout,setFolders ,setOrganizations,setSelectMenu, setOrgAndFolderLoading, setReloadPage,setMakeBlur} = vaultSlice.actions;
 
 export default vaultSlice.reducer

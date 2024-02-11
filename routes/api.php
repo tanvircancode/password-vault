@@ -21,37 +21,26 @@ use App\Http\Controllers\OrganizationsController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function()  { 
-   
-    // user apis
- Route::get('/user/{id}',[UsersController::class, 'show']);  
- Route::get('/me',[UsersController::class, 'me']);  
+Route::middleware('auth:sanctum')->group(function () {
 
- Route::get('/logout',[UsersController::class, 'logout']);
- 
+  // user apis
+  Route::get('/user/{id}', [UsersController::class, 'show']);
+  Route::get('/me', [UsersController::class, 'me']);
+
+  Route::get('/logout', [UsersController::class, 'logout']);
+
   // item apis
-Route::post('/item',[ItemsController::class, 'store']);  
-Route::get('/items/{id}',[ItemsController::class, 'index']);  
+  Route::post('/item', [ItemsController::class, 'store']);
+  Route::get('/items/{id}', [ItemsController::class, 'index']);
 
 
-// folder apis
-Route::post('/folder',[FoldersController::class, 'store']);  
+  // folder apis
+  Route::post('/folder', [FoldersController::class, 'store']);
 
-// orgs apis
-Route::post('/organization',[OrganizationsController::class, 'store']);  
-
-
-
+  // orgs apis
+  Route::post('/organization', [OrganizationsController::class, 'store']);
 });
 
 
-Route::post('/register',[UsersController::class, 'store']);  
-Route::post('/login',[UsersController::class, 'login']);
-
-
-
-
-
-
-
-
+Route::post('/register', [UsersController::class, 'store']);
+Route::post('/login', [UsersController::class, 'login']);

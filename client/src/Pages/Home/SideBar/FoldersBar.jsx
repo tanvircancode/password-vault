@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import AddFolderModal from "../../../Modal/FolderModals/AddFolderModal";
 
 import { useDispatch, useSelector } from "react-redux";
-import MoonLoader from "react-spinners/HashLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 import { setSelectMenu, setMakeBlur } from "../../../store";
 import "../home.scss";
 
@@ -12,7 +12,9 @@ const FoldersBar = () => {
     const folders = useSelector((state) => state.folders);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
-    const [loading, setLoading] = useState(true);
+    const orgAndFolderLoading = useSelector((state) => state.orgAndFolderLoading);
+
+    
 
     const dispatch = useDispatch();
 
@@ -22,12 +24,6 @@ const FoldersBar = () => {
         setOpenAddModal(true);
         dispatch(setMakeBlur({ makeBlur: true }));
     };
-
-    // useEffect(() => {
-    //     if (folders.length > 0) {
-    //         setLoading(false);
-    //     }
-    // }, [folders]);
 
     return (
         <div className="accordion">
@@ -46,15 +42,24 @@ const FoldersBar = () => {
                             Folders
                         </button>
                     </h2>
-                    {/* {loading && (
-                        
-                    )} */}
+
+                    {orgAndFolderLoading && (
+                        <div
+                            style={{
+                                width: "100px",
+                                margin: "15px auto 15px",
+                                display: "block",
+                            }}
+                        >
+                            <MoonLoader color="#52bfd9" />
+                        </div>
+                    )}
                     <div
                         id="collapseThree"
                         className="accordion-collapse collapse show "
                         style={{ marginLeft: 20 }}
                     >
-                        {folders.length > 0 ? (
+                        {folders.length > 0 && (
                             <div
                                 className="accordion-body p-0 mt-3"
                                 // style={{ marginRight: 22 }}
@@ -96,17 +101,7 @@ const FoldersBar = () => {
                                     ))}
                                 </ul>
                             </div>
-                        ) : (
-                            <div
-                                style={{
-                                    margin: "auto",
-                                    display: "block",
-                                }}
-                            >
-                                <MoonLoader color="#36d7b7" />
-                            </div>
                         )}
-
                         <div
                             className="accordion-body p-0 mt-2 mb-2 add-folder-text"
                             style={{ marginRight: 70 }}

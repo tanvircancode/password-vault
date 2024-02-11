@@ -3,6 +3,7 @@ import {
     BsUpload,
     BsArrow90DegUp,
     BsTrash3,
+    BsClipboard2X,
 } from "react-icons/bs";
 import "./item.scss";
 import { useEffect, useState } from "react";
@@ -27,7 +28,6 @@ const ItemList = () => {
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
     const reloadPage = useSelector((state) => state.reloadPage);
-    
 
     console.log(userId);
 
@@ -56,7 +56,7 @@ const ItemList = () => {
                 },
             })
             .then((res) => {
-                // console.log(res);
+                console.log(res);
                 if (res.data.status && res.status === 200) {
                     setItemsData(res.data.data.items);
                 }
@@ -186,7 +186,7 @@ const ItemList = () => {
                         className="form-check-input small-checkbox"
                         type="checkbox"
                         id="select-all"
-                        disabled={!token}
+                        disabled={!token || itemsData.length === 0}
                         checked={
                             checkAll &&
                             selectedItems.length === itemsData.length
@@ -196,7 +196,7 @@ const ItemList = () => {
                     />
 
                     <label
-                        className="form-check-label mb-0"
+                        className=" mb-0"
                         style={{ marginTop: "2px", fontSize: 18 }}
                         htmlFor="select-all"
                     >
@@ -395,6 +395,20 @@ const ItemList = () => {
                         <hr />
                     </>
                 ))}
+
+            {itemsData.length === 0 && !loading && (
+                <div
+                    className="text-center d-flex flex-column align-items-center"
+                    style={{ marginTop: 30 }}
+                >
+                    <BsClipboard2X
+                        size={80}
+                        color={"#aebed5"}
+                        style={{ marginBottom: 15 }}
+                    />
+                    <span>There are no items to show</span>
+                </div>
+            )}
 
             <AddItemModal
                 openPopup={openNewItemModal}
