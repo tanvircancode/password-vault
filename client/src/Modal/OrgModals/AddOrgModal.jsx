@@ -52,6 +52,8 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                     } else {
                         toast.error("Server is not responding");
                     }
+                    setOpenAddModal(false);
+                    dispatch(setMakeBlur({ makeBlur: false }));
                 })
                 .catch((error) => {
                     // console.log(error)
@@ -67,9 +69,9 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                 });
             setEmail("");
             setOrgname("");
-            setOpenAddModal(false);
+            
         }
-        dispatch(setMakeBlur({ makeBlur: false }));
+        
     };
 
     const cancelModal = () => {

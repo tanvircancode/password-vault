@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AddIdentityModal = ({ stateValues, setStateValues }) => {
+const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
     return (
         <>
             <div className="row mb-2">
@@ -11,7 +11,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                     <select
                         className="form-select"
                         aria-label="Default select example"
-                        value={stateValues.title}
+                        value={fetchSingleItem.identity.title ?? ""}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -35,7 +35,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                             type="email"
                             placeholder="example@gmail.com"
                             className="form-control"
-                            value={stateValues.identityEmail}
+                            value={fetchSingleItem.identity.email ?? ""}
                             onChange={(e) =>
                                 setStateValues({
                                     ...stateValues,
@@ -55,7 +55,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="text"
                         className="form-control"
                         placeholder="First Name"
-                        value={stateValues.firstName}
+                        value={fetchSingleItem.identity.first_name ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -70,7 +70,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                     </label>
                     <input
                         type="text"
-                        value={stateValues.middleName}
+                        value={fetchSingleItem.identity.middle_name  ?? ''}
                         className="form-control"
                         placeholder="Middle Name"
                         onChange={(e) =>
@@ -89,7 +89,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="text"
                         className="form-control"
                         placeholder="Last Name"
-                        value={stateValues.lastName}
+                        value={fetchSingleItem.identity.last_name  ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -108,7 +108,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="number"
                         className="form-control"
                         placeholder="Phone"
-                        value={stateValues.phone}
+                        value={fetchSingleItem.identity.phone  ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -125,7 +125,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="number"
                         className="form-control"
                         placeholder="Security"
-                        value={stateValues.security}
+                        value={fetchSingleItem.identity.security ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -142,7 +142,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="number"
                         className="form-control"
                         placeholder="License"
-                        value={stateValues.license}
+                        value={fetchSingleItem.identity.license  ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -161,7 +161,7 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
                         type="text"
                         className="form-control"
                         placeholder="Address"
-                        value={stateValues.address}
+                        value={fetchSingleItem.identity.address  ?? ''}
                         onChange={(e) =>
                             setStateValues({
                                 ...stateValues,
@@ -175,4 +175,4 @@ const AddIdentityModal = ({ stateValues, setStateValues }) => {
     );
 };
 
-export default AddIdentityModal;
+export default EditIdentityModal;

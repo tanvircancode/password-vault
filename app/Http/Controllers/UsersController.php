@@ -110,8 +110,7 @@ class UsersController extends Controller
 
     public function me(Request $request)
     {
-        $token = request()->bearerToken();
-        return response()->json(['user' => $token], 200);
+        
         if (!Auth::user()) {
             return response()->json(['status' => false], 403);
         }
@@ -128,7 +127,6 @@ class UsersController extends Controller
     public function show($id)
     {
 
-        // return response()->json(['token' => $request->bearerToken(), 'user' => Auth::user()], 200);
         if ($id !== Auth::user()->id) {
             return response()->json(['status' => false], 403);
         }

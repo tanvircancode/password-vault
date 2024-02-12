@@ -17,8 +17,9 @@ const OrganizationsBar = () => {
     const organizations = useSelector((state) => state.organizations);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
-    const orgAndFolderLoading = useSelector((state) => state.orgAndFolderLoading);
-
+    const orgAndFolderLoading = useSelector(
+        (state) => state.orgAndFolderLoading
+    );
 
     const dispatch = useDispatch();
 
@@ -109,17 +110,17 @@ const OrganizationsBar = () => {
                         style={{ marginLeft: 20 }}
                     >
                         {orgAndFolderLoading && (
-                        <div
-                            style={{
-                                width: "100px",
-                                margin: "15px auto 15px",
-                                display: "block",
-                            }}
-                        >
-                            <MoonLoader color="#52bfd9" />
-                        </div>
-                    )}
-              
+                            <div
+                                style={{
+                                    width: "100px",
+                                    margin: "15px auto 15px",
+                                    display: "block",
+                                }}
+                            >
+                                <MoonLoader color="#52bfd9" />
+                            </div>
+                        )}
+
                         {organizations.length > 0 && (
                             <div className="accordion-body p-0 ">
                                 <ul
@@ -160,7 +161,7 @@ const OrganizationsBar = () => {
                                     ))}
                                 </ul>
                             </div>
-                        ) }
+                        )}
                         <div onClick={handleAddOrg}>
                             <div
                                 className="accordion-body p-0 mb-3 add-org-text"

@@ -15,10 +15,15 @@ import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { setReloadPage, setMakeBlur } from "../../../store";
 import HashLoader from "react-spinners/HashLoader";
+import EditItemModal from "../../../Modal/ItemModals/EditItemModal";
 
 const ItemList = () => {
     const [loading, setLoading] = useState(true);
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
+
+    const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
+    const [fetchSingleItem, setFetchSingleItem] = useState("");
+
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
     const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
@@ -29,13 +34,18 @@ const ItemList = () => {
     const token = useSelector((state) => state.token);
     const reloadPage = useSelector((state) => state.reloadPage);
 
-    console.log(userId);
+    // console.log(userId);
 
-    const [itemsData, setItemsData] = useState("");
+    const [itemsData, setItemsData] = useState([]);
     const [selectedItems, setSelectedItems] = useState("");
     const [checkAll, setCheckAll] = useState(false);
 
     const dispatch = useDispatch();
+
+    const handleOpenPopup = (item) => {
+        setOpenEditItemPopup(true);
+        setFetchSingleItem(item);
+    }
 
     const headings = {
         orgs: "All Items",
@@ -105,42 +115,51 @@ const ItemList = () => {
                 selectMenu.menuType === "orgs" ||
                 selectMenu.menuType === "items"
             ) {
-                return itemsData.filter((item) => !item.deleted_at);
+                return itemsData.filter((item) => Boolean(!item.deleted_at));
             } else if (selectMenu.menuType === "me") {
                 return itemsData.filter(
-                    (item) => !item.deleted_at && !item.organization
+                    (item) =>
+                        Boolean(!item.deleted_at) && Boolean(!item.organization)
                 );
             } else if (selectMenu.menuType === "org") {
                 return itemsData.filter(
                     (item) =>
-                        !item.deleted_at &&
+                        Boolean(!item.deleted_at) &&
                         item.organization_id === selectMenu.typeValue
                 );
             } else if (selectMenu.menuType === "favorite") {
                 return itemsData.filter(
-                    (item) => !item.deleted_at && item.favorite
+                    (item) => Boolean(!item.deleted_at) && item.favorite
                 );
             } else if (selectMenu.menuType === "type") {
                 return itemsData.filter(
                     (item) =>
-                        !item.deleted_at && item.type === selectMenu.typeValue
+                        Boolean(!item.deleted_at) &&
+                        item.type === selectMenu.typeValue
                 );
             } else if (selectMenu.menuType === "folder") {
                 return itemsData.filter(
                     (item) =>
-                        !item.deleted_at &&
+                        Boolean(!item.deleted_at) &&
                         item.folder_id === selectMenu.typeValue
                 );
             } else if (selectMenu.menuType === "trash") {
-                return itemsData.filter((item) => item.deleted_at);
+                return itemsData.filter((item) => Boolean(item.deleted_at));
             }
         }
+
+        return itemsData.filter((item) => Boolean(!item.deleted_at));
+        
     };
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
         dispatch(setMakeBlur({ makeBlur: true }));
     };
+
+   
+
+    // console.log(filteredItems())
 
     useEffect(() => {
         getItemsData();
@@ -278,11 +297,11 @@ const ItemList = () => {
                 </div>
             )}
             {itemsData.length > 0 &&
-                itemsData.map((item, index) => (
-                    <>
+                filteredItems().map((item, index) => (
+                    <div key={index}>
                         <div
                             className={`row mb-2 ${blur ? "is-blur" : ""}`}
-                            key={index}
+                            
                         >
                             <div className="col">
                                 <div className="d-flex">
@@ -308,7 +327,7 @@ const ItemList = () => {
                                         ></label>
                                     </div>
                                     <div className="col-5 text-start">
-                                        <p className="m-0">{item.name}</p>
+                                        <p className="m-0" onClick={() => handleOpenPopup(item)}>{item.name}</p>
                                         <span>
                                             {item.type === 1
                                                 ? "Login item"
@@ -393,10 +412,10 @@ const ItemList = () => {
                             </div>
                         </div>
                         <hr />
-                    </>
+                    </div>
                 ))}
 
-            {itemsData.length === 0 && !loading && (
+            {filteredItems().length === 0 && !loading && (
                 <div
                     className="text-center d-flex flex-column align-items-center"
                     style={{ marginTop: 30 }}
@@ -409,6 +428,14 @@ const ItemList = () => {
                     <span>There are no items to show</span>
                 </div>
             )}
+            {openEditItemPopup && (
+               < EditItemModal 
+                 openEditItemPopup={openEditItemPopup}
+                   setOpenEditItemPopup={setOpenEditItemPopup}
+                   fetchSingleItem={fetchSingleItem}
+                   setFetchSingleItem={setFetchSingleItem}
+               /> 
+            )} 
 
             <AddItemModal
                 openPopup={openNewItemModal}

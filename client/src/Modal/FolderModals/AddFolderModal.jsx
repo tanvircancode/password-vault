@@ -47,6 +47,8 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                 else  {
                     toast.error("Server is not responding");
                 }
+                setOpenAddModal(false);
+        dispatch(setMakeBlur({makeBlur:false}))
             })
             .catch((error) => {
                 console.log(error)
@@ -60,8 +62,7 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
             setFolderName("")
             
         }
-        setOpenAddModal(false);
-        dispatch(setMakeBlur({makeBlur:false}))
+        
     };
 
     const cancelModal = () => {

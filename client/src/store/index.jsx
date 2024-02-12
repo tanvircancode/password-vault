@@ -22,6 +22,8 @@ export const vaultSlice = createSlice({
     setLogout: (state) => {
       state.user = null;
       state.token = null;
+      state.folders = []; 
+      state.organizations = []; 
     },
     setFolders: (state, action) => {
       state.folders = action.payload.folders;

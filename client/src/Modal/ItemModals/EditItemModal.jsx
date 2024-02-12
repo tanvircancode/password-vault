@@ -1,20 +1,25 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect, useState } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
+
 import { useSelector, useDispatch } from "react-redux";
 import "../modal.scss";
 import { Types } from "../../constants/variables";
-import AddLoginModal from "./AddLoginModal";
-import AddCardModal from "./AddCardModal";
-import AddIdentityModal from "./AddIdentityModal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
 import { setReloadPage, setMakeBlur } from "../../store";
+import EditLoginModal from "./EditLoginModal";
+import EditCardModal from "./EditcardModal";
+import EditIdentityModal from "./EditIdentityModal";
 
-function AddItemModal({ openPopup, setOpenPopup }) {
+function EditItemModal({
+    openEditItemPopup,
+    setOpenEditItemPopup,
+    fetchSingleItem,
+    setFetchSingleItem,
+}) {
+    // console.log(fetchSingleItem);
 
     const userId = localStorage.getItem("user_id");
     const types = Types;
@@ -56,7 +61,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
     useEffect(() => {
-        console.log(blur);
+        // console.log(blur);
     }, [blur]);
 
     const closePopup = () => {
@@ -64,7 +69,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
         dispatch(setMakeBlur({ makeBlur: false }));
     };
 
-    const handleAddItem = async (e) => {
+    const handleEditItem = async (e) => {
         e.preventDefault();
         var formData = new FormData();
         formData.append("user_id", userId);
@@ -88,14 +93,14 @@ function AddItemModal({ openPopup, setOpenPopup }) {
             formData.append("security_code", stateValues.securityCode);
         } else if (stateValues.selectItemType === 3) {
             formData.append("title", stateValues.title);
-            formData.append("email", stateValues.email);
-            formData.append("first_name", stateValues.firstName);
-            formData.append("middle_name", stateValues.middleName);
-            formData.append("last_name", stateValues.lastName);
-            formData.append("phone", stateValues.phone);
-            formData.append("security", stateValues.security);
-            formData.append("license", stateValues.license);
-            formData.append("address", stateValues.address);
+            formData.append("email", stateValues.brand);
+            formData.append("first_name", stateValues.cardNumber);
+            formData.append("middle_name", stateValues.expMonth);
+            formData.append("last_name", stateValues.expYear);
+            formData.append("phone", stateValues.securityCode);
+            formData.append("security", stateValues.expMonth);
+            formData.append("license", stateValues.expYear);
+            formData.append("address", stateValues.securityCode);
         }
         await axios
             .post(`${BASE_URL}/api/item`, formData, {
@@ -129,16 +134,16 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     return (
         <div
-            className={`modal fade ${openPopup ? "show" : ""}`}
+            className={`modal fade ${openEditItemPopup ? "show" : ""}`}
             tabIndex="-1"
             role="dialog"
-            style={{ display: openPopup ? "block" : "none" }}
-            aria-hidden={!openPopup}
+            style={{ display: openEditItemPopup ? "block" : "none" }}
+            aria-hidden={!openEditItemPopup}
         >
             <div className="modal-dialog modal-dialog-scrollable custom-width">
                 <div className={`modal-content `}>
                     <div className="modal-header custom-modal-bg">
-                        <h5 className="modal-title">Add New Item</h5>
+                        <h5 className="modal-title">Edit Item</h5>
                         <button
                             type="button"
                             className="btn-close"
@@ -154,7 +159,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={stateValues.selectItemType}
+                                    value={fetchSingleItem.type ?? ''}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
@@ -181,7 +186,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     type="text"
                                     className="form-control"
                                     placeholder="Name"
-                                    value={stateValues.itemName}
+                                    value={fetchSingleItem.name}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
@@ -196,7 +201,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={stateValues.folderId}
+                                    value={fetchSingleItem.folder_id ?? ''}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
@@ -217,24 +222,24 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                             </div>
                         </div>
 
-                        {stateValues.selectItemType === 1 && (
-                            <AddLoginModal
-                                stateValues={stateValues}
-                                setStateValues={setStateValues}
+                        {fetchSingleItem.type === 1 && (
+                            <EditLoginModal 
+                            fetchSingleItem={fetchSingleItem}
+                            setFetchSingleItem={setFetchSingleItem}
+                            />
+                        ) }
+
+                        {fetchSingleItem.type === 2 && (
+                            <EditCardModal
+                            fetchSingleItem={fetchSingleItem}
+                            setFetchSingleItem={setFetchSingleItem}
                             />
                         )}
 
-                        {stateValues.selectItemType === 2 && (
-                            <AddCardModal
-                                stateValues={stateValues}
-                                setStateValues={setStateValues}
-                            />
-                        )}
-
-                        {stateValues.selectItemType === 3 && (
-                            <AddIdentityModal
-                                stateValues={stateValues}
-                                setStateValues={setStateValues}
+                        {fetchSingleItem.type === 3 && (
+                            <EditIdentityModal
+                            fetchSingleItem={fetchSingleItem}
+                            setFetchSingleItem={setFetchSingleItem}
                             />
                         )}
 
@@ -247,7 +252,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     className="form-control"
                                     style={{ resize: "none" }}
                                     rows="4"
-                                    value={stateValues.note  && ''}
+                                    value={fetchSingleItem.notes ?? ''}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
@@ -264,7 +269,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={stateValues.orgId}
+                                    value={fetchSingleItem.organization_id ?? ""}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,
@@ -272,7 +277,11 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                         })
                                     }
                                 >
-                                  {token && <option value="">{userData.name}</option>}  
+                                    {token && (
+                                        <option value="">
+                                            {userData.name}
+                                        </option>
+                                    )}
                                     {organizations.map((organization) => (
                                         <option
                                             key={organization.id}
@@ -290,7 +299,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     <input
                                         className="form-check-input"
                                         type="checkbox"
-                                        checked={stateValues.favorite}
+                                        checked={fetchSingleItem.favorite}
                                         id="flexCheckDefault"
                                         onChange={(e) =>
                                             setStateValues({
@@ -324,7 +333,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                         <button
                             type="button"
                             className="modal-save"
-                            onClick={handleAddItem}
+                            onClick={handleEditItem}
                         >
                             Save
                         </button>
@@ -342,4 +351,4 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     );
 }
 
-export default AddItemModal;
+export default EditItemModal;

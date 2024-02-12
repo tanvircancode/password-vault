@@ -6,19 +6,21 @@ import ItemsBar from "./SideBar/ItemsBar";
 import OrganizationsBar from "./SideBar/OrganizationsBar";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setFolders, setOrganizations, setMakeBlur, setOrgAndFolderLoading } from "../../store";
+import {
+    setFolders,
+    setOrganizations,
+    setMakeBlur,
+    setOrgAndFolderLoading,
+} from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
 const Home = () => {
-
     const userId = localStorage.getItem("user_id");
-    console.log(userId)
+    console.log(userId);
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
-
 
     const dispatch = useDispatch();
 
@@ -30,7 +32,8 @@ const Home = () => {
                 },
             })
             .then((res) => {
-                console.log(res);
+                // console.log(res);
+
                 if (res.data.status && res.status === 200) {
                     dispatch(setFolders({ folders: res.data.data.folders }));
                     dispatch(
@@ -38,7 +41,10 @@ const Home = () => {
                             organizations: res.data.data.organizations,
                         })
                     );
-                    dispatch(setOrgAndFolderLoading({orgAndFolderLoading:false}));
+
+                    dispatch(
+                        setOrgAndFolderLoading({ orgAndFolderLoading: false })
+                    );
                 }
             })
             .catch((error) => {
@@ -52,12 +58,11 @@ const Home = () => {
                     // toast.error("Server is not responding");
                 }
             });
-            
     };
 
     useEffect(() => {
         getFoldersAndOrgs();
-       
+
         if (window.performance) {
             if (performance.navigation.type == 1) {
                 dispatch(setMakeBlur({ makeBlur: false }));
@@ -68,12 +73,12 @@ const Home = () => {
     return (
         <div className={`container`}>
             <div className="row mt-5 d-flex ">
-                <div
-                    className="col-sm-12 col-md-4 col-lg-3 "
-                >
+                <div className="col-sm-12 col-md-4 col-lg-3 ">
                     <div className="card w-100">
                         <div
-                            className={`card-header text-uppercase ${blur ? "is-blur" : ""}`}
+                            className={`card-header text-uppercase ${
+                                blur ? "is-blur" : ""
+                            }`}
                             style={{ fontWeight: "bold" }}
                         >
                             Filter
@@ -89,7 +94,9 @@ const Home = () => {
                                 <FoldersBar />
                             </li>
                             <li
-                                className={`list-group-item d-flex align-items-center justify-content-center ${blur ? "is-blur" : ""}`}
+                                className={`list-group-item d-flex align-items-center justify-content-center ${
+                                    blur ? "is-blur" : ""
+                                }`}
                                 onClick={() =>
                                     dispatch(
                                         setSelectMenu({
