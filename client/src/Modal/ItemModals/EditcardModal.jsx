@@ -3,14 +3,26 @@ import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
 import { Brands, Months } from "../../constants/variables";
+import { useSelector, useDispatch } from "react-redux";
+import { setFetchSingleItem } from "../../store";
 
-const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
+
+const EditCardModal = () => {
     const [copiedName, setCopiedName] = useState(false);
     const [copiedNumber, setCopiedNumber] = useState(false);
     const [copiedCode, setCopiedCode] = useState(false);
-
     const [showNumber, setShowNumber] = useState(false);
     const [showCode, setShowCode] = useState(false);
+
+    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
+
+    const dispatch = useDispatch();
+
+    const handleInputChange = (e, propertyName) => {
+        const value = e.target.value;
+        const type= 2;
+        dispatch(setFetchSingleItem({propertyName, value,type}));
+      };
 
     const handleToggleNumber = () => {
         setShowNumber(!showNumber);
@@ -56,17 +68,12 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         type="text"
                         className="form-control"
                         value={fetchSingleItem.card.cardholder_name ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                cardHolderName: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'cardholder_name')}
                         aria-label="Name"
                     />
                     <button type="button" className="btn btn-light">
                         <CopyToClipboard
-                            text={fetchSingleItem.card.cardholder_name}
+                            text={fetchSingleItem.card.cardholder_name ?? ''}
                             onCopy={handleCopyToClipboard(0)}
                         >
                             <BsCopy />
@@ -85,12 +92,7 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                 <select
                     className="form-select"
                     value={fetchSingleItem.card.brand ?? ''}
-                    onChange={(e) =>
-                        setStateValues({
-                            ...stateValues,
-                            brand: e.target.value,
-                        })
-                    }
+                    onChange={(e) => handleInputChange(e, 'brand')}
                 >
                     <option value="">-Select-</option>
                     {Object.keys(Brands).map((brandKey) => (
@@ -110,18 +112,13 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                             type={showNumber ? "text" : "password"}
                             className="form-control"
                             value={fetchSingleItem.card.number ?? ''}
-                            onChange={(e) =>
-                                setStateValues({
-                                    ...stateValues,
-                                    cardNumber: e.target.value,
-                                })
-                            }
+                            onChange={(e) => handleInputChange(e, 'number')}
                             aria-label="Password"
                         />
 
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={fetchSingleItem.card.number}
+                                text={fetchSingleItem.card.number ?? ''}
                                 onCopy={handleCopyToClipboard(1)}
                             >
                                 <BsCopy />
@@ -148,12 +145,7 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                     <select
                         className="form-select"
                         value={fetchSingleItem.card.exp_month ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                expMonth: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'exp_month')}
                     >
                         <option value="">-Select-</option>
                         {Object.keys(Months).map((monthKey) => (
@@ -171,13 +163,8 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         type="text"
                         className="form-control"
                         placeholder="ex:- 2024"
-                        value={fetchSingleItem.card.exp_year}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                expYear: e.target.value,
-                            })
-                        }
+                        value={fetchSingleItem.card.exp_year ?? ''}
+                        onChange={(e) => handleInputChange(e, 'exp_year')}
                     />
                 </div>
             </div>
@@ -191,18 +178,13 @@ const EditCardModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         <input
                             type={showCode ? "text" : "password"}
                             className="form-control"
-                            value={fetchSingleItem.card.security_code}
-                            onChange={(e) =>
-                                setStateValues({
-                                    ...stateValues,
-                                    securityCode: e.target.value,
-                                })
-                            }
+                            value={fetchSingleItem.card.security_code ?? ''}
+                            onChange={(e) => handleInputChange(e, 'security_code')}
                         />
 
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={fetchSingleItem.card.security_code}
+                                text={fetchSingleItem.card.security_code ?? ''}
                                 onCopy={handleCopyToClipboard(2)}
                             >
                                 <BsCopy />

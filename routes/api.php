@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
   // item apis
   Route::post('/item', [ItemsController::class, 'store']);
   Route::get('/items/{id}', [ItemsController::class, 'index']);
+  Route::put('/item/{id}', [ItemsController::class, 'update']);
 
 
   // folder apis

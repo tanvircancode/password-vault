@@ -1,6 +1,19 @@
-import { useState } from "react";
 
-const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
+
+import { useSelector, useDispatch } from "react-redux";
+import { setFetchSingleItem } from "../../store";
+
+const EditIdentityModal = () => {
+    const dispatch = useDispatch();
+
+    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
+
+    const handleInputChange = (e, propertyName) => {
+        const value = e.target.value;
+        const type= 3;
+        dispatch(setFetchSingleItem({propertyName, value,type}));
+      };
+
     return (
         <>
             <div className="row mb-2">
@@ -12,12 +25,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-select"
                         aria-label="Default select example"
                         value={fetchSingleItem.identity.title ?? ""}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                title: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'title')}
                     >
                         <option value="1" defaultValue>
                             Mr
@@ -36,12 +44,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                             placeholder="example@gmail.com"
                             className="form-control"
                             value={fetchSingleItem.identity.email ?? ""}
-                            onChange={(e) =>
-                                setStateValues({
-                                    ...stateValues,
-                                    identityEmail: e.target.value,
-                                })
-                            }
+                            onChange={(e) => handleInputChange(e, 'email')}
                         />
                     </div>
                 </div>
@@ -56,12 +59,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="First Name"
                         value={fetchSingleItem.identity.first_name ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                firstName: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'first_name')}
                     />
                 </div>
                 <div className="col-sm-12 col-md-4 mb-2">
@@ -73,12 +71,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         value={fetchSingleItem.identity.middle_name  ?? ''}
                         className="form-control"
                         placeholder="Middle Name"
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                middleName: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'middle_name')}
                     />
                 </div>
                 <div className="col-sm-12 col-md-4 mb-2">
@@ -90,12 +83,8 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="Last Name"
                         value={fetchSingleItem.identity.last_name  ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                lastName: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'last_name')}
+
                     />
                 </div>
             </div>
@@ -109,12 +98,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="Phone"
                         value={fetchSingleItem.identity.phone  ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                phone: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'phone')}
                     />
                 </div>
                 <div className="col-sm-12 col-md-4 mb-2">
@@ -126,12 +110,8 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="Security"
                         value={fetchSingleItem.identity.security ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                security: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'security')}
+
                     />
                 </div>
                 <div className="col-sm-12 col-md-4 mb-2">
@@ -143,12 +123,8 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="License"
                         value={fetchSingleItem.identity.license  ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                license: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'license')}
+
                     />
                 </div>
             </div>
@@ -162,12 +138,7 @@ const EditIdentityModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         className="form-control"
                         placeholder="Address"
                         value={fetchSingleItem.identity.address  ?? ''}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                address: e.target.value,
-                            })
-                        }
+                        onChange={(e) => handleInputChange(e, 'address')}
                     />
                 </div>
             </div>

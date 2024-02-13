@@ -2,17 +2,28 @@ import { useState } from "react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsCopy, BsEye, BsEyeSlash } from "react-icons/bs";
+import { useSelector, useDispatch } from "react-redux";
+import { setFetchSingleItem } from "../../store";
 
-const EditLoginModal = ({ fetchSingleItem, setFetchSingleItem }) => {
+const EditLoginModal = () => {
     const [copiedUsername, setCopiedUsername] = useState(false);
     const [copiedPassword, setCopiedPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
+
+    const dispatch = useDispatch();
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
 
-    console.log(fetchSingleItem)
+    const handleInputChange = (e, propertyName) => {
+        const value = e.target.value;
+        const type = 1;
+        dispatch(setFetchSingleItem({propertyName, value, type}));
+    };
+
+    // console.log(fetchSingleItem)
 
     const handleCopyToClipboard = (val) => {
         return () => {
@@ -44,18 +55,13 @@ const EditLoginModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         <input
                             type="text"
                             className="form-control"
-                            value={fetchSingleItem.login.username}
-                            onChange={(e) =>
-                                setStateValues({
-                                    ...stateValues,
-                                    userName: e.target.value,
-                                })
-                            }
+                            value={fetchSingleItem.login.username ?? ""}
+                            onChange={(e) => handleInputChange(e, "username")}
                             aria-label="Name"
                         />
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={fetchSingleItem.login.userName}
+                                text={fetchSingleItem.login.username ?? ""}
                                 onCopy={handleCopyToClipboard(0)}
                             >
                                 <BsCopy />
@@ -77,18 +83,13 @@ const EditLoginModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         <input
                             type={showPassword ? "text" : "password"}
                             className="form-control"
-                            value={fetchSingleItem.login.password}  
-                            onChange={(e) =>
-                                setStateValues({
-                                    ...stateValues,
-                                    password: e.target.value,
-                                })
-                            }
+                            value={fetchSingleItem.login.password ?? ''}
+                            onChange={(e) => handleInputChange(e, "password")}
                             aria-label="Password"
                         />
                         <button type="button" className="btn btn-light">
                             <CopyToClipboard
-                                text={fetchSingleItem.login.password}
+                                text={fetchSingleItem.login.password ?? ""}
                                 onCopy={handleCopyToClipboard(1)}
                             >
                                 <BsCopy />
@@ -101,7 +102,7 @@ const EditLoginModal = ({ fetchSingleItem, setFetchSingleItem }) => {
                         >
                             {showPassword ? <BsEye /> : <BsEyeSlash />}
                         </button>
-                    </div>  
+                    </div>
                     {copiedPassword && (
                         <div className="position-absolute top-0 end-0 me-2">
                             <span style={{ color: "red" }}>Copied.</span>
@@ -112,17 +113,12 @@ const EditLoginModal = ({ fetchSingleItem, setFetchSingleItem }) => {
             <div className="row mb-4">
                 <div className="col-sm-12 col-md-8 col-lg-6">
                     <label className="form-label fw-bold label-text">URL</label>
-                    <input  
+                    <input
                         type="text"
                         className="form-control"
                         placeholder="https://google.com"
-                        value={fetchSingleItem.login.url}
-                        onChange={(e) =>
-                            setStateValues({
-                                ...stateValues,
-                                loginUrl: e.target.value,
-                            })
-                        }
+                        value={fetchSingleItem.login.url ?? ''}
+                        onChange={(e) => handleInputChange(e, "url")}
                     />
                 </div>
             </div>

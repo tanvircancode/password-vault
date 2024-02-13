@@ -13,7 +13,7 @@ import MoveOrgModal from "../../../Modal/OrgModals/MoveOrgModal";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
-import { setReloadPage, setMakeBlur } from "../../../store";
+import { setReloadPage, setMakeBlur, setFetchSingleItem } from "../../../store";
 import HashLoader from "react-spinners/HashLoader";
 import EditItemModal from "../../../Modal/ItemModals/EditItemModal";
 
@@ -22,13 +22,14 @@ const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
 
     const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
-    const [fetchSingleItem, setFetchSingleItem] = useState("");
+    // const [fetchSingleItem, setFetchSingleItem] = useState("");
 
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
     const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
+    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
 
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
@@ -44,8 +45,13 @@ const ItemList = () => {
 
     const handleOpenPopup = (item) => {
         setOpenEditItemPopup(true);
-        setFetchSingleItem(item);
+        dispatch(setFetchSingleItem({ fetchSingleItem: item }));
+        dispatch(setMakeBlur({ makeBlur: true }));
     }
+    console.log(fetchSingleItem);
+    // useEffect(() => {
+
+    // },[fetchSingleItem]);
 
     const headings = {
         orgs: "All Items",
@@ -432,8 +438,7 @@ const ItemList = () => {
                < EditItemModal 
                  openEditItemPopup={openEditItemPopup}
                    setOpenEditItemPopup={setOpenEditItemPopup}
-                   fetchSingleItem={fetchSingleItem}
-                   setFetchSingleItem={setFetchSingleItem}
+                   
                /> 
             )} 
 

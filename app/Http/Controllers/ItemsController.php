@@ -61,4 +61,26 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
+    public function update($id)
+    {
+        $item = Item::find($id);
+        if(!$item) {
+            return response()->json(['status'=> false, 'message' => 'Item not found'], 404);
+        }
+
+        if ($item->user_id !== Auth::user()->id) {
+            return response()->json(['status' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $input = $request->only(['folder_id', 'notes', 'organization_id', 'favorite']);
+
+      
+   
+        $items = User::with(['items.organization', 'items.folder', 'items.login', 'items.identity', 'items.card'])->find($id);
+        $response = [
+            'status' => true,
+            'data' => $items
+        ];
+        return response()->json($response, 200);
+    }
 }

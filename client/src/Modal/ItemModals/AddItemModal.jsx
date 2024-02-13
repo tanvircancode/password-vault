@@ -55,9 +55,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
-    useEffect(() => {
-        console.log(blur);
-    }, [blur]);
+
 
     const closePopup = () => {
         setOpenPopup(false);
@@ -247,7 +245,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                     className="form-control"
                                     style={{ resize: "none" }}
                                     rows="4"
-                                    value={stateValues.note  && ''}
+                                    value={stateValues.note}
                                     onChange={(e) =>
                                         setStateValues({
                                             ...stateValues,

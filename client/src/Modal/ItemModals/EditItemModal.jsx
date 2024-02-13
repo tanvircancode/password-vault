@@ -4,32 +4,32 @@ import { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import "../modal.scss";
-import { Types } from "../../constants/variables";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
-import { setReloadPage, setMakeBlur } from "../../store";
+import { setReloadPage, setMakeBlur, setFetchSingleItem } from "../../store";
 import EditLoginModal from "./EditLoginModal";
 import EditCardModal from "./EditcardModal";
 import EditIdentityModal from "./EditIdentityModal";
 
-function EditItemModal({
-    openEditItemPopup,
-    setOpenEditItemPopup,
-    fetchSingleItem,
-    setFetchSingleItem,
-}) {
-    // console.log(fetchSingleItem);
-
+function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
     const userId = localStorage.getItem("user_id");
-    const types = Types;
+
     const token = useSelector((state) => state.token);
-    const blur = useSelector((state) => state.makeBlur);
+    
     const folders = useSelector((state) => state.folders);
     const organizations = useSelector((state) => state.organizations);
     const userData = useSelector((state) => state.user);
+    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
 
     const dispatch = useDispatch();
+
+    const handleInputChange = (e, propertyName) => {
+        const value = e.target.value;
+        const type = null;
+        dispatch(setFetchSingleItem({propertyName, value, type}));
+      };
 
     const fieldValues = {
         selectItemType: 1,
@@ -60,50 +60,51 @@ function EditItemModal({
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
-    useEffect(() => {
-        // console.log(blur);
-    }, [blur]);
 
-    const closePopup = () => {
-        setOpenPopup(false);
+    const closePopup = () => { 
+        dispatch(setFetchSingleItem(null))
         dispatch(setMakeBlur({ makeBlur: false }));
+        setOpenEditItemPopup(false);
     };
 
-    const handleEditItem = async (e) => {
+    const handleUpdateItem = async (e) => {
         e.preventDefault();
+        const itemId = fetchSingleItem.id;
+        console.log(fetchSingleItem);
+
         var formData = new FormData();
-        formData.append("user_id", userId);
-        formData.append("type", stateValues.selectItemType);
-        formData.append("name", stateValues.itemName);
-        formData.append("folder_id", stateValues.folderId);
-        formData.append("notes", stateValues.note);
-        formData.append("organization_id", stateValues.orgId);
-        formData.append("favorite", stateValues.favorite ? 1 : 0);
+        formData.append("user_id", fetchSingleItem.user_id);
+        formData.append("type", fetchSingleItem.type);
+        formData.append("name", fetchSingleItem.name);
+        formData.append("folder_id", fetchSingleItem.folder_id);
+        formData.append("notes", fetchSingleItem.notes);
+        formData.append("organization_id", fetchSingleItem.organization_id);
+        formData.append("favorite", fetchSingleItem.favorite ? 1 : 0);
 
         if (stateValues.selectItemType === 1) {
-            formData.append("username", stateValues.userName);
-            formData.append("password", stateValues.password);
-            formData.append("url", stateValues.loginUrl);
+            formData.append("username", fetchSingleItem.login.username);
+            formData.append("password", fetchSingleItem.login.password);
+            formData.append("url", fetchSingleItem.login.url);
         } else if (stateValues.selectItemType === 2) {
-            formData.append("cardholder_name", stateValues.cardHolderName);
-            formData.append("brand", stateValues.brand);
-            formData.append("number", stateValues.cardNumber);
-            formData.append("exp_month", stateValues.expMonth);
-            formData.append("exp_year", stateValues.expYear);
-            formData.append("security_code", stateValues.securityCode);
+            formData.append("cardholder_name", fetchSingleItem.card.cardholder_name);
+            formData.append("brand", fetchSingleItem.card.brand);
+            formData.append("number", fetchSingleItem.card.number);
+            formData.append("exp_month", fetchSingleItem.card.exp_month);
+            formData.append("exp_year", fetchSingleItem.card.exp_year);
+            formData.append("security_code", fetchSingleItem.card.security_code);
         } else if (stateValues.selectItemType === 3) {
-            formData.append("title", stateValues.title);
-            formData.append("email", stateValues.brand);
-            formData.append("first_name", stateValues.cardNumber);
-            formData.append("middle_name", stateValues.expMonth);
-            formData.append("last_name", stateValues.expYear);
-            formData.append("phone", stateValues.securityCode);
-            formData.append("security", stateValues.expMonth);
-            formData.append("license", stateValues.expYear);
-            formData.append("address", stateValues.securityCode);
+            formData.append("title", fetchSingleItem.identity.title);
+            formData.append("email", fetchSingleItem.identity.email);
+            formData.append("first_name", fetchSingleItem.identity.first_name);
+            formData.append("middle_name", fetchSingleItem.identity.middle_name);
+            formData.append("last_name",fetchSingleItem.identity.last_name);
+            formData.append("phone", fetchSingleItem.identity.phone);
+            formData.append("security", fetchSingleItem.identity.security);
+            formData.append("license", fetchSingleItem.identity.license);
+            formData.append("address", fetchSingleItem.identity.address);
         }
         await axios
-            .post(`${BASE_URL}/api/item`, formData, {
+            .put(`${BASE_URL}/api/item/${itemId}`  , formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -152,31 +153,7 @@ function EditItemModal({
                         ></button>
                     </div>
                     <div className="modal-body">
-                        <div className="row mb-2">
-                            <div className="col-md-12 col-lg-6">
-                                <label className="form-label fw-bold label-text">
-                                    What type of item is this?
-                                </label>
-                                <select
-                                    className="form-select"
-                                    value={fetchSingleItem.type ?? ''}
-                                    onChange={(e) =>
-                                        setStateValues({
-                                            ...stateValues,
-                                            selectItemType: parseInt(
-                                                e.target.value
-                                            ),
-                                        })
-                                    }
-                                >
-                                    {types.map((type, index) => (
-                                        <option key={index} value={type.id}>
-                                            {type.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
+                        
                         <div className="row ">
                             <div className="col-sm-12 col-md-6 mb-2">
                                 <label className="form-label fw-bold label-text">
@@ -186,13 +163,8 @@ function EditItemModal({
                                     type="text"
                                     className="form-control"
                                     placeholder="Name"
-                                    value={fetchSingleItem.name}
-                                    onChange={(e) =>
-                                        setStateValues({
-                                            ...stateValues,
-                                            itemName: e.target.value,
-                                        })
-                                    }
+                                    value={fetchSingleItem.name ?? ""}
+                                    onChange={(e) => handleInputChange(e, 'name')}
                                 />
                             </div>
                             <div className="col-sm-12 col-md-6 mb-2">
@@ -201,13 +173,8 @@ function EditItemModal({
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={fetchSingleItem.folder_id ?? ''}
-                                    onChange={(e) =>
-                                        setStateValues({
-                                            ...stateValues,
-                                            folderId: e.target.value,
-                                        })
-                                    }
+                                    value={fetchSingleItem.folder_id ?? ""}
+                                    onChange={(e) => handleInputChange(e, 'folder_id')}
                                 >
                                     <option value={null}>--Select--</option>
                                     {folders.map((folder) => (
@@ -222,26 +189,11 @@ function EditItemModal({
                             </div>
                         </div>
 
-                        {fetchSingleItem.type === 1 && (
-                            <EditLoginModal 
-                            fetchSingleItem={fetchSingleItem}
-                            setFetchSingleItem={setFetchSingleItem}
-                            />
-                        ) }
+                        {fetchSingleItem.type === 1 && <EditLoginModal />}
 
-                        {fetchSingleItem.type === 2 && (
-                            <EditCardModal
-                            fetchSingleItem={fetchSingleItem}
-                            setFetchSingleItem={setFetchSingleItem}
-                            />
-                        )}
+                        {fetchSingleItem.type === 2 && <EditCardModal />}
 
-                        {fetchSingleItem.type === 3 && (
-                            <EditIdentityModal
-                            fetchSingleItem={fetchSingleItem}
-                            setFetchSingleItem={setFetchSingleItem}
-                            />
-                        )}
+                        {fetchSingleItem.type === 3 && <EditIdentityModal />}
 
                         <div className="row mb-4">
                             <div className="col-12">
@@ -252,13 +204,8 @@ function EditItemModal({
                                     className="form-control"
                                     style={{ resize: "none" }}
                                     rows="4"
-                                    value={fetchSingleItem.notes ?? ''}
-                                    onChange={(e) =>
-                                        setStateValues({
-                                            ...stateValues,
-                                            note: e.target.value,
-                                        })
-                                    }
+                                    value={fetchSingleItem.notes ?? ""}
+                                    onChange={(e) => handleInputChange(e, 'notes')}
                                 ></textarea>
                             </div>
                         </div>
@@ -269,13 +216,10 @@ function EditItemModal({
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={fetchSingleItem.organization_id ?? ""}
-                                    onChange={(e) =>
-                                        setStateValues({
-                                            ...stateValues,
-                                            orgId: e.target.value,
-                                        })
+                                    value={
+                                        fetchSingleItem.organization_id ?? ""
                                     }
+                                    onChange={(e) => handleInputChange(e, 'organization_id')}
                                 >
                                     {token && (
                                         <option value="">
@@ -301,14 +245,7 @@ function EditItemModal({
                                         type="checkbox"
                                         checked={fetchSingleItem.favorite}
                                         id="flexCheckDefault"
-                                        onChange={(e) =>
-                                            setStateValues({
-                                                ...stateValues,
-                                                favorite: e.target.checked
-                                                    ? 1
-                                                    : 0,
-                                            })
-                                        }
+                                        onChange={(e) => handleInputChange(e, 'favorite')}
                                     />
 
                                     <label
@@ -333,9 +270,9 @@ function EditItemModal({
                         <button
                             type="button"
                             className="modal-save"
-                            onClick={handleEditItem}
+                            onClick={handleUpdateItem}
                         >
-                            Save
+                            Update
                         </button>
                         <button
                             type="button"
