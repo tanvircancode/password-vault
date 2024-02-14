@@ -17,7 +17,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
     const userId = localStorage.getItem("user_id");
 
     const token = useSelector((state) => state.token);
-    
+
     const folders = useSelector((state) => state.folders);
     const organizations = useSelector((state) => state.organizations);
     const userData = useSelector((state) => state.user);
@@ -26,10 +26,17 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
     const dispatch = useDispatch();
 
     const handleInputChange = (e, propertyName) => {
-        const value = e.target.value;
+        var value;
+
+        if (propertyName !== "favorite") {
+            value = e.target.value;
+        } else {
+            value = e.target.checked;
+        }
+
         const type = null;
-        dispatch(setFetchSingleItem({propertyName, value, type}));
-      };
+        dispatch(setFetchSingleItem({ propertyName, value, type }));
+    };
 
     const fieldValues = {
         selectItemType: 1,
@@ -60,9 +67,8 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
-
-    const closePopup = () => { 
-        dispatch(setFetchSingleItem(null))
+    const closePopup = () => {
+        dispatch(setFetchSingleItem(null));
         dispatch(setMakeBlur({ makeBlur: false }));
         setOpenEditItemPopup(false);
     };
@@ -76,45 +82,53 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
         formData.append("user_id", fetchSingleItem.user_id);
         formData.append("type", fetchSingleItem.type);
         formData.append("name", fetchSingleItem.name);
-        formData.append("folder_id", fetchSingleItem.folder_id);
+        formData.append("folder_id", fetchSingleItem.folder_id ?? '');
         formData.append("notes", fetchSingleItem.notes);
         formData.append("organization_id", fetchSingleItem.organization_id);
         formData.append("favorite", fetchSingleItem.favorite ? 1 : 0);
 
-        if (stateValues.selectItemType === 1) {
+        if (fetchSingleItem.type === 1) {
             formData.append("username", fetchSingleItem.login.username);
             formData.append("password", fetchSingleItem.login.password);
             formData.append("url", fetchSingleItem.login.url);
-        } else if (stateValues.selectItemType === 2) {
-            formData.append("cardholder_name", fetchSingleItem.card.cardholder_name);
+        } else if (fetchSingleItem.type === 2) {
+            formData.append(
+                "cardholder_name",
+                fetchSingleItem.card.cardholder_name
+            );
             formData.append("brand", fetchSingleItem.card.brand);
             formData.append("number", fetchSingleItem.card.number);
             formData.append("exp_month", fetchSingleItem.card.exp_month);
             formData.append("exp_year", fetchSingleItem.card.exp_year);
-            formData.append("security_code", fetchSingleItem.card.security_code);
-        } else if (stateValues.selectItemType === 3) {
+            formData.append(
+                "security_code",
+                fetchSingleItem.card.security_code
+            );
+        } else if (fetchSingleItem.type === 3) {
             formData.append("title", fetchSingleItem.identity.title);
             formData.append("email", fetchSingleItem.identity.email);
             formData.append("first_name", fetchSingleItem.identity.first_name);
-            formData.append("middle_name", fetchSingleItem.identity.middle_name);
-            formData.append("last_name",fetchSingleItem.identity.last_name);
+            formData.append(
+                "middle_name",
+                fetchSingleItem.identity.middle_name
+            );
+            formData.append("last_name", fetchSingleItem.identity.last_name);
             formData.append("phone", fetchSingleItem.identity.phone);
             formData.append("security", fetchSingleItem.identity.security);
             formData.append("license", fetchSingleItem.identity.license);
             formData.append("address", fetchSingleItem.identity.address);
         }
         await axios
-            .put(`${BASE_URL}/api/item/${itemId}`  , formData, {
+            .put(`${BASE_URL}/api/item/${itemId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
             .then((res) => {
                 console.log(res.data);
-                console.log(formData);
 
                 if (res.data.status) {
-                    toast.success("Item Added Successful");
+                    toast.success("Item Updated Successful");
                 } else {
                     toast.error("Server is not responding");
                 }
@@ -128,7 +142,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
             });
 
         setStateValues({ ...fieldValues });
-        setOpenPopup(false);
+        setOpenEditItemPopup(false);
         dispatch(setMakeBlur({ makeBlur: false }));
         dispatch(setReloadPage({ reloadPage: true }));
     };
@@ -153,7 +167,6 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                         ></button>
                     </div>
                     <div className="modal-body">
-                        
                         <div className="row ">
                             <div className="col-sm-12 col-md-6 mb-2">
                                 <label className="form-label fw-bold label-text">
@@ -164,7 +177,9 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                     className="form-control"
                                     placeholder="Name"
                                     value={fetchSingleItem.name ?? ""}
-                                    onChange={(e) => handleInputChange(e, 'name')}
+                                    onChange={(e) =>
+                                        handleInputChange(e, "name")
+                                    }
                                 />
                             </div>
                             <div className="col-sm-12 col-md-6 mb-2">
@@ -173,10 +188,12 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={fetchSingleItem.folder_id ?? ""}
-                                    onChange={(e) => handleInputChange(e, 'folder_id')}
+                                    value={fetchSingleItem.folder_id ?? ""} 
+                                    onChange={(e) =>
+                                        handleInputChange(e, "folder_id")
+                                    }
                                 >
-                                    <option value={null}>--Select--</option>
+                                    <option value="">--Select--</option>
                                     {folders.map((folder) => (
                                         <option
                                             key={folder.id}
@@ -205,7 +222,9 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                     style={{ resize: "none" }}
                                     rows="4"
                                     value={fetchSingleItem.notes ?? ""}
-                                    onChange={(e) => handleInputChange(e, 'notes')}
+                                    onChange={(e) =>
+                                        handleInputChange(e, "notes")
+                                    }
                                 ></textarea>
                             </div>
                         </div>
@@ -219,7 +238,9 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                     value={
                                         fetchSingleItem.organization_id ?? ""
                                     }
-                                    onChange={(e) => handleInputChange(e, 'organization_id')}
+                                    onChange={(e) =>
+                                        handleInputChange(e, "organization_id")
+                                    }
                                 >
                                     {token && (
                                         <option value="">
@@ -245,7 +266,9 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                         type="checkbox"
                                         checked={fetchSingleItem.favorite}
                                         id="flexCheckDefault"
-                                        onChange={(e) => handleInputChange(e, 'favorite')}
+                                        onChange={(e) =>
+                                            handleInputChange(e, "favorite")
+                                        }
                                     />
 
                                     <label

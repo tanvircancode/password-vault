@@ -48,7 +48,7 @@ const ItemList = () => {
         dispatch(setFetchSingleItem({ fetchSingleItem: item }));
         dispatch(setMakeBlur({ makeBlur: true }));
     }
-    console.log(fetchSingleItem);
+   
     // useEffect(() => {
 
     // },[fetchSingleItem]);

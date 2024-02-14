@@ -64,6 +64,7 @@ const Home = () => {
         getFoldersAndOrgs();
 
         if (window.performance) {
+            console.log('sssssssssssssssssssssssssss')
             if (performance.navigation.type == 1) {
                 dispatch(setMakeBlur({ makeBlur: false }));
             }

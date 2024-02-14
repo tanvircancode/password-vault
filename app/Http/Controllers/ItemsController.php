@@ -22,21 +22,7 @@ class ItemsController extends Controller
         $item = Item::create($input);
 
         if ($item->id) {
-
-            if ($item->type === 1) {
-                $loginInput = $request->only(['username', 'password', 'url']);
-                $loginInput['item_id'] = $item->id;
-                $login = Login::create($loginInput);
-            } else if ($item->type === 2) {
-                $cardInput = $request->only(['cardholder_name', 'brand', 'number', 'exp_month', 'exp_year', 'security_code']);
-                $cardInput['item_id'] = $item->id;
-                $card = Card::create($cardInput);
-            } else if ($item->type === 3) {
-                $identityInput = $request->only(['title', 'email', 'first_name', 'middle_name', 'last_name', 'phone', 'security', 'license', 'address']);
-                $identityInput['item_id'] = $item->id;
-                $identity = Identity::create($identityInput);
-            }
-            
+            $item->createRelatedModel($request->all());
         }
 
         $response = [
@@ -61,25 +47,25 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
-    public function update($id)
+    public function update($id,Request $request)
     {
+        return response()->json(['data' => $request,'id' => $id], 200);
+
         $item = Item::find($id);
-        if(!$item) {
-            return response()->json(['status'=> false, 'message' => 'Item not found'], 404);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Item not found'], 404);
         }
 
         if ($item->user_id !== Auth::user()->id) {
             return response()->json(['status' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $input = $request->only(['folder_id', 'notes', 'organization_id', 'favorite']);
+        $item->updateItemAndRelatedModels($request->all());
 
-      
-   
-        $items = User::with(['items.organization', 'items.folder', 'items.login', 'items.identity', 'items.card'])->find($id);
         $response = [
             'status' => true,
-            'data' => $items
+            'data' => $item->load(['organization','folder','login','card','identity']),
+            'message' => 'Item updated Successfully'
         ];
         return response()->json($response, 200);
     }
