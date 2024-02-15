@@ -101,7 +101,7 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                         ></button>
                     </div>
                     <div
-                        className="modal-body pt-4 pb-4"
+                        className="modal-body pt-4 pb-4 custom-modal-body"
                         style={{ textAlign: "left" }}
                     >
                         <div className="mb-3">

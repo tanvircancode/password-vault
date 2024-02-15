@@ -51,9 +51,9 @@ class Item extends Model
             'user_id' => 'string',
             'type' => 'nullable|integer|between:1,4',
             'name' => 'nullable|string|max:255',
-            'folder_id' => 'nullable|string',
+            'folder_id' => 'nullable',
             'notes' => 'nullable|string|max:500',
-            'organization_id' => 'nullable|string',
+            'organization_id' => 'nullable',
             'favorite' => 'boolean'
         ]);
 
@@ -169,6 +169,7 @@ class Item extends Model
 
         $this->identity()->create($identityInput);
     }
+
     public function updateItemAndRelatedModels(array $data)
     {
         $itemInput = [

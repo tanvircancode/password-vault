@@ -10,6 +10,8 @@ const initialState = {
     makeBlur: false,
     orgAndFolderLoading: true,
     fetchSingleItem: null,
+    popup:null,
+    selectedItems:[],
 };
 
 export const vaultSlice = createSlice({
@@ -47,6 +49,21 @@ export const vaultSlice = createSlice({
         setMakeBlur: (state, action) => {
             state.makeBlur = action.payload.makeBlur;
         },
+        setSelectedItems: (state, action) => {
+            if (action.payload === null) {
+                state.selectedItems = null;
+            }else {
+                state.selectedItems = action.payload.selectedItems;
+            }
+            
+        },
+        setPopup: (state, action) => {
+            if (action.payload === null) {
+                state.popup = null;
+            } else {
+                state.popup = action.payload.popup;
+            }
+        },
         setFetchSingleItem: (state, action) => {
             if (action.payload === null) {
                 state.fetchSingleItem = null;
@@ -78,6 +95,8 @@ export const {
     setOrgAndFolderLoading,
     setReloadPage,
     setMakeBlur,
+    setPopup,
+    setSelectedItems,
     setFetchSingleItem,
 } = vaultSlice.actions;
 

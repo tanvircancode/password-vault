@@ -13,9 +13,16 @@ import MoveOrgModal from "../../../Modal/OrgModals/MoveOrgModal";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
-import { setReloadPage, setMakeBlur, setFetchSingleItem } from "../../../store";
+import {
+    setReloadPage,
+    setMakeBlur,
+    setFetchSingleItem,
+    setPopup,
+    setSelectedItems,
+} from "../../../store";
 import HashLoader from "react-spinners/HashLoader";
 import EditItemModal from "../../../Modal/ItemModals/EditItemModal";
+import { toast } from "react-toastify";
 
 const ItemList = () => {
     const [loading, setLoading] = useState(true);
@@ -23,7 +30,6 @@ const ItemList = () => {
 
     const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
     // const [fetchSingleItem, setFetchSingleItem] = useState("");
-
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
     const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
@@ -34,11 +40,10 @@ const ItemList = () => {
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
     const reloadPage = useSelector((state) => state.reloadPage);
-
-    // console.log(userId);
+    const selectedItems = useSelector((state) => state.selectedItems);
+    const popup = useSelector((state) => state.popup);
 
     const [itemsData, setItemsData] = useState([]);
-    const [selectedItems, setSelectedItems] = useState("");
     const [checkAll, setCheckAll] = useState(false);
 
     const dispatch = useDispatch();
@@ -47,11 +52,21 @@ const ItemList = () => {
         setOpenEditItemPopup(true);
         dispatch(setFetchSingleItem({ fetchSingleItem: item }));
         dispatch(setMakeBlur({ makeBlur: true }));
-    }
-   
-    // useEffect(() => {
+    };
 
-    // },[fetchSingleItem]);
+    useEffect(() => {
+        console.log(selectedItems);
+    }, [selectedItems]);
+
+    const handleMoveToFolder = () => {
+        dispatch(setPopup({ popup: "moveToFolder" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
+    };
+
+    const handleMoveToOrg = () => {
+        dispatch(setPopup({ popup: "moveToOrg" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
+    };
 
     const headings = {
         orgs: "All Items",
@@ -100,18 +115,24 @@ const ItemList = () => {
         if (event.target.checked) {
             const allItemIds = itemsData.map((item) => item.id);
             setCheckAll(true);
-            setSelectedItems(allItemIds);
+        
+        dispatch(setSelectedItems({ selectedItems: allItemIds }));
+
         } else {
             setCheckAll(false);
-            setSelectedItems([]);
+            
+        dispatch(setSelectedItems(null));
         }
     };
 
     const handleCheckboxChange = (itemId) => {
         if (selectedItems.includes(itemId)) {
-            setSelectedItems(selectedItems.filter((id) => id !== itemId));
+            var filteredSelectedItems = selectedItems.filter((id) => id !== itemId);
+        dispatch(setSelectedItems({ selectedItems: filteredSelectedItems }));
+            
         } else {
-            setSelectedItems([...selectedItems, itemId]);
+            var updatedItems = [...selectedItems, itemId];
+      dispatch(setSelectedItems({ selectedItems: updatedItems }));
         }
     };
 
@@ -155,28 +176,35 @@ const ItemList = () => {
         }
 
         return itemsData.filter((item) => Boolean(!item.deleted_at));
-        
     };
+
+    const handleDotButton = () => {
+        if(selectedItems?.length <= 0) {
+            toast.error('Please select at least one item!');
+        }
+        else{
+            return;
+        }
+        
+    }
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
-   
-
     // console.log(filteredItems())
 
     useEffect(() => {
         getItemsData();
-        // console.log(itemsData);
+        // console.log(popup);
         // console.log(selectedItems);
         // console.log(checkAll);
         // console.log(loading);
 
         if (
-            selectedItems.length === itemsData.length &&
-            selectedItems.length > 0
+            selectedItems?.length === itemsData.length &&
+            selectedItems?.length > 0
         ) {
             setCheckAll(true);
         }
@@ -241,9 +269,10 @@ const ItemList = () => {
                             style={{ border: "none" }}
                             type="button"
                             data-bs-toggle={`${
-                                itemsData.length > 0 && "dropdown"
+                                selectedItems?.length > 0 && "dropdown"
                             }`}
-                            aria-expanded="false"
+                            aria-expanded="true"
+                            onClick={handleDotButton}
                         >
                             <BsThreeDotsVertical
                                 style={{
@@ -252,6 +281,7 @@ const ItemList = () => {
                                         itemsData.length > 0 ? "block" : "none",
                                 }}
                             />
+                            
                         </button>
                         <ul className="dropdown-menu">
                             {selectMenu.menuType === "trash" ? (
@@ -260,24 +290,20 @@ const ItemList = () => {
                                     onClick={() => setOpenMoveFolderModal(true)}
                                 >
                                     <BsTrash3 style={{ marginRight: 5 }} />
-                                    <span>Permanentlt Delete Selected</span>
+                                    <span>Permanently Delete Selected</span>
                                 </li>
                             ) : (
                                 <div>
                                     <li
                                         className="dropdown-item dropdown-list"
-                                        onClick={() =>
-                                            setOpenMoveFolderModal(true)
-                                        }
+                                        onClick={handleMoveToFolder}
                                     >
                                         <BsUpload style={{ marginRight: 5 }} />
                                         <span> Move Selected</span>
                                     </li>
                                     <li
                                         className="dropdown-list dropdown-item"
-                                        onClick={() =>
-                                            setOpenMoveOrgModal(true)
-                                        }
+                                        onClick={handleMoveToOrg}
                                     >
                                         <BsArrow90DegUp
                                             style={{ marginRight: 5 }}
@@ -305,10 +331,7 @@ const ItemList = () => {
             {itemsData.length > 0 &&
                 filteredItems().map((item, index) => (
                     <div key={index}>
-                        <div
-                            className={`row mb-2 ${blur ? "is-blur" : ""}`}
-                            
-                        >
+                        <div className={`row mb-2 ${blur ? "is-blur" : ""}`}>
                             <div className="col">
                                 <div className="d-flex">
                                     <div
@@ -319,7 +342,7 @@ const ItemList = () => {
                                             type="checkbox"
                                             style={{ width: "auto" }}
                                             id={`item-${item.id}`}
-                                            checked={selectedItems.includes(
+                                            checked={selectedItems !== null && selectedItems.includes(
                                                 item.id
                                             )}
                                             onChange={() =>
@@ -332,8 +355,12 @@ const ItemList = () => {
                                             htmlFor={`item-${item.id}`}
                                         ></label>
                                     </div>
-                                    <div className="col-5 text-start">
-                                        <p className="m-0" onClick={() => handleOpenPopup(item)}>{item.name}</p>
+                                    <div
+                                        className="col-5 text-start"
+                                        onClick={() => handleOpenPopup(item)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <p className="m-0">{item.name}</p>
                                         <span>
                                             {item.type === 1
                                                 ? "Login item"
@@ -404,10 +431,7 @@ const ItemList = () => {
                                                                     marginRight: 5,
                                                                 }}
                                                             />
-                                                            <span>
-                                                                {" "}
-                                                                Delete{" "}
-                                                            </span>
+                                                            <span>Delete</span>
                                                         </li>
                                                     </div>
                                                 )}
@@ -435,26 +459,19 @@ const ItemList = () => {
                 </div>
             )}
             {openEditItemPopup && (
-               < EditItemModal 
-                 openEditItemPopup={openEditItemPopup}
-                   setOpenEditItemPopup={setOpenEditItemPopup}
-                   
-               /> 
-            )} 
+                <EditItemModal
+                    openEditItemPopup={openEditItemPopup}
+                    setOpenEditItemPopup={setOpenEditItemPopup}
+                />
+            )}
 
             <AddItemModal
                 openPopup={openNewItemModal}
                 setOpenPopup={setOpenNewItemModal}
             />
 
-            <MoveFolderModal
-                openPopup={openMoveFolderModal}
-                setOpenPopup={setOpenMoveFolderModal}
-            />
-            <MoveOrgModal
-                openPopup={openMoveOrgModal}
-                setOpenPopup={setOpenMoveOrgModal}
-            />
+            {popup === "moveToFolder" && <MoveFolderModal />}
+            {popup === "moveToOrg" && <MoveOrgModal />}
         </div>
     );
 };

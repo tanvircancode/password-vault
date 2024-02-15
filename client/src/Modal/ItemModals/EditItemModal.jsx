@@ -38,40 +38,13 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
         dispatch(setFetchSingleItem({ propertyName, value, type }));
     };
 
-    const fieldValues = {
-        selectItemType: 1,
-        orgId: "",
-        itemName: "",
-        folderId: "",
-        userName: "",
-        password: "",
-        loginUrl: "",
-        note: "",
-        favorite: "",
-        cardHolderName: "",
-        brand: "",
-        cardNumber: "",
-        expMonth: "",
-        expYear: "",
-        securityCode: "",
-        title: "",
-        identityEmail: "",
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        phone: "",
-        security: "",
-        license: "",
-        address: "",
-    };
-
-    const [stateValues, setStateValues] = useState({ ...fieldValues });
-
     const closePopup = () => {
         dispatch(setFetchSingleItem(null));
         dispatch(setMakeBlur({ makeBlur: false }));
         setOpenEditItemPopup(false);
     };
+
+    console.log(fetchSingleItem);
 
     const handleUpdateItem = async (e) => {
         e.preventDefault();
@@ -79,69 +52,81 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
         console.log(fetchSingleItem);
 
         var formData = new FormData();
-        formData.append("user_id", fetchSingleItem.user_id);
-        formData.append("type", fetchSingleItem.type);
-        formData.append("name", fetchSingleItem.name);
-        formData.append("folder_id", fetchSingleItem.folder_id ?? '');
-        formData.append("notes", fetchSingleItem.notes);
-        formData.append("organization_id", fetchSingleItem.organization_id);
+        formData.append("user_id", fetchSingleItem.user_id ?? "");
+        formData.append("type", fetchSingleItem.type ?? "");
+        formData.append("name", fetchSingleItem.name ?? "");
+        formData.append("folder_id", fetchSingleItem.folder_id ?? "");
+        formData.append("notes", fetchSingleItem.notes ?? "");
+        formData.append(
+            "organization_id",
+            fetchSingleItem.organization_id ?? ""
+        );
         formData.append("favorite", fetchSingleItem.favorite ? 1 : 0);
 
         if (fetchSingleItem.type === 1) {
-            formData.append("username", fetchSingleItem.login.username);
-            formData.append("password", fetchSingleItem.login.password);
-            formData.append("url", fetchSingleItem.login.url);
+            formData.append("username", fetchSingleItem.login?.username ?? "");
+            formData.append("password", fetchSingleItem.login?.password ?? "");
+            formData.append("url", fetchSingleItem.login?.url ?? "");
         } else if (fetchSingleItem.type === 2) {
             formData.append(
                 "cardholder_name",
-                fetchSingleItem.card.cardholder_name
+                fetchSingleItem.card?.cardholder_name ?? ""
             );
-            formData.append("brand", fetchSingleItem.card.brand);
-            formData.append("number", fetchSingleItem.card.number);
-            formData.append("exp_month", fetchSingleItem.card.exp_month);
-            formData.append("exp_year", fetchSingleItem.card.exp_year);
+            formData.append("brand", fetchSingleItem.card?.brand ?? "");
+            formData.append("number", fetchSingleItem.card?.number ?? "");
+            formData.append("exp_month", fetchSingleItem.card?.exp_month ?? "");
+            formData.append("exp_year", fetchSingleItem.card?.exp_year ?? "");
             formData.append(
                 "security_code",
-                fetchSingleItem.card.security_code
+                fetchSingleItem.card?.security_code ?? ""
             );
         } else if (fetchSingleItem.type === 3) {
-            formData.append("title", fetchSingleItem.identity.title);
-            formData.append("email", fetchSingleItem.identity.email);
-            formData.append("first_name", fetchSingleItem.identity.first_name);
+            formData.append("title", fetchSingleItem.identity?.title ?? "");
+            formData.append("email", fetchSingleItem.identity?.email ?? "");
+            formData.append(
+                "first_name",
+                fetchSingleItem.identity?.first_name ?? ""
+            );
             formData.append(
                 "middle_name",
-                fetchSingleItem.identity.middle_name
+                fetchSingleItem.identity?.middle_name ?? ""
             );
-            formData.append("last_name", fetchSingleItem.identity.last_name);
-            formData.append("phone", fetchSingleItem.identity.phone);
-            formData.append("security", fetchSingleItem.identity.security);
-            formData.append("license", fetchSingleItem.identity.license);
-            formData.append("address", fetchSingleItem.identity.address);
+            formData.append(
+                "last_name",
+                fetchSingleItem.identity?.last_name ?? ""
+            );
+            formData.append("phone", fetchSingleItem.identity?.phone ?? "");
+            formData.append(
+                "security",
+                fetchSingleItem.identity.security ?? ""
+            );
+            formData.append("license", fetchSingleItem.identity?.license ?? "");
+            formData.append("address", fetchSingleItem.identity?.address ?? "");
         }
         await axios
             .put(`${BASE_URL}/api/item/${itemId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
             })
             .then((res) => {
-                console.log(res.data);
 
-                if (res.data.status) {
+                if (res.data?.status) {
                     toast.success("Item Updated Successful");
                 } else {
                     toast.error("Server is not responding");
                 }
             })
             .catch((error) => {
-                if (error.response && error.response.status === 401) {
-                    toast.error(error.response.data.message);
+                console.log(error);
+                if (error.response && error.response.status) {
+                    toast.error(error.response?.data?.message);
                 } else {
                     toast.error("Server is not responding");
                 }
             });
 
-        setStateValues({ ...fieldValues });
         setOpenEditItemPopup(false);
         dispatch(setMakeBlur({ makeBlur: false }));
         dispatch(setReloadPage({ reloadPage: true }));
@@ -166,7 +151,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                             onClick={closePopup}
                         ></button>
                     </div>
-                    <div className="modal-body">
+                    <div className="modal-body custom-modal-body">
                         <div className="row ">
                             <div className="col-sm-12 col-md-6 mb-2">
                                 <label className="form-label fw-bold label-text">
@@ -188,7 +173,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={fetchSingleItem.folder_id ?? ""} 
+                                    value={fetchSingleItem.folder_id ?? ""}
                                     onChange={(e) =>
                                         handleInputChange(e, "folder_id")
                                     }

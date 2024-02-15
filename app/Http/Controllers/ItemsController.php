@@ -47,9 +47,9 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
-    public function update($id,Request $request)
+    public function update(Request $request , $id)
     {
-        return response()->json(['data' => $request,'id' => $id], 200);
+        
 
         $item = Item::find($id);
         if (!$item) {

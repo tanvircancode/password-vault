@@ -56,7 +56,6 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     const [stateValues, setStateValues] = useState({ ...fieldValues });
 
 
-
     const closePopup = () => {
         setOpenPopup(false);
         dispatch(setMakeBlur({ makeBlur: false }));
@@ -86,7 +85,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
             formData.append("security_code", stateValues.securityCode);
         } else if (stateValues.selectItemType === 3) {
             formData.append("title", stateValues.title);
-            formData.append("email", stateValues.email);
+            formData.append("email", stateValues.email ?? "");
             formData.append("first_name", stateValues.firstName);
             formData.append("middle_name", stateValues.middleName);
             formData.append("last_name", stateValues.lastName);
@@ -144,7 +143,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                             onClick={closePopup}
                         ></button>
                     </div>
-                    <div className="modal-body">
+                    <div className="modal-body custom-modal-body">
                         <div className="row mb-2">
                             <div className="col-md-12 col-lg-6">
                                 <label className="form-label fw-bold label-text">
@@ -192,7 +191,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 <label className="form-label fw-bold label-text">
                                     Folder
                                 </label>
-                                <select
+                                <select  
                                     className="form-select"
                                     value={stateValues.folderId}
                                     onChange={(e) =>
