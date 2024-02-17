@@ -126,12 +126,12 @@ const ItemList = () => {
     };
 
     const handleCheckboxChange = (itemId) => {
-        if (selectedItems.includes(itemId)) {
+        if (selectedItems && selectedItems.includes(itemId)) {
             var filteredSelectedItems = selectedItems.filter((id) => id !== itemId);
         dispatch(setSelectedItems({ selectedItems: filteredSelectedItems }));
             
         } else {
-            var updatedItems = [...selectedItems, itemId];
+            var updatedItems =  selectedItems ? [...selectedItems, itemId] : [itemId];
       dispatch(setSelectedItems({ selectedItems: updatedItems }));
         }
     };

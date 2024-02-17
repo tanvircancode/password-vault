@@ -28,6 +28,7 @@ export const vaultSlice = createSlice({
             state.folders = [];
             state.organizations = [];
             state.fetchSingleItem = null;
+            state.selectedItems = [];
         },
         setFolders: (state, action) => {
             state.folders = action.payload.folders;
@@ -51,7 +52,7 @@ export const vaultSlice = createSlice({
         },
         setSelectedItems: (state, action) => {
             if (action.payload === null) {
-                state.selectedItems = null;
+                state.selectedItems = [];
             }else {
                 state.selectedItems = action.payload.selectedItems;
             }

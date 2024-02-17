@@ -40,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // orgs apis
   Route::post('/organization', [OrganizationsController::class, 'store']);
+
+  //move to folder
+  Route::put('/moveToFolder/{id}', [ItemsController::class, 'moveItemsToFolder']);
+
 });
 
 

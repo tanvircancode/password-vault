@@ -47,9 +47,9 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
-    public function update(Request $request , $id)
+    public function update(Request $request, $id)
     {
-        
+
 
         $item = Item::find($id);
         if (!$item) {
@@ -64,9 +64,22 @@ class ItemsController extends Controller
 
         $response = [
             'status' => true,
-            'data' => $item->load(['organization','folder','login','card','identity']),
+            'data' => $item->load(['organization', 'folder', 'login', 'card', 'identity']),
             'message' => 'Item updated Successfully'
         ];
         return response()->json($response, 200);
+    }
+
+    public function moveItemsToFolder(Request $request, $id)
+    {
+        $selectedItems = $request->input('selectedItems');
+
+        Item::whereIn('id', $selectedItems)
+            ->update(['folder_id' => $id]);
+
+        $items = Item::whereIn('id', $selectedItems)->get();
+
+        $items->load(['organization', 'folder', 'login', 'card', 'identity']);
+        return response()->json(['data' => $items], 200);
     }
 }

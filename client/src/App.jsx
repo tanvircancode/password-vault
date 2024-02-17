@@ -43,7 +43,6 @@ function InitUser() {
                 },
             });
 
-           
             if (response.data.user) {
                 dispatch(
                     setLogin({
