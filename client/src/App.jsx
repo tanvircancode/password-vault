@@ -6,7 +6,7 @@ import Register from "./Pages/RegisterPage";
 import Tools from "./Pages/Tools";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { setLogin } from "./store";
+import { setLogin, setSelectedItems } from "./store";
 import { useEffect } from "react";
 import { BASE_URL } from "./config";
 // import { Provider } from "react-redux";
@@ -57,11 +57,11 @@ function InitUser() {
                         token: null,
                     })
                 );
+                dispatch(setSelectedItems(null));
                 localStorage.removeItem("token");
                 localStorage.removeItem("user_id");
             }
-        } 
-        catch (e) {
+        } catch (e) {
             dispatch(
                 setLogin({
                     user: null,

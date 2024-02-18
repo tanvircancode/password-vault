@@ -23,6 +23,7 @@ import {
 import HashLoader from "react-spinners/HashLoader";
 import EditItemModal from "../../../Modal/ItemModals/EditItemModal";
 import { toast } from "react-toastify";
+import DeleteItemModal from "../../../Modal/ItemModals/DeleteItemModal";
 
 const ItemList = () => {
     const [loading, setLoading] = useState(true);
@@ -68,6 +69,11 @@ const ItemList = () => {
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
+    const handleDeleteItems = () => {
+        dispatch(setPopup({ popup: "deleteItems" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
+    };
+
     const headings = {
         orgs: "All Items",
         me: "My Items",
@@ -107,7 +113,6 @@ const ItemList = () => {
             });
 
         dispatch(setReloadPage({ reloadPage: false }));
-        // dispatch(setLoading({ loading: false }));
         setLoading(false);
     };
 
@@ -115,24 +120,28 @@ const ItemList = () => {
         if (event.target.checked) {
             const allItemIds = itemsData.map((item) => item.id);
             setCheckAll(true);
-        
-        dispatch(setSelectedItems({ selectedItems: allItemIds }));
 
+            dispatch(setSelectedItems({ selectedItems: allItemIds }));
         } else {
             setCheckAll(false);
-            
-        dispatch(setSelectedItems(null));
+
+            dispatch(setSelectedItems(null));
         }
     };
 
     const handleCheckboxChange = (itemId) => {
         if (selectedItems && selectedItems.includes(itemId)) {
-            var filteredSelectedItems = selectedItems.filter((id) => id !== itemId);
-        dispatch(setSelectedItems({ selectedItems: filteredSelectedItems }));
-            
+            var filteredSelectedItems = selectedItems.filter(
+                (id) => id !== itemId
+            );
+            dispatch(
+                setSelectedItems({ selectedItems: filteredSelectedItems })
+            );
         } else {
-            var updatedItems =  selectedItems ? [...selectedItems, itemId] : [itemId];
-      dispatch(setSelectedItems({ selectedItems: updatedItems }));
+            var updatedItems = selectedItems
+                ? [...selectedItems, itemId]
+                : [itemId];
+            dispatch(setSelectedItems({ selectedItems: updatedItems }));
         }
     };
 
@@ -179,14 +188,12 @@ const ItemList = () => {
     };
 
     const handleDotButton = () => {
-        if(selectedItems?.length <= 0) {
-            toast.error('Please select at least one item!');
-        }
-        else{
+        if (selectedItems?.length <= 0) {
+            toast.error("Please select at least one item!");
+        } else {
             return;
         }
-        
-    }
+    };
 
     const handleNewItemClick = () => {
         setOpenNewItemModal(true);
@@ -281,7 +288,6 @@ const ItemList = () => {
                                         itemsData.length > 0 ? "block" : "none",
                                 }}
                             />
-                            
                         </button>
                         <ul className="dropdown-menu">
                             {selectMenu.menuType === "trash" ? (
@@ -313,6 +319,7 @@ const ItemList = () => {
                                     <li
                                         className="dropdown-list dropdown-item"
                                         style={{ color: "red" }}
+                                        onClick={handleDeleteItems}
                                     >
                                         <BsTrash3 style={{ marginRight: 5 }} />
                                         <span>Delete Selected</span>
@@ -342,9 +349,10 @@ const ItemList = () => {
                                             type="checkbox"
                                             style={{ width: "auto" }}
                                             id={`item-${item.id}`}
-                                            checked={selectedItems !== null && selectedItems.includes(
-                                                item.id
-                                            )}
+                                            checked={
+                                                selectedItems !== null &&
+                                                selectedItems.includes(item.id)
+                                            }
                                             onChange={() =>
                                                 handleCheckboxChange(item.id)
                                             }
@@ -470,8 +478,25 @@ const ItemList = () => {
                 setOpenPopup={setOpenNewItemModal}
             />
 
-            {popup === "moveToFolder" && <MoveFolderModal />}
-            {popup === "moveToOrg" && <MoveOrgModal />}
+            {popup === "moveToFolder" && (
+                <MoveFolderModal
+                    itemsData={itemsData}
+                    setItemsData={setItemsData}
+                />
+            )}
+            {popup === "moveToOrg" && (
+                <MoveOrgModal
+                    itemsData={itemsData}
+                    setItemsData={setItemsData}
+                />
+            )}
+
+            {popup === "deleteItems" && (
+                <DeleteItemModal
+                    itemsData={itemsData}
+                    setItemsData={setItemsData}
+                />
+            )}
         </div>
     );
 };

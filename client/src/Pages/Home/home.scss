@@ -58,6 +58,22 @@
     border: none;
     background-image: linear-gradient(to right, #eba5a5 0%, #ff7c50 51%, #b79d79 100%);
 }
+.modal-yes {
+    padding: 5px 15px;
+    margin-right: 10px;
+    border-radius: 0.5em;
+    background: linear-gradient(0.25turn, #a9bd84, #7ebb50, #5ebad1);
+    color: white;
+    border: none;
+}
+.modal-no{
+    padding: 5px 15px;
+    border-radius: 0.5em;
+    color: white;
+    border: none;
+    background-image: linear-gradient(to right, #f3be9f 0%, #e55f32 51%, #d59030 100%);
+}
+
 
 
 

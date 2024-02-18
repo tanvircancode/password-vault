@@ -173,7 +173,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                                 </label>
                                 <select
                                     className="form-select"
-                                    value={fetchSingleItem.folder_id ?? ""}
+                                    value={fetchSingleItem.folder_id || ""}
                                     onChange={(e) =>
                                         handleInputChange(e, "folder_id")
                                     }

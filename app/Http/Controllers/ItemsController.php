@@ -80,6 +80,18 @@ class ItemsController extends Controller
         $items = Item::whereIn('id', $selectedItems)->get();
 
         $items->load(['organization', 'folder', 'login', 'card', 'identity']);
-        return response()->json(['data' => $items], 200);
+        return response()->json(['status' => true, 'data' => $items, 'message' => 'Items Moved Successfully'], 200);
+    }
+    public function moveItemsToOrganization(Request $request, $id)
+    {
+        $selectedItems = $request->input('selectedItems');
+
+        Item::whereIn('id', $selectedItems)
+            ->update(['organization_id' => $id]);
+
+        $items = Item::whereIn('id', $selectedItems)->get();
+
+        $items->load(['organization', 'folder', 'login', 'card', 'identity']);
+        return response()->json(['status' => true, 'data' => $items, 'message' => 'Items Moved Successfully'], 200);
     }
 }

@@ -1,4 +1,4 @@
-import { setMakeBlur, setPopup } from "../../store";
+import { setMakeBlur, setPopup, setSelectedItems } from "../../store";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import "../modal.scss";
@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { BASE_URL } from "../../config";
 
-const MoveFolderModal = () => {
+const MoveFolderModal = ({ itemsData, setItemsData }) => {
     const folders = useSelector((state) => state.folders);
     const token = useSelector((state) => state.token);
     const popup = useSelector((state) => state.popup);
@@ -30,24 +30,34 @@ const MoveFolderModal = () => {
                 }
             )
             .then((res) => {
-                console.log(res);
-                // if (res.data?.status) {
-                //     toast.success("Item Updated Successful");
-                // } else {
-                //     toast.error("Server is not responding");
-                // }
+                console.log(res.data);
+                console.log(itemsData);
+                if (res.data?.status) {
+                    toast.success(res.data.message);
+                    var updatedItems = itemsData.map((item) => {
+                        var matchedObject = res.data.data.find(
+                            (resultItem) => resultItem.id === item.id
+                        );
+                        if (matchedObject) {
+                            return { ...item, ...matchedObject };
+                        } else {
+                            return item;
+                        }
+                    });
+
+                    setItemsData(updatedItems);
+                    dispatch(setSelectedItems(null));
+                    dispatch(setPopup(null));
+                    dispatch(setMakeBlur({ makeBlur: false }));
+                } else {
+                    toast.error("Server is not responding");
+                }
             })
             .catch((error) => {
-                console.log(error);
-                // if (error.response && error.response.status) {
-                //     toast.error(error.response?.data?.message);
-                // } else {
-                //     toast.error("Server is not responding");
-                // }
+                   toast.error("Server is not responding");
             });
     };
 
-    // Handle change when a different folder is selected
     const handleFolderChange = (e) => {
         setSelectedFolderId(e.target.value);
     };
@@ -82,11 +92,11 @@ const MoveFolderModal = () => {
                         style={{ textAlign: "left" }}
                     >
                         <h5>Folders</h5>
-
+     
                         <select
                             className="form-select"
                             style={{ width: "26%" }}
-                            value={selectedFolderId}
+                            value={selectedFolderId || ""}
                             onChange={handleFolderChange}
                         >
                             <option value={null}>--Select--</option>
