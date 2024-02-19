@@ -46,6 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
   //move to organization
   Route::put('/moveToOrg/{id}', [ItemsController::class, 'moveItemsToOrganization']);
+
+  //deletes
+  Route::post('/deleteitems', [ItemsController::class, 'destroyItems']);
+ 
 });
 
 

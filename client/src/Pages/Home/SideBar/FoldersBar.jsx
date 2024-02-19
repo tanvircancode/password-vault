@@ -1,10 +1,10 @@
 import { BsPlusCircle, BsFolder } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import AddFolderModal from "../../../Modal/FolderModals/AddFolderModal";
 
 import { useDispatch, useSelector } from "react-redux";
 import MoonLoader from "react-spinners/MoonLoader";
-import { setSelectMenu, setMakeBlur } from "../../../store";
+import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup } from "../../../store";
 import "../home.scss";
 
 const FoldersBar = () => {
@@ -12,9 +12,9 @@ const FoldersBar = () => {
     const folders = useSelector((state) => state.folders);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
-    const orgAndFolderLoading = useSelector((state) => state.orgAndFolderLoading);
-
-    
+    const orgAndFolderLoading = useSelector(
+        (state) => state.orgAndFolderLoading
+    );
 
     const dispatch = useDispatch();
 
@@ -23,6 +23,17 @@ const FoldersBar = () => {
     const handleFolderModal = () => {
         setOpenAddModal(true);
         dispatch(setMakeBlur({ makeBlur: true }));
+    };
+
+    const handleFolderClick = (folderId) => {
+        dispatch(
+            setSelectMenu({
+                menuType: "folder",
+                typeValue: folderId,
+            })
+        );
+        dispatch(setSelectedItems(null));
+        dispatch(setPopup(null));
     };
 
     return (
@@ -75,12 +86,7 @@ const FoldersBar = () => {
                                         <li
                                             key={folder.id}
                                             onClick={() =>
-                                                dispatch(
-                                                    setSelectMenu({
-                                                        menuType: "folder",
-                                                        typeValue: folder.id,
-                                                    })
-                                                )
+                                                handleFolderClick(folder.id)
                                             }
                                             className={`${
                                                 selectMenu.typeValue ===

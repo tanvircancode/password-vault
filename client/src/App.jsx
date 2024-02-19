@@ -68,6 +68,7 @@ function InitUser() {
                     token: null,
                 })
             );
+            dispatch(setSelectedItems(null));
             localStorage.removeItem("token");
             localStorage.removeItem("user_id");
         }

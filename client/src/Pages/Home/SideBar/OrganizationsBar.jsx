@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
 import MoonLoader from "react-spinners/MoonLoader";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectMenu, setMakeBlur } from "../../../store";
+import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup } from "../../../store";
 
 const OrganizationsBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -22,6 +22,17 @@ const OrganizationsBar = () => {
     );
 
     const dispatch = useDispatch();
+
+    const handleOrgClick = (menuType, typeValue) => {
+        dispatch(
+            setSelectMenu({
+                menuType: menuType,
+                typeValue: typeValue,
+            })
+        );
+        dispatch(setSelectedItems(null));
+        dispatch(setPopup(null));
+    };
 
     const handleAddOrg = () => {
         setOpenAddModal(true);
@@ -63,14 +74,7 @@ const OrganizationsBar = () => {
                                     ? "active-menu"
                                     : ""
                             }`}
-                            onClick={() =>
-                                dispatch(
-                                    setSelectMenu({
-                                        typeValue: 0,
-                                        menuType: "orgs",
-                                    })
-                                )
-                            }
+                            onClick={() => handleOrgClick("orgs", 0)}
                         >
                             <BsFillPeopleFill style={{ marginRight: 8 }} />
                             All Vaults
@@ -89,14 +93,7 @@ const OrganizationsBar = () => {
                                     ? "active-menu"
                                     : ""
                             }`}
-                            onClick={() =>
-                                dispatch(
-                                    setSelectMenu({
-                                        typeValue: 0,
-                                        menuType: "me",
-                                    })
-                                )
-                            }
+                            onClick={() => handleOrgClick("me", 0)}
                         >
                             <BsFillPersonFill style={{ marginRight: 8 }} />
                             My Vault
@@ -144,12 +141,9 @@ const OrganizationsBar = () => {
                                                 // width: "112px",
                                             }}
                                             onClick={() =>
-                                                dispatch(
-                                                    setSelectMenu({
-                                                        typeValue:
-                                                            organization.id,
-                                                        menuType: "org",
-                                                    })
+                                                handleOrgClick(
+                                                    "org",
+                                                    organization.id
                                                 )
                                             }
                                         >

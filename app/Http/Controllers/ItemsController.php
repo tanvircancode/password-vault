@@ -40,7 +40,11 @@ class ItemsController extends Controller
             return response()->json(['status' => false], 403);
         }
 
-        $items = User::with(['items.organization', 'items.folder', 'items.login', 'items.identity', 'items.card'])->find($id);
+        // $items = User::with(['items.organization', 'items.folder', 'items.login', 'items.identity', 'items.card'])->find($id);
+        $items = User::with(['items' => function ($query) {
+            $query->withTrashed()->with(['organization', 'folder', 'login', 'identity', 'card']);
+        }])->find($id);
+        
         $response = [
             'status' => true,
             'data' => $items
@@ -93,5 +97,20 @@ class ItemsController extends Controller
 
         $items->load(['organization', 'folder', 'login', 'card', 'identity']);
         return response()->json(['status' => true, 'data' => $items, 'message' => 'Items Moved Successfully'], 200);
+    }
+    public function destroyItems(Request $request)
+    {
+        $selectedItems = $request->input('selectedItems');
+        // return response()->json(['data' => $selectedItems], 200);
+
+        $item = new Item();
+        $result = $item->deleteItems($selectedItems);
+
+        if ($result['success']) {
+            $items = $result['items'];
+            return response()->json(['status' => true, 'data' => $items, 'message' => 'Items deleted successfully'], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'No items selected for deletion'], 400);
+        }
     }
 }

@@ -30,13 +30,11 @@ const ItemList = () => {
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
 
     const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
-    // const [fetchSingleItem, setFetchSingleItem] = useState("");
 
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
-    const [openMoveOrgModal, setOpenMoveOrgModal] = useState(false);
+
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
-    const fetchSingleItem = useSelector((state) => state.fetchSingleItem);
 
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
@@ -69,8 +67,9 @@ const ItemList = () => {
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
-    const handleDeleteItems = () => {
-        dispatch(setPopup({ popup: "deleteItems" }));
+    const handleDeleteItems = (value) => {
+        // console.log(value);
+        dispatch(setPopup({ popup: value }));
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
@@ -293,7 +292,11 @@ const ItemList = () => {
                             {selectMenu.menuType === "trash" ? (
                                 <li
                                     className="dropdown-item dropdown-list"
-                                    onClick={() => setOpenMoveFolderModal(true)}
+                                    onClick={() =>
+                                        handleDeleteItems(
+                                            "permanentlyDeleteItems"
+                                        )
+                                    }
                                 >
                                     <BsTrash3 style={{ marginRight: 5 }} />
                                     <span>Permanently Delete Selected</span>
@@ -319,7 +322,9 @@ const ItemList = () => {
                                     <li
                                         className="dropdown-list dropdown-item"
                                         style={{ color: "red" }}
-                                        onClick={handleDeleteItems}
+                                        onClick={() =>
+                                            handleDeleteItems("deleteItems")
+                                        }
                                     >
                                         <BsTrash3 style={{ marginRight: 5 }} />
                                         <span>Delete Selected</span>
@@ -491,7 +496,8 @@ const ItemList = () => {
                 />
             )}
 
-            {popup === "deleteItems" && (
+            {(popup === "deleteItems" ||
+                popup === "permanentlyDeleteItems") && (
                 <DeleteItemModal
                     itemsData={itemsData}
                     setItemsData={setItemsData}

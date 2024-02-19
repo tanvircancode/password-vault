@@ -18,7 +18,7 @@ import "./home.scss";
 
 const Home = () => {
     const userId = localStorage.getItem("user_id");
-    console.log(userId);
+    
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
 
@@ -64,7 +64,7 @@ const Home = () => {
         getFoldersAndOrgs();
 
         if (window.performance) {
-            console.log('sssssssssssssssssssssssssss')
+            
             if (performance.navigation.type == 1) {
                 dispatch(setMakeBlur({ makeBlur: false }));
             }

@@ -6,12 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Item extends Model
 {
-
+    use SoftDeletes;
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -179,17 +179,17 @@ class Item extends Model
             'favorite' => $data['favorite'],
             'name' => $data['name'],
         ];
-        
+
         $this->update($itemInput);
 
         switch ($this->type) {
             case 1:
                 $this->updateLogin($data);
                 break;
-            case 2: 
+            case 2:
                 $this->updateCard($data);
                 break;
-            case 3: 
+            case 3:
                 $this->updateIdentity($data);
                 break;
         }
@@ -205,7 +205,7 @@ class Item extends Model
             'url' => $data['url'],
         ];
         $login = $this->login;
-        if(!$login) {
+        if (!$login) {
             $login = new Login();
             $login->item_id = $this->id;
         }
@@ -224,7 +224,7 @@ class Item extends Model
             'security_code' => $data['security_code'],
         ];
         $card = $this->card;
-        if(!$card) {
+        if (!$card) {
             $card = new Card();
             $card->item_id = $this->id;
         }
@@ -246,11 +246,39 @@ class Item extends Model
             'address' => $data['address'],
         ];
         $identity = $this->identity;
-        if(!$identity) {
+        if (!$identity) {
             $identity = new Identity();
             $identity->item_id = $this->id;
         }
         $identity->fill($identityInput);
         $identity->save();
+    }
+
+    public function deleteItems(array $selectedItems): array
+    {
+        $result = ['success' => false, 'items' => []];
+        // return response()->json([ 'data' => $selectedItems], 200);
+
+        if (empty($selectedItems)) {
+            return $result;
+        }
+
+        $items = $this->with(['organization', 'folder', 'login', 'card', 'identity'])
+        ->withTrashed() // Include soft deleted items
+        ->whereIn('id', $selectedItems)
+        ->get();
+
+        foreach ($items as $item) {
+            if ($item->trashed()) {
+                $item->forceDelete(); // Permanently delete soft deleted items
+            } else {
+                $item->delete(); // Soft delete non-deleted items
+            }
+        }
+
+        $result['success'] = true;
+        $result['items'] = $items->toArray();
+
+        return $result;
     }
 }
