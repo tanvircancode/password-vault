@@ -12,6 +12,7 @@ const initialState = {
     fetchSingleItem: null,
     popup:null,
     selectedItems:[],
+    setDotModal:false,
 };
 
 export const vaultSlice = createSlice({
@@ -41,6 +42,9 @@ export const vaultSlice = createSlice({
             state.organizations = action.payload.organizations;
         },
         setSelectMenu: (state, action) => {
+            if (state.selectMenu === null || state.selectMenu === undefined) {
+                state.selectMenu = { menuType: "", typeValue: "" };
+            }
             state.selectMenu.menuType = action.payload.menuType;
             state.selectMenu.typeValue = action.payload.typeValue;
         },
@@ -50,6 +54,10 @@ export const vaultSlice = createSlice({
         setMakeBlur: (state, action) => {
             state.makeBlur = action.payload.makeBlur;
         },
+        setDotModal: (state, action) => {
+            state.dotModal = action.payload.dotModal;
+        },
+
         setSelectedItems: (state, action) => {
             if (action.payload === null) {
                 state.selectedItems = [];
@@ -97,6 +105,7 @@ export const {
     setReloadPage,
     setMakeBlur,
     setPopup,
+    setDotModal,
     setSelectedItems,
     setFetchSingleItem,
 } = vaultSlice.actions;

@@ -257,22 +257,21 @@ class Item extends Model
     public function deleteItems(array $selectedItems): array
     {
         $result = ['success' => false, 'items' => []];
-        // return response()->json([ 'data' => $selectedItems], 200);
 
         if (empty($selectedItems)) {
             return $result;
         }
 
         $items = $this->with(['organization', 'folder', 'login', 'card', 'identity'])
-        ->withTrashed() // Include soft deleted items
-        ->whereIn('id', $selectedItems)
-        ->get();
+            ->withTrashed()
+            ->whereIn('id', $selectedItems)
+            ->get();
 
         foreach ($items as $item) {
             if ($item->trashed()) {
-                $item->forceDelete(); // Permanently delete soft deleted items
+                $item->forceDelete();
             } else {
-                $item->delete(); // Soft delete non-deleted items
+                $item->delete();
             }
         }
 

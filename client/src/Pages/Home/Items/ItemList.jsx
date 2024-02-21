@@ -19,6 +19,7 @@ import {
     setFetchSingleItem,
     setPopup,
     setSelectedItems,
+    setDotModal,
 } from "../../../store";
 import HashLoader from "react-spinners/HashLoader";
 import EditItemModal from "../../../Modal/ItemModals/EditItemModal";
@@ -31,13 +32,12 @@ const ItemList = () => {
 
     const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
 
-    const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
-
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
 
     const userId = localStorage.getItem("user_id");
     const token = useSelector((state) => state.token);
+    const dotModal = useSelector((state) => state.dotModal);
     const reloadPage = useSelector((state) => state.reloadPage);
     const selectedItems = useSelector((state) => state.selectedItems);
     const popup = useSelector((state) => state.popup);
@@ -68,9 +68,12 @@ const ItemList = () => {
     };
 
     const handleDeleteItems = (value) => {
-        // console.log(value);
         dispatch(setPopup({ popup: value }));
         dispatch(setMakeBlur({ makeBlur: true }));
+    };
+
+    const handleDeleteSingleItem = (itemId) => {
+        dispatch(setPopup({ popup: "deleteSingleItem" }));
     };
 
     const headings = {
@@ -190,7 +193,7 @@ const ItemList = () => {
         if (selectedItems?.length <= 0) {
             toast.error("Please select at least one item!");
         } else {
-            return;
+            dispatch(setDotModal({ dotModal: true }));
         }
     };
 
@@ -288,7 +291,7 @@ const ItemList = () => {
                                 }}
                             />
                         </button>
-                        <ul className="dropdown-menu">
+                        <ul className={`dropdown-menu ${dotModal}`}>
                             {selectMenu.menuType === "trash" ? (
                                 <li
                                     className="dropdown-item dropdown-list"
@@ -434,8 +437,8 @@ const ItemList = () => {
                                                         <li
                                                             className="dropdown-item dropdown-list"
                                                             onClick={() =>
-                                                                setOpenMoveFolderModal(
-                                                                    true
+                                                                handleDeleteSingleItem(
+                                                                    item.id
                                                                 )
                                                             }
                                                         >
@@ -491,6 +494,14 @@ const ItemList = () => {
             )}
             {popup === "moveToOrg" && (
                 <MoveOrgModal
+                    itemsData={itemsData}
+                    setItemsData={setItemsData}
+                />
+            )}
+
+            {popup === "deleteSingleItem" && (
+                <DeleteItemModal
+                    itemId={itemId} // Pass itemId only for deleteSingleItem
                     itemsData={itemsData}
                     setItemsData={setItemsData}
                 />

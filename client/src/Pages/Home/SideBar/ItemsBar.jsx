@@ -7,7 +7,7 @@ import {
     BsSuitcaseLg,
 } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { setPopup, setSelectMenu, setSelectedItems } from "../../../store";
+import { setDotModal, setPopup, setSelectMenu, setSelectedItems } from "../../../store";
 
 const ItemsBar = () => {
     const selectMenu = useSelector((state) => state.selectMenu);
@@ -22,6 +22,7 @@ const ItemsBar = () => {
                 typeValue: typeValue,
             })
         );
+        dispatch(setDotModal({dotModal:false}));
         dispatch(setSelectedItems(null));
         dispatch(setPopup(null));
     };

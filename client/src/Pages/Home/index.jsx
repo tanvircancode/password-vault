@@ -12,17 +12,31 @@ import {
     setOrganizations,
     setMakeBlur,
     setOrgAndFolderLoading,
+    setDotModal,
+    setSelectedItems,
 } from "../../store";
 import { setSelectMenu } from "../../store";
 import "./home.scss";
 
 const Home = () => {
     const userId = localStorage.getItem("user_id");
-    
+
     const token = useSelector((state) => state.token);
     const blur = useSelector((state) => state.makeBlur);
 
     const dispatch = useDispatch();
+
+    const handleTrashClick = () => {
+        dispatch(
+            setSelectMenu({
+                menuType: "trash",
+                typeValue: ""
+            })
+        );
+        dispatch(setDotModal({dotModal:false}));
+        dispatch(setSelectedItems(null));
+        
+    };
 
     const getFoldersAndOrgs = async () => {
         await axios
@@ -64,7 +78,6 @@ const Home = () => {
         getFoldersAndOrgs();
 
         if (window.performance) {
-            
             if (performance.navigation.type == 1) {
                 dispatch(setMakeBlur({ makeBlur: false }));
             }
@@ -98,14 +111,7 @@ const Home = () => {
                                 className={`list-group-item d-flex align-items-center justify-content-center ${
                                     blur ? "is-blur" : ""
                                 }`}
-                                onClick={() =>
-                                    dispatch(
-                                        setSelectMenu({
-                                            typeValue: "",
-                                            menuType: "trash",
-                                        })
-                                    )
-                                }
+                                onClick={handleTrashClick}
                             >
                                 <BsTrash3
                                     style={{ color: "red", marginRight: 5 }}

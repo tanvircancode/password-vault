@@ -9,11 +9,10 @@ import { useState, useEffect } from "react";
 import AddOrgModal from "../../../Modal/OrgModals/AddOrgModal";
 import MoonLoader from "react-spinners/MoonLoader";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup } from "../../../store";
+import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup, setDotModal } from "../../../store";
 
 const OrganizationsBar = () => {
     const [openAddModal, setOpenAddModal] = useState(false);
-    const [loading, setLoading] = useState(true);
     const organizations = useSelector((state) => state.organizations);
     const selectMenu = useSelector((state) => state.selectMenu);
     const blur = useSelector((state) => state.makeBlur);
@@ -30,6 +29,7 @@ const OrganizationsBar = () => {
                 typeValue: typeValue,
             })
         );
+        dispatch(setDotModal({dotModal:false}));
         dispatch(setSelectedItems(null));
         dispatch(setPopup(null));
     };
@@ -39,11 +39,6 @@ const OrganizationsBar = () => {
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 100000);
-    }, [organizations]);
 
     return (
         <div className="accordion">

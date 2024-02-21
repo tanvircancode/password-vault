@@ -4,7 +4,7 @@ import AddFolderModal from "../../../Modal/FolderModals/AddFolderModal";
 
 import { useDispatch, useSelector } from "react-redux";
 import MoonLoader from "react-spinners/MoonLoader";
-import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup } from "../../../store";
+import { setSelectMenu, setMakeBlur, setSelectedItems, setPopup, setDotModal } from "../../../store";
 import "../home.scss";
 
 const FoldersBar = () => {
@@ -32,6 +32,8 @@ const FoldersBar = () => {
                 typeValue: folderId,
             })
         );
+        dispatch(setDotModal({dotModal:false}));
+
         dispatch(setSelectedItems(null));
         dispatch(setPopup(null));
     };

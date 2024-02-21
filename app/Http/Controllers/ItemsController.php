@@ -44,7 +44,7 @@ class ItemsController extends Controller
         $items = User::with(['items' => function ($query) {
             $query->withTrashed()->with(['organization', 'folder', 'login', 'identity', 'card']);
         }])->find($id);
-        
+
         $response = [
             'status' => true,
             'data' => $items
@@ -101,14 +101,16 @@ class ItemsController extends Controller
     public function destroyItems(Request $request)
     {
         $selectedItems = $request->input('selectedItems');
-        // return response()->json(['data' => $selectedItems], 200);
 
         $item = new Item();
         $result = $item->deleteItems($selectedItems);
 
         if ($result['success']) {
             $items = $result['items'];
-            return response()->json(['status' => true, 'data' => $items, 'message' => 'Items deleted successfully'], 200);
+
+            return response()->json([
+                'status' => true, 'data' => $items, 'message' => 'Items deleted successfully'
+            ], 200);
         } else {
             return response()->json(['status' => false, 'message' => 'No items selected for deletion'], 400);
         }

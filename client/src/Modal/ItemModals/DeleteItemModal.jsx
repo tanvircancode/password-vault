@@ -6,13 +6,14 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { BASE_URL } from "../../config";
 
-const DeleteItemModal = ({ itemsData, setItemsData }) => {
+const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
+    if (itemId) {
+        // Component logic that depends on itemId
+    }
     const token = useSelector((state) => state.token);
     const popup = useSelector((state) => state.popup);
     const selectedItems = useSelector((state) => state.selectedItems);
     // console.log(folders);
-
-    const [selectedFolderId, setSelectedFolderId] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -30,32 +31,33 @@ const DeleteItemModal = ({ itemsData, setItemsData }) => {
                     }
                 )
                 .then((res) => {
-                  console.log(res.data);
-                  // console.log(itemsData);
-                  // if (res.data?.status) {
-                  //     toast.success(res.data.message);
-                  //     var updatedItems = itemsData.map((item) => {
-                  //         var matchedObject = res.data.data.find(
-                  //             (resultItem) => resultItem.id === item.id
-                  //         );
-                  //         if (matchedObject) {
-                  //             return { ...item, ...matchedObject };
-                  //         } else {
-                  //             return item;
-                  //         }
-                  //     });
-  
-                  //     setItemsData(updatedItems);
-                  //     dispatch(setSelectedItems(null));
-                  //     dispatch(setPopup(null));
-                  //     dispatch(setMakeBlur({ makeBlur: false }));
-                  // } else {
-                  //     toast.error("Server is not responding");
-                  // }
-              })
-              .catch((error) => {
-                  toast.error("Server is not responding");
-              });
+                    console.log(itemsData);
+                    console.log(res.data.data);
+
+                    if (res.data?.status) {
+                        toast.success(res.data?.message);
+                        var updatedItems = itemsData.map((item) => {
+                            var matchedObject = res.data.data.find(
+                                (resultItem) => resultItem.id === item.id
+                            );
+                            if (matchedObject) {
+                                return { ...item, ...matchedObject };
+                            } else {
+                                return item;
+                            }
+                        });
+
+                        setItemsData(updatedItems);
+                        dispatch(setSelectedItems(null));
+                        dispatch(setPopup(null));
+                        dispatch(setMakeBlur({ makeBlur: false }));
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    toast.error("Server is not responding");
+                });
         } else if (popup === "permanentlyDeleteItems") {
             axios
                 .post(
@@ -69,32 +71,33 @@ const DeleteItemModal = ({ itemsData, setItemsData }) => {
                     }
                 )
                 .then((res) => {
-                  console.log(res.data);
-                  // console.log(itemsData);
-                  // if (res.data?.status) {
-                  //     toast.success(res.data.message);
-                  //     var updatedItems = itemsData.map((item) => {
-                  //         var matchedObject = res.data.data.find(
-                  //             (resultItem) => resultItem.id === item.id
-                  //         );
-                  //         if (matchedObject) {
-                  //             return { ...item, ...matchedObject };
-                  //         } else {
-                  //             return item;
-                  //         }
-                  //     });
-  
-                  //     setItemsData(updatedItems);
-                  //     dispatch(setSelectedItems(null));
-                  //     dispatch(setPopup(null));
-                  //     dispatch(setMakeBlur({ makeBlur: false }));
-                  // } else {
-                  //     toast.error("Server is not responding");
-                  // }
-              })
-              .catch((error) => {
-                  toast.error("Server is not responding");
-              });
+                    if (res.data?.status) {
+                        toast.success(res.data?.message);
+
+                        var itemsReturned = res.data.data;
+                        var deletedItemIds = itemsReturned.map(
+                            (item) => item.id
+                        );
+
+                        var filteredItems = itemsData.map((item) => {
+                            var isDeleted = deletedItemIds.includes(item.id);
+                            return isDeleted ? null : item;
+                        });
+                        filteredItems = filteredItems.filter(
+                            (item) => item !== null
+                        );
+
+                        setItemsData(filteredItems);
+                        dispatch(setSelectedItems(null));
+                        dispatch(setPopup(null));
+                        dispatch(setMakeBlur({ makeBlur: false }));
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    toast.error("Server is not responding");
+                });
         }
     };
 
