@@ -47,11 +47,13 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
     console.log(fetchSingleItem);
 
     const handleUpdateItem = async (e) => {
+        
         e.preventDefault();
         const itemId = fetchSingleItem.id;
         console.log(fetchSingleItem);
 
         var formData = new FormData();
+        
         formData.append("user_id", fetchSingleItem.user_id ?? "");
         formData.append("type", fetchSingleItem.type ?? "");
         formData.append("name", fetchSingleItem.name ?? "");
@@ -103,6 +105,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
             formData.append("license", fetchSingleItem.identity?.license ?? "");
             formData.append("address", fetchSingleItem.identity?.address ?? "");
         }
+
         await axios
             .put(`${BASE_URL}/api/item/${itemId}`, formData, {
                 headers: {
@@ -111,7 +114,6 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                 },
             })
             .then((res) => {
-
                 if (res.data?.status) {
                     toast.success("Item Updated Successful");
                 } else {

@@ -29,6 +29,7 @@ import DeleteItemModal from "../../../Modal/ItemModals/DeleteItemModal";
 const ItemList = () => {
     const [loading, setLoading] = useState(true);
     const [openNewItemModal, setOpenNewItemModal] = useState(false);
+    const [deleteItemId, setDeleteItemId] = useState("");
 
     const [openEditItemPopup, setOpenEditItemPopup] = useState(false);
 
@@ -73,6 +74,7 @@ const ItemList = () => {
     };
 
     const handleDeleteSingleItem = (itemId) => {
+        setDeleteItemId(itemId);
         dispatch(setPopup({ popup: "deleteSingleItem" }));
     };
 
@@ -387,7 +389,7 @@ const ItemList = () => {
                                                 : "Secure item"}
                                         </span>
                                     </div>
-
+ 
                                     <div className="col-3 text-start">
                                         {item.organization
                                             ? item.organization.orgname || "Me"
@@ -501,7 +503,7 @@ const ItemList = () => {
 
             {popup === "deleteSingleItem" && (
                 <DeleteItemModal
-                    itemId={itemId} // Pass itemId only for deleteSingleItem
+                    itemId={deleteItemId} // Pass itemId only for deleteSingleItem
                     itemsData={itemsData}
                     setItemsData={setItemsData}
                 />

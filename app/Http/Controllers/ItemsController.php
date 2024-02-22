@@ -53,8 +53,7 @@ class ItemsController extends Controller
     }
     public function update(Request $request, $id)
     {
-
-
+        // return response()->json(['id'=> $id], 200);
         $item = Item::find($id);
         if (!$item) {
             return response()->json(['status' => false, 'message' => 'Item not found'], 404);
@@ -101,10 +100,10 @@ class ItemsController extends Controller
     public function destroyItems(Request $request)
     {
         $selectedItems = $request->input('selectedItems');
-
+        // return response()->json(['data' => $selectedItems,'status'=>'checking'], 200);
         $item = new Item();
         $result = $item->deleteItems($selectedItems);
-
+// return response()->json(['data' => $result,'status'=>'checking'], 200);
         if ($result['success']) {
             $items = $result['items'];
 

@@ -267,6 +267,8 @@ class Item extends Model
             ->whereIn('id', $selectedItems)
             ->get();
 
+       
+
         foreach ($items as $item) {
             if ($item->trashed()) {
                 $item->forceDelete();

@@ -7,9 +7,9 @@ import { useState } from "react";
 import { BASE_URL } from "../../config";
 
 const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
-    if (itemId) {
-        // Component logic that depends on itemId
-    }
+    // if (itemId) {
+    //     // alert(itemId)
+    // }
     const token = useSelector((state) => state.token);
     const popup = useSelector((state) => state.popup);
     const selectedItems = useSelector((state) => state.selectedItems);
@@ -31,8 +31,8 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
                     }
                 )
                 .then((res) => {
-                    console.log(itemsData);
-                    console.log(res.data.data);
+                    // console.log(itemsData);
+                    // console.log(res.data.data);
 
                     if (res.data?.status) {
                         toast.success(res.data?.message);
@@ -98,6 +98,45 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
                 .catch((error) => {
                     toast.error("Server is not responding");
                 });
+        }else if(popup === "deleteSingleItem") {
+            axios
+                .post(
+                    `${BASE_URL}/api/deleteitems`,
+                    { selectedItems : [itemId]},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                )
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.data?.status) {
+                        toast.success("Item deleted sucessfully");
+
+                        var updatedItems = itemsData.map((item) => {
+                            var matchedObject = res.data.data.find(
+                                (resultItem) => resultItem.id === item.id
+                            );
+                            if (matchedObject) {
+                                return { ...item, ...matchedObject };
+                            } else {
+                                return item;
+                            }
+                        });
+
+                        setItemsData(updatedItems);
+                        dispatch(setSelectedItems(null));
+                        dispatch(setPopup(null));
+                        dispatch(setMakeBlur({ makeBlur: false }));
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    toast.error("Server is not responding");
+                });
         }
     };
 
@@ -109,7 +148,7 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
     return (
         <div
             className={`modal fade ${
-                popup === "deleteItems" || popup === "permanentlyDeleteItems"
+                popup === "deleteItems" || popup === "permanentlyDeleteItems" || popup === "deleteSingleItem"
                     ? "show"
                     : ""
             }`}
@@ -118,7 +157,7 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
             style={{
                 display:
                     popup === "deleteItems" ||
-                    popup === "permanentlyDeleteItems"
+                    popup === "permanentlyDeleteItems" || popup === "deleteSingleItem"
                         ? "block"
                         : "none",
             }}
