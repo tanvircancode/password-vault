@@ -44,13 +44,13 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
         setOpenEditItemPopup(false);
     };
 
-    console.log(fetchSingleItem);
+
 
     const handleUpdateItem = async (e) => {
         
         e.preventDefault();
         const itemId = fetchSingleItem.id;
-        console.log(fetchSingleItem);
+        // console.log(fetchSingleItem);
 
         var formData = new FormData();
         
@@ -114,6 +114,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                 },
             })
             .then((res) => {
+                console.log(res.data);
                 if (res.data?.status) {
                     toast.success("Item Updated Successful");
                 } else {

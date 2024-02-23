@@ -58,6 +58,18 @@ const ItemList = () => {
         console.log(selectedItems);
     }, [selectedItems]);
 
+    const handlePermDeleteSingleItem = (itemId) => {
+        setDeleteItemId(itemId);
+        dispatch(setPopup({ popup: "permDeleteSingleItem" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
+    }
+
+    const handleRestoreItem = (itemId) => {
+        setDeleteItemId(itemId);
+        dispatch(setPopup({ popup: "restoreSingleItem" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
+    }
+
     const handleMoveToFolder = () => {
         dispatch(setPopup({ popup: "moveToFolder" }));
         dispatch(setMakeBlur({ makeBlur: true }));
@@ -76,6 +88,7 @@ const ItemList = () => {
     const handleDeleteSingleItem = (itemId) => {
         setDeleteItemId(itemId);
         dispatch(setPopup({ popup: "deleteSingleItem" }));
+        dispatch(setMakeBlur({ makeBlur: true }));
     };
 
     const headings = {
@@ -375,7 +388,11 @@ const ItemList = () => {
                                     </div>
                                     <div
                                         className="col-5 text-start"
-                                        onClick={() => handleOpenPopup(item)}
+                                        onClick={() => {
+                                            if (selectMenu.menuType !== 'trash') {
+                                                handleOpenPopup(item);
+                                            }
+                                        }}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <p className="m-0">{item.name}</p>
@@ -412,7 +429,9 @@ const ItemList = () => {
                                                 {selectMenu.menuType ===
                                                 "trash" ? (
                                                     <div>
-                                                        <li className="dropdown-item dropdown-list">
+                                                        <li className="dropdown-item dropdown-list"
+                                                         onClick={() => handleRestoreItem(item.id)} 
+                                                        >
                                                             <BsTrash3
                                                                 style={{
                                                                     marginRight: 5,
@@ -422,7 +441,9 @@ const ItemList = () => {
                                                                 Restore Item
                                                             </span>
                                                         </li>
-                                                        <li className="dropdown-item dropdown-list">
+                                                        <li className="dropdown-item dropdown-list"
+                                                        onClick={() => handlePermDeleteSingleItem(item.id)} 
+                                                        >
                                                             <BsTrash3
                                                                 style={{
                                                                     marginRight: 5,
@@ -501,9 +522,9 @@ const ItemList = () => {
                 />
             )}
 
-            {popup === "deleteSingleItem" && (
+            {(popup === "deleteSingleItem" || popup === "permDeleteSingleItem" || popup === "restoreSingleItem") && (
                 <DeleteItemModal
-                    itemId={deleteItemId} // Pass itemId only for deleteSingleItem
+                    itemId={deleteItemId} 
                     itemsData={itemsData}
                     setItemsData={setItemsData}
                 />

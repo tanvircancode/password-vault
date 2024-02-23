@@ -40,7 +40,6 @@ class ItemsController extends Controller
             return response()->json(['status' => false], 403);
         }
 
-        // $items = User::with(['items.organization', 'items.folder', 'items.login', 'items.identity', 'items.card'])->find($id);
         $items = User::with(['items' => function ($query) {
             $query->withTrashed()->with(['organization', 'folder', 'login', 'identity', 'card']);
         }])->find($id);
@@ -51,10 +50,11 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
+    
     public function update(Request $request, $id)
     {
-        // return response()->json(['id'=> $id], 200);
         $item = Item::find($id);
+
         if (!$item) {
             return response()->json(['status' => false, 'message' => 'Item not found'], 404);
         }
@@ -100,10 +100,10 @@ class ItemsController extends Controller
     public function destroyItems(Request $request)
     {
         $selectedItems = $request->input('selectedItems');
-        // return response()->json(['data' => $selectedItems,'status'=>'checking'], 200);
+
         $item = new Item();
         $result = $item->deleteItems($selectedItems);
-// return response()->json(['data' => $result,'status'=>'checking'], 200);
+
         if ($result['success']) {
             $items = $result['items'];
 
@@ -112,6 +112,48 @@ class ItemsController extends Controller
             ], 200);
         } else {
             return response()->json(['status' => false, 'message' => 'No items selected for deletion'], 400);
+        }
+    }
+
+    public function destroyItem($id)
+    {
+        $item = Item::withTrashed()->find($id);
+        $convertedArray = array();
+
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Item not found!'], 404);
+        } else if ($item->user_id !== Auth::user()->id) {
+            return response()->json(['status' => false, 'message' => 'Unauthenticated'], 403);
+        } else {
+            if ($item->trashed()) {
+                $item->forceDelete();
+            } else {
+                $item->delete();
+            }
+            array_push($convertedArray, $item);
+
+            return response()->json(['status' => true, 'data' => $convertedArray, 'message' => 'Item deleted successfully'], 200);
+        }
+    }
+
+    public function restoreItem($id)
+    {
+        $item = Item::withTrashed()
+        ->with(['organization', 'folder', 'login', 'card', 'identity'])
+        ->find($id);
+        $convertedArray = array();
+
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Item not found!'], 404);
+        } else if ($item->user_id !== Auth::user()->id) {
+            return response()->json(['status' => false, 'message' => 'Unauthenticated'], 403);
+        } else {
+
+            $item->restore();
+
+            array_push($convertedArray, $item);
+
+            return response()->json(['status' => true, 'data' => $convertedArray, 'message' => 'Item restored successfully'], 200);
         }
     }
 }

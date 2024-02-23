@@ -6,10 +6,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { BASE_URL } from "../../config";
 
-const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
-    // if (itemId) {
-    //     // alert(itemId)
-    // }
+const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
     const token = useSelector((state) => state.token);
     const popup = useSelector((state) => state.popup);
     const selectedItems = useSelector((state) => state.selectedItems);
@@ -98,35 +95,52 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
                 .catch((error) => {
                     toast.error("Server is not responding");
                 });
-        }else if(popup === "deleteSingleItem") {
+        } else if (popup === "deleteSingleItem") {
             axios
-                .post(
-                    `${BASE_URL}/api/deleteitems`,
-                    { selectedItems : [itemId]},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
-                )
+                .delete(`${BASE_URL}/api/item/${itemId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
                 .then((res) => {
-                    console.log(res.data);
                     if (res.data?.status) {
-                        toast.success("Item deleted sucessfully");
-
                         var updatedItems = itemsData.map((item) => {
-                            var matchedObject = res.data.data.find(
-                                (resultItem) => resultItem.id === item.id
-                            );
-                            if (matchedObject) {
-                                return { ...item, ...matchedObject };
+                            if (item.id === itemId) {
+                                return { ...item, ...res.data.data };
                             } else {
                                 return item;
                             }
                         });
 
+                        toast.success("Item deleted sucessfully");
                         setItemsData(updatedItems);
+                        dispatch(setSelectedItems(null));
+                        dispatch(setPopup(null));
+                        dispatch(setMakeBlur({ makeBlur: false }));
+                        
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    toast.error("Server is not responding");
+                });
+        } else if (popup === "permDeleteSingleItem") {
+            axios
+                .delete(`${BASE_URL}/api/item/${itemId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.data?.status) {
+                        toast.success(res.data?.message);
+
+                        itemsData.filter((item) => item.id !== itemId);
+
+                        setItemsData(itemsData);
                         dispatch(setSelectedItems(null));
                         dispatch(setPopup(null));
                         dispatch(setMakeBlur({ makeBlur: false }));
@@ -138,6 +152,39 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
                     toast.error("Server is not responding");
                 });
         }
+        else if (popup === "restoreSingleItem") {
+            axios
+                .put(`${BASE_URL}/api/item/${itemId}`,null, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.data?.status) {
+                        var updatedItems = itemsData.map((item) => {
+                            if (item.id === itemId) {
+                                return { ...item, ...res.data.data };
+                            } else {
+                                return item;
+                            }
+                        });
+
+                        toast.success(res.data.message);
+                        setItemsData(updatedItems);
+                        dispatch(setSelectedItems(null));
+                        dispatch(setPopup(null));
+                        dispatch(setMakeBlur({ makeBlur: false }));
+                        
+                    } else {
+                        toast.error("Server is not responding");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    toast.error("Server is not responding");
+                });
+        } 
     };
 
     const closePopup = () => {
@@ -148,7 +195,11 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
     return (
         <div
             className={`modal fade ${
-                popup === "deleteItems" || popup === "permanentlyDeleteItems" || popup === "deleteSingleItem"
+                popup === "deleteItems" ||
+                popup === "permanentlyDeleteItems" ||
+                popup === "deleteSingleItem" ||
+                popup === "permDeleteSingleItem" ||
+                popup === "restoreSingleItem"
                     ? "show"
                     : ""
             }`}
@@ -157,7 +208,10 @@ const DeleteItemModal = ({ itemId,itemsData, setItemsData }) => {
             style={{
                 display:
                     popup === "deleteItems" ||
-                    popup === "permanentlyDeleteItems" || popup === "deleteSingleItem"
+                    popup === "permanentlyDeleteItems" ||
+                    popup === "deleteSingleItem" ||
+                    popup === "permDeleteSingleItem" ||
+                    popup === "restoreSingleItem"
                         ? "block"
                         : "none",
             }}
