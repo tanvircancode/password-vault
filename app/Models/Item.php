@@ -172,6 +172,7 @@ class Item extends Model
 
     public function updateItemAndRelatedModels(array $data)
     {
+        
         $itemInput = [
             'folder_id' => $data['folder_id'],
             'notes' => $data['notes'],

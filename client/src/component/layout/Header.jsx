@@ -1,15 +1,18 @@
 import { BsFillShieldLockFill } from "react-icons/bs";
 import "./layout.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate , useLocation} from "react-router-dom";
 import axios from "axios";
-import { setFolders, setLogout, setOrganizations } from "../../store";
+import { setLogout } from "../../store";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
 
 const Header = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const [activeLink, setActiveLink] = useState("");
 
     const token = useSelector((state) => state.token);
     const userData = useSelector((state) => state.user);
@@ -17,8 +20,12 @@ const Header = () => {
 
     const dispatch = useDispatch();
 
-    // console.log(token);
-    console.log(userData);
+    
+
+    const handleNavLinkClick = (path) => {
+        setActiveLink(path);
+        navigate(path);
+    };
 
     const handleLogout = async () => {
         await axios
@@ -46,7 +53,8 @@ const Header = () => {
         if (userData === null) {
             navigate("/login");
         }
-    }, [userData]);
+        setActiveLink(location.pathname);
+    }, [location.pathname]);
 
     let loggedUserName = "";
 
@@ -66,34 +74,27 @@ const Header = () => {
                         <BsFillShieldLockFill style={{ color: "#0D6EFD" }} />
                     </div>
 
-                    {/* <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button> */}
-
                     <div
                         className="collapse navbar-collapse"
                         id="navbarSupportedContent"
                     >
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
+                            <li className={`nav-item ${activeLink==="/home" ? "active" : ''}`}>
                                 <a
-                                    className="nav-link active"
+                                    className="nav-link"
                                     aria-current="page"
-                                    href="#"
+                                    onClick={() => handleNavLinkClick("/home")}
                                 >
                                     Home
                                 </a>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">
+                            <li
+                                className={`nav-item ${activeLink==="/tools" ? "active" : ''}`}
+                            >
+                                <a
+                                    className="nav-link"
+                                    onClick={() => handleNavLinkClick("/tools")}
+                                >
                                     Tools
                                 </a>
                             </li>

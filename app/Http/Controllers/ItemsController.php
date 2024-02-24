@@ -10,6 +10,7 @@ use App\Models\Identity;
 use App\Models\Folder;
 use App\Models\Organization;
 use Illuminate\Support\Facades\Auth;
+use League\Csv\Writer;
 
 use Illuminate\Http\Request;
 
@@ -50,9 +51,10 @@ class ItemsController extends Controller
         ];
         return response()->json($response, 200);
     }
-    
+
     public function update(Request $request, $id)
     {
+
         $item = Item::find($id);
 
         if (!$item) {
@@ -139,8 +141,8 @@ class ItemsController extends Controller
     public function restoreItem($id)
     {
         $item = Item::withTrashed()
-        ->with(['organization', 'folder', 'login', 'card', 'identity'])
-        ->find($id);
+            ->with(['organization', 'folder', 'login', 'card', 'identity'])
+            ->find($id);
         $convertedArray = array();
 
         if (!$item) {
@@ -155,5 +157,74 @@ class ItemsController extends Controller
 
             return response()->json(['status' => true, 'data' => $convertedArray, 'message' => 'Item restored successfully'], 200);
         }
+    }
+    // public function export($id)
+    // {
+
+    //     if ($id !== Auth::user()->id) {
+    //         return response()->json(['status' => false], 403);
+    //     }
+
+    //     // $items = User::with(['items' => function ($query) {
+    //     //     $query->whereNull('deleted_at')->with(['organization', 'folder', 'login', 'identity', 'card']);
+    //     // }])->find($id);
+    //     $items = Item::where('user_id', $id)
+    //             ->whereNull('deleted_at')
+    //             ->get();
+
+
+    //     $response = [
+    //         'status' => true,
+    //         'checking' => 'yes',
+    //         'data' => $items
+    //     ];
+    //     return response()->json($response, 200);
+    // }
+    public function export($id)
+    {
+        if ($id !== Auth::user()->id) {
+            return response()->json(['status' => false], 403);
+        }
+
+      
+        $items = Item::where('user_id', $id)
+            ->with(['organization', 'folder', 'login'])
+            ->get();
+
+        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+
+        $csv->insertOne([
+            'folder_name', 'favorite', 'type', 'item_name', 'notes', 'login_username', 'login_password',
+            'login_url'
+        ]);
+
+       
+        foreach ($items as $item) {
+            if ($item->type == 2 || $item->type == 3) {
+                continue;
+            }
+            $csv->insertOne([
+
+                $item->folder->foldername  ?? "",
+                $item->favorite ?? "",
+                $item->type  ? ($item->type == 1 ? 'login' : 'note') : "",
+                $item->name ?? "",
+                $item->notes  ?? "",
+                $item->login->username  ?? "",
+                $item->login->password  ?? "",
+                $item->login->url  ?? ""
+            ]);
+        }
+
+      
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="vault_data.csv"',
+        ];
+
+        // Send the CSV file as a response
+        return response()->stream(function () use ($csv) {
+            $csv->output();
+        }, 200, $headers);
     }
 }

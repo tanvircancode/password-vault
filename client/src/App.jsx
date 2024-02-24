@@ -15,7 +15,6 @@ import { BASE_URL } from "./config";
 // import { store, persistor } from "./main";
 
 function App() {
-    const authChecked = Boolean(useSelector((state) => state.token));
     return (
         <>
             <Layout />

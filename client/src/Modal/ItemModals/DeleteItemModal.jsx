@@ -154,7 +154,7 @@ const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
         }
         else if (popup === "restoreSingleItem") {
             axios
-                .put(`${BASE_URL}/api/item/${itemId}`,null, {
+                .put(`${BASE_URL}/api/restoreitem/${itemId}`,null, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -240,7 +240,7 @@ const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
                         style={{ textAlign: "left" }}
                     >
                         <h5 className="modal-title mb-2">
-                            Do you want to delete?
+                            Do you want to {popup === "restoreSingleItem" ? 'restore' : 'delete' }?
                         </h5>
                         <button
                             type="button"
