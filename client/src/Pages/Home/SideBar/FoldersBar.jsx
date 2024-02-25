@@ -18,8 +18,6 @@ const FoldersBar = () => {
 
     const dispatch = useDispatch();
 
-    console.log(folders);
-
     const handleFolderModal = () => {
         setOpenAddModal(true);
         dispatch(setMakeBlur({ makeBlur: true }));

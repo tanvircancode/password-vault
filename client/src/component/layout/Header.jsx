@@ -54,7 +54,7 @@ const Header = () => {
             navigate("/login");
         }
         setActiveLink(location.pathname);
-    }, [location.pathname]);
+    }, [userData,location.pathname]);
 
     let loggedUserName = "";
 

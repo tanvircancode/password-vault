@@ -91,6 +91,10 @@ const ItemList = () => {
         dispatch(setMakeBlur({ makeBlur: true }));
     };
 
+    const handleDotsClick = () => {
+        dispatch(setSelectedItems(null));
+    };
+
     const headings = {
         orgs: "All Items",
         me: "My Items",
@@ -134,16 +138,18 @@ const ItemList = () => {
     };
 
     const handleSelectAll = (event) => {
-        if (event.target.checked) {
-            const allItemIds = itemsData.map((item) => item.id);
-            setCheckAll(true);
-
-            dispatch(setSelectedItems({ selectedItems: allItemIds }));
-        } else {
-            setCheckAll(false);
-
-            dispatch(setSelectedItems(null));
-        }
+ 
+            if (event.target.checked) {
+                const allItemIds = filteredItems().map((item) => item.id);
+                setCheckAll(true);
+    
+                dispatch(setSelectedItems({ selectedItems: allItemIds }));
+            } else {
+                setCheckAll(false);
+    
+                dispatch(setSelectedItems(null));
+            }
+        
     };
 
     const handleCheckboxChange = (itemId) => {
@@ -221,10 +227,6 @@ const ItemList = () => {
 
     useEffect(() => {
         getItemsData();
-        // console.log(popup);
-        // console.log(selectedItems);
-        // console.log(checkAll);
-        // console.log(loading);
 
         if (
             selectedItems?.length === itemsData.length &&
@@ -266,7 +268,7 @@ const ItemList = () => {
                         disabled={!token || itemsData.length === 0}
                         checked={
                             checkAll &&
-                            selectedItems.length === itemsData.length
+                            selectedItems.length === filteredItems().length
                         }
                         onChange={handleSelectAll}
                         style={{ margin: "3px", transform: "scale(0.6)" }}
@@ -420,6 +422,7 @@ const ItemList = () => {
                                                 type="button"
                                                 data-bs-toggle="dropdown"
                                                 aria-expanded="false"
+                                                onClick={handleDotsClick}
                                             >
                                                 <BsThreeDotsVertical
                                                     style={{ color: "00000" }}
@@ -535,6 +538,7 @@ const ItemList = () => {
                 <DeleteItemModal
                     itemsData={itemsData}
                     setItemsData={setItemsData}
+                    setCheckAll={setCheckAll}
                 />
             )}
         </div>

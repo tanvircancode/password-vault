@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
@@ -7,28 +7,6 @@ import { BASE_URL } from "../../config";
 const ExportData = () => {
     const token = useSelector((state) => state.token);
     const userId = localStorage.getItem("user_id");
-
-    function convertArrayOfObjectsToCSV(data) {
-        const keys = Object.keys(data[0]);
-        const csvData = [];
-
-        // Add headers
-        csvData.push(keys.join(","));
-
-        // Add rows
-        data.forEach((item) => {
-            const values = keys.map((key) => {
-                let value = item[key];
-                if (typeof value === "string") {
-                    value = '"' + value + '"';
-                }
-                return value;
-            });
-            csvData.push(values.join(","));
-        });
-
-        return csvData.join("\n");
-    }
 
     const handleExport = async () => {
         await axios
@@ -46,7 +24,7 @@ const ExportData = () => {
 
                 const link = document.createElement("a");
                 link.href = url;
-                link.setAttribute("download", "items.csv"); // Set the filename for the downloaded file
+                link.setAttribute("download", "items.csv"); 
 
                 document.body.appendChild(link);
                 link.click();

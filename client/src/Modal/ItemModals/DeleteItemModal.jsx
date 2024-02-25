@@ -6,11 +6,11 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { BASE_URL } from "../../config";
 
-const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
+const DeleteItemModal = ({ itemId, itemsData, setItemsData,setCheckAll }) => {
     const token = useSelector((state) => state.token);
     const popup = useSelector((state) => state.popup);
     const selectedItems = useSelector((state) => state.selectedItems);
-    // console.log(folders);
+    console.log(selectedItems);
 
     const dispatch = useDispatch();
 
@@ -48,6 +48,7 @@ const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
                         dispatch(setSelectedItems(null));
                         dispatch(setPopup(null));
                         dispatch(setMakeBlur({ makeBlur: false }));
+                        setCheckAll(false);
                     } else {
                         toast.error("Server is not responding");
                     }
@@ -55,6 +56,7 @@ const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
                 .catch((error) => {
                     toast.error("Server is not responding");
                 });
+                
         } else if (popup === "permanentlyDeleteItems") {
             axios
                 .post(
@@ -88,6 +90,7 @@ const DeleteItemModal = ({ itemId, itemsData, setItemsData }) => {
                         dispatch(setSelectedItems(null));
                         dispatch(setPopup(null));
                         dispatch(setMakeBlur({ makeBlur: false }));
+                        setCheckAll(false);
                     } else {
                         toast.error("Server is not responding");
                     }

@@ -116,7 +116,7 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
             .then((res) => {
                 console.log(res.data);
                 if (res.data?.status) {
-                    toast.success("Item Updated Successful");
+                    toast.success("Item Updated Successfully");
                 } else {
                     toast.error("Server is not responding");
                 }

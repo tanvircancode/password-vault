@@ -54,7 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
   //export
   Route::get('/exportitems/{id}', [ItemsController::class, 'export']);
-
+  //import
+  Route::post('/importitem/{id}', [ItemsController::class, 'import']);
 
  
 });

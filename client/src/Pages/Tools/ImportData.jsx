@@ -1,4 +1,43 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { BASE_URL } from "../../config";
+
 const ImportData = () => {
+    const token = useSelector((state) => state.token);
+    const userId = localStorage.getItem("user_id");
+
+    const [file, setFile] = useState(null);
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+    const handleUpload = () => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        axios
+            .post(`${BASE_URL}/api/importitem/${userId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                if(res.data?.status) {
+                    toast.success(res.data.message);
+                    setFile(null);
+                }else{
+                    toast.success(res.data.message);
+                }
+
+            })
+            .catch((error) => {
+                toast.error("Server is not responding");
+            });
+    };
     return (
         <div className="container ">
             <div className="fw-bold border-bottom pb-2">
@@ -23,7 +62,7 @@ const ImportData = () => {
                 </div>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-3">
                 <label htmlFor="importFile" className="form-label fw-bold mb-1">
                     Select the import file
                 </label>
@@ -31,8 +70,9 @@ const ImportData = () => {
                     className="form-control-plaintext"
                     type="file"
                     id="importFile"
+                    onChange={handleFileChange}
                 />
-                <button type="submit" className="btn btn-primary mt-2">
+                <button className="btn btn-primary mt-2" onClick={handleUpload}>
                     Submit
                 </button>
             </div>

@@ -5,9 +5,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use League\Csv\Writer;
 
 class Item extends Model
 {
@@ -37,31 +36,10 @@ class Item extends Model
 
         static::creating(function ($model) {
             $model->id = Str::uuid();
-            $model->validate();
-        });
-
-        static::updating(function ($model) {
-            $model->validate();
         });
     }
 
-    protected function validate()
-    {
-        $validator = Validator::make($this->attributes, [
-            'user_id' => 'string',
-            'type' => 'nullable|integer|between:1,4',
-            'name' => 'nullable|string|max:255',
-            'folder_id' => 'nullable',
-            'notes' => 'nullable|string|max:500',
-            'organization_id' => 'nullable',
-            'favorite' => 'boolean'
-        ]);
 
-        if ($validator->fails()) {
-            // throw new ValidationException($validator);
-            return response()->json(['status' => false, 'errors' => $validator->errors()], 400);
-        }
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -172,7 +150,7 @@ class Item extends Model
 
     public function updateItemAndRelatedModels(array $data)
     {
-        
+
         $itemInput = [
             'folder_id' => $data['folder_id'],
             'notes' => $data['notes'],
@@ -283,5 +261,71 @@ class Item extends Model
 
         return $result;
     }
-    
+
+    public static function importItems($file, $userId)
+    {
+
+        $fileData = array_map('str_getcsv', file($file));
+
+        foreach ($fileData as $index => $row) {
+            // CSV structure: foldername,favorite,type,name,notes,username,password,url
+
+            if ($index === 0) {
+                continue;
+            }
+
+            $folder = null;
+            if (!empty($row[0])) {
+                $folder = Folder::create(['foldername' => $row[0] ?? "", 'user_id' => $userId]);
+            }
+            $item = new Item();
+            $item->folder_id = !empty($folder->id) ? $folder->id : "";
+            $item->favorite = $row[1];
+            $item->type = $row[2] == 'login' ? 1 : 4;
+            $item->name = $row[3] ?? "";
+            $item->notes = $row[4] ?? "";
+            $item->user_id = $userId;
+
+            $item->save();
+            $item->login()->create([
+                'username' => $row[5] ?? '',
+                'password' => $row[6] ?? "",
+                'url' => $row[7] ?? "",
+                'item_id' => $item->id
+            ]);
+        }
+    }
+
+    public function exportItems($userId)
+    {
+        $items = $this->where('user_id', $userId)
+            ->with(['folder', 'login'])
+            ->get();
+
+        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+
+        $csv->insertOne([
+            'folder_name', 'favorite', 'type', 'item_name', 'notes', 'login_username', 'login_password',
+            'login_url'
+        ]);
+
+
+        foreach ($items as $item) {
+            if ($item->type == 2 || $item->type == 3) {
+                continue;
+            }
+            $csv->insertOne([
+
+                $item->folder->foldername  ?? "",
+                $item->favorite ?? "",
+                $item->type  ? ($item->type == 1 ? 'login' : 'note') : "",
+                strval($item->name) ?? "",
+                $item->notes  ?? "",
+                $item->login->username  ?? "",
+                $item->login->password  ?? "",
+                $item->login->url  ?? ""
+            ]);
+        }
+        return $csv;
+    }
 }
