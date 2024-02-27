@@ -44,8 +44,6 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
         setOpenEditItemPopup(false);
     };
 
-
-
     const handleUpdateItem = async (e) => {
         
         e.preventDefault();
@@ -120,20 +118,21 @@ function EditItemModal({ openEditItemPopup, setOpenEditItemPopup }) {
                 } else {
                     toast.error("Server is not responding");
                 }
+                setOpenEditItemPopup(false);
+                dispatch(setMakeBlur({ makeBlur: false }));
+                dispatch(setReloadPage({ reloadPage: true }));
             })
             .catch((error) => {
-                console.log(error);
-                if (error.response && error.response.status) {
-                    toast.error(error.response?.data?.message);
+                // console.log(error);
+                if (error.response && error.response?.status && error.response.data?.message) {
+                    toast.error(error.response.data.message);
                 } else {
                     toast.error("Server is not responding");
                 }
             });
 
-        setOpenEditItemPopup(false);
-        dispatch(setMakeBlur({ makeBlur: false }));
-        dispatch(setReloadPage({ reloadPage: true }));
-    };
+       
+    };  
 
     return (
         <div

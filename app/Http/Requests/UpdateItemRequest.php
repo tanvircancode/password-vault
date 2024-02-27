@@ -24,7 +24,7 @@ class UpdateItemRequest extends FormRequest
         return [
             'user_id' => 'required|string',
             'type' => 'nullable|integer|between:1,4',
-            'name' => 'nullable|string|max:255',
+            'name' => 'required|string|min:5|max:255',
             'folder_id' => 'nullable|string',
             'notes' => 'nullable|string|max:500',
             'organization_id' => 'nullable|string',
@@ -37,8 +37,9 @@ class UpdateItemRequest extends FormRequest
         return [
             'type.min' => 'Type is not valid',
             'type.max' => 'Type is not valid',
-            'notes.max' => 'Text is too long',
+            'notes.max' => 'Notes too long',
             'name.max' => 'Please Try To Use Shorter Name',
+            'name.min' => 'Name is too short',
         ];
     }
 }

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate,useNavigate } from "react-router-dom";
 import Layout from "./Pages/Layout";
 import Home from "./Pages/Home";
 import Login from "./Pages/LoginPage";
@@ -9,21 +9,26 @@ import axios from "axios";
 import { setLogin, setSelectedItems } from "./store";
 import { useEffect } from "react";
 import { BASE_URL } from "./config";
+import LoginComponent from "./Pages/LoginPage/LoginComponent";
 // import { Provider } from "react-redux";
 // import { PersistGate } from "redux-persist/integration/react";
 
 // import { store, persistor } from "./main";
 
 function App() {
+  const authChecked = Boolean(useSelector((state) => state.token));
+
     return (
         <>
             <Layout />
+            
             <InitUser />
             <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/tools" element={<Tools />} />
+                <Route path="/home" element={authChecked ? <Home /> : <Navigate to="/login" />} />
+
+                <Route path="/login" element={<LoginComponent />} />
+        
+                <Route path="/tools" element={authChecked ? <Tools /> : <Navigate to="/login" />} />
             </Routes>
         </>
     );
@@ -32,7 +37,8 @@ function App() {
 function InitUser() {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
-    console.log(token);
+    // console.log(token);
+
 
     const init = async () => {
         try {
@@ -43,6 +49,7 @@ function InitUser() {
             });
 
             if (response.data.user) {
+
                 dispatch(
                     setLogin({
                         user: response.data.user,
@@ -61,6 +68,7 @@ function InitUser() {
                 localStorage.removeItem("user_id");
             }
         } catch (e) {
+
             dispatch(
                 setLogin({
                     user: null,
@@ -70,12 +78,13 @@ function InitUser() {
             dispatch(setSelectedItems(null));
             localStorage.removeItem("token");
             localStorage.removeItem("user_id");
+
         }
     };
 
     useEffect(() => {
         init();
-    }, [token]);
+    }, []);
 
     return <></>;
 }

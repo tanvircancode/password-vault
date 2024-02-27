@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreItemRequest extends FormRequest
+class StoreFolderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,21 +23,16 @@ class StoreItemRequest extends FormRequest
     {
         return [
             'user_id' => 'required|string',
-            'type' => 'nullable|integer|between:1,4',
-            'name' => 'required|string|min:5|max:255',
-            'folder_id' => 'nullable|string',
-            'notes' => 'nullable|string|max:500',
-            'organization_id' => 'nullable|string',
-            'favorite' => 'boolean'
+            'foldername' => 'required|string|min:5|max:255',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'type.between' => 'Type is not valid',
-            'notes.max' => 'Notes text is too long',
-            'name.max' => 'Please Try To Use Shorter Name',
+            'foldername.max' => 'Folder name is too long',
+            'foldername.min' => 'Folder name is too short',
+
         ];
     }
 }

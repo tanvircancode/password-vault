@@ -101,25 +101,25 @@ function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-               
-                        <div className="form-input">
-                            <button type="submit" className="btn btn-primary">
-                                Login
-                            </button>
-                        </div>
-                        <div className="form-input">
-                            <button type="submit" className="btn btn-primary">
-                                Login
-                            </button>
-                        </div>
-                   
 
                     <div className="form-input">
-                        <Link to="/register">
-                            Don't have an account? Create Account
-                        </Link>
+                        <button type="submit" className="btn btn-primary">
+                            Login
+                        </button>
                     </div>
+                    
+
+                
+                        
+                    
                 </form>
+                <a
+                            className="nav-link"
+                            aria-current="page"
+                            onClick={() => navigate("/register")}
+                        >
+                            Don't have an account? Create Account
+                        </a>
             </div>
             <div className="right-section" style={{ width: "50%" }}>
                 <img src={rightImage} alt="image here" />

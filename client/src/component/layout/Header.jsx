@@ -50,9 +50,9 @@ const Header = () => {
     };
 
     useEffect(() => {
-        if (userData === null) {
-            navigate("/login");
-        }
+        // if (userData === null) {
+        //     navigate("/login");
+        // }
         setActiveLink(location.pathname);
     }, [userData,location.pathname]);
 

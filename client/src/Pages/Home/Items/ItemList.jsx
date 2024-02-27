@@ -62,13 +62,13 @@ const ItemList = () => {
         setDeleteItemId(itemId);
         dispatch(setPopup({ popup: "permDeleteSingleItem" }));
         dispatch(setMakeBlur({ makeBlur: true }));
-    }
+    };
 
     const handleRestoreItem = (itemId) => {
         setDeleteItemId(itemId);
         dispatch(setPopup({ popup: "restoreSingleItem" }));
         dispatch(setMakeBlur({ makeBlur: true }));
-    }
+    };
 
     const handleMoveToFolder = () => {
         dispatch(setPopup({ popup: "moveToFolder" }));
@@ -138,18 +138,16 @@ const ItemList = () => {
     };
 
     const handleSelectAll = (event) => {
- 
-            if (event.target.checked) {
-                const allItemIds = filteredItems().map((item) => item.id);
-                setCheckAll(true);
-    
-                dispatch(setSelectedItems({ selectedItems: allItemIds }));
-            } else {
-                setCheckAll(false);
-    
-                dispatch(setSelectedItems(null));
-            }
-        
+        if (event.target.checked) {
+            const allItemIds = filteredItems().map((item) => item.id);
+            setCheckAll(true);
+
+            dispatch(setSelectedItems({ selectedItems: allItemIds }));
+        } else {
+            setCheckAll(false);
+
+            dispatch(setSelectedItems(null));
+        }
     };
 
     const handleCheckboxChange = (itemId) => {
@@ -260,6 +258,7 @@ const ItemList = () => {
                     blur ? "is-blur" : ""
                 }`}
             >
+
                 <div className="col-2 text-start d-flex p-0">
                     <input
                         className="form-check-input small-checkbox"
@@ -274,13 +273,13 @@ const ItemList = () => {
                         style={{ margin: "3px", transform: "scale(0.6)" }}
                     />
 
-                    <label
-                        className=" mb-0"
+                    <span
+                        className="mb-0"
                         style={{ marginTop: "2px", fontSize: 18 }}
                         htmlFor="select-all"
                     >
                         All
-                    </label>
+                    </span>
                 </div>
                 <div className="col-5 text-start p-0" style={{ fontSize: 18 }}>
                     Name
@@ -391,7 +390,9 @@ const ItemList = () => {
                                     <div
                                         className="col-5 text-start"
                                         onClick={() => {
-                                            if (selectMenu.menuType !== 'trash') {
+                                            if (
+                                                selectMenu.menuType !== "trash"
+                                            ) {
                                                 handleOpenPopup(item);
                                             }
                                         }}
@@ -408,7 +409,7 @@ const ItemList = () => {
                                                 : "Secure item"}
                                         </span>
                                     </div>
- 
+
                                     <div className="col-3 text-start">
                                         {item.organization
                                             ? item.organization.orgname || "Me"
@@ -432,8 +433,13 @@ const ItemList = () => {
                                                 {selectMenu.menuType ===
                                                 "trash" ? (
                                                     <div>
-                                                        <li className="dropdown-item dropdown-list"
-                                                         onClick={() => handleRestoreItem(item.id)} 
+                                                        <li
+                                                            className="dropdown-item dropdown-list"
+                                                            onClick={() =>
+                                                                handleRestoreItem(
+                                                                    item.id
+                                                                )
+                                                            }
                                                         >
                                                             <BsTrash3
                                                                 style={{
@@ -444,8 +450,13 @@ const ItemList = () => {
                                                                 Restore Item
                                                             </span>
                                                         </li>
-                                                        <li className="dropdown-item dropdown-list"
-                                                        onClick={() => handlePermDeleteSingleItem(item.id)} 
+                                                        <li
+                                                            className="dropdown-item dropdown-list"
+                                                            onClick={() =>
+                                                                handlePermDeleteSingleItem(
+                                                                    item.id
+                                                                )
+                                                            }
                                                         >
                                                             <BsTrash3
                                                                 style={{
@@ -525,9 +536,11 @@ const ItemList = () => {
                 />
             )}
 
-            {(popup === "deleteSingleItem" || popup === "permDeleteSingleItem" || popup === "restoreSingleItem") && (
+            {(popup === "deleteSingleItem" ||
+                popup === "permDeleteSingleItem" ||
+                popup === "restoreSingleItem") && (
                 <DeleteItemModal
-                    itemId={deleteItemId} 
+                    itemId={deleteItemId}
                     itemsData={itemsData}
                     setItemsData={setItemsData}
                 />

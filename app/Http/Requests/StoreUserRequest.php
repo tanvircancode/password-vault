@@ -23,10 +23,10 @@ class StoreUserRequest extends FormRequest
     {
         return [
             
-            'name' => 'nullable|string|max:255',
-            'email' => 'required|string',
-            'password' => 'nullable|string|max:255',
-            'password_hint' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:50',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:5|max:255',
+            'password_hint' => 'required|string|min:3|max:20',
             
         ];
     }
@@ -40,6 +40,7 @@ class StoreUserRequest extends FormRequest
             'password_hint.min' => 'Password Hint is too short',
             'password_hint.max' => 'Password Hint is too long',
             'email.required' => 'Email is required',
+            'email.email' => 'This must be a valid email address.',
             'name.max' => 'Please Try To Use Shorter Name',
         ];
     }

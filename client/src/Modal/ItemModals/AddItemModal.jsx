@@ -15,7 +15,6 @@ import { BASE_URL } from "../../config";
 import { setReloadPage, setMakeBlur } from "../../store";
 
 function AddItemModal({ openPopup, setOpenPopup }) {
-
     const userId = localStorage.getItem("user_id");
     const types = Types;
     const token = useSelector((state) => state.token);
@@ -54,7 +53,6 @@ function AddItemModal({ openPopup, setOpenPopup }) {
     };
 
     const [stateValues, setStateValues] = useState({ ...fieldValues });
-
 
     const closePopup = () => {
         setOpenPopup(false);
@@ -101,27 +99,29 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                 },
             })
             .then((res) => {
-                console.log(res.data);
-                console.log(formData);
-
                 if (res.data.status) {
                     toast.success("Item Added Successful");
                 } else {
                     toast.error("Server is not responding");
                 }
+                setStateValues({ ...fieldValues });
+                setOpenPopup(false);
+                dispatch(setMakeBlur({ makeBlur: false }));
+                dispatch(setReloadPage({ reloadPage: true }));
             })
             .catch((error) => {
-                if (error.response && error.response.status === 401) {
+                // console.log(error);
+
+                if (
+                    error.response &&
+                    error.response?.status &&
+                    error.response.data?.message
+                ) {
                     toast.error(error.response.data.message);
                 } else {
                     toast.error("Server is not responding");
                 }
             });
-
-        setStateValues({ ...fieldValues });
-        setOpenPopup(false);
-        dispatch(setMakeBlur({ makeBlur: false }));
-        dispatch(setReloadPage({ reloadPage: true }));
     };
 
     return (
@@ -191,7 +191,7 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                 <label className="form-label fw-bold label-text">
                                     Folder
                                 </label>
-                                <select  
+                                <select
                                     className="form-select"
                                     value={stateValues.folderId}
                                     onChange={(e) =>
@@ -269,7 +269,11 @@ function AddItemModal({ openPopup, setOpenPopup }) {
                                         })
                                     }
                                 >
-                                  {token && <option value="">{userData.name}</option>}  
+                                    {token && (
+                                        <option value="">
+                                            {userData.name}
+                                        </option>
+                                    )}
                                     {organizations.map((organization) => (
                                         <option
                                             key={organization.id}

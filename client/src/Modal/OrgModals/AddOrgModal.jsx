@@ -54,24 +54,23 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
                     }
                     setOpenAddModal(false);
                     dispatch(setMakeBlur({ makeBlur: false }));
+                    setEmail("");
+                    setOrgname("");
                 })
                 .catch((error) => {
-                    // console.log(error)
+                    // console.log(error);
                     if (
                         error.response &&
-                        error.response.status === 404 &&
-                        !error.response.data.status
+                        error.response?.status &&
+                        error.response.data?.message
                     ) {
                         toast.error(error.response.data.message);
                     } else {
                         toast.error("Server is not responding");
                     }
                 });
-            setEmail("");
-            setOrgname("");
-            
+           
         }
-        
     };
 
     const cancelModal = () => {
@@ -86,7 +85,10 @@ const AddOrgModal = ({ openAddModal, setOpenAddModal }) => {
             className={`modal fade ${openAddModal ? "show" : ""}`}
             tabIndex="-1"
             role="dialog"
-            style={{ display: openAddModal ? "block" : "none" , marginTop:'5em'}}
+            style={{
+                display: openAddModal ? "block" : "none",
+                marginTop: "5em",
+            }}
         >
             <div className="modal-dialog">
                 <div className="modal-content">

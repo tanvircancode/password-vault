@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrganizationRequest;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ use Illuminate\Http\Request;
 
 class OrganizationsController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreOrganizationRequest $request)
     {
         $input = $request->all();
         $organization = Organization::create($input);

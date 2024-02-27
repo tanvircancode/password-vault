@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -11,11 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 class UsersController extends Controller
 {
 
-
-
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-
         $input = $request->all();
 
         // Validate email uniqueness

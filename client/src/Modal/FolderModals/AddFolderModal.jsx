@@ -48,18 +48,19 @@ const AddFolderModal = ({ openAddModal, setOpenAddModal }) => {
                     toast.error("Server is not responding");
                 }
                 setOpenAddModal(false);
-        dispatch(setMakeBlur({makeBlur:false}))
+               dispatch(setMakeBlur({makeBlur:false}));
+               setFolderName("");
             })
             .catch((error) => {
-                console.log(error)
-                if(error.response && error.response.status === 404 && !error.response.data.status) {
+                // console.log(error)
+                if(error.response && error.response?.status && error.response.data?.message) {
                     toast.error(error.response.data.message)
                 }else{
                     toast.error("Server is not responding");
                 }
             });
             
-            setFolderName("")
+           
             
         }
         

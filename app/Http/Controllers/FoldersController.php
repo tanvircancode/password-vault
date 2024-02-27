@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFolderRequest;
 use Illuminate\Http\Request;
 use App\Models\Folder;
 use App\Models\User;
@@ -21,7 +22,7 @@ class FoldersController extends Controller
         return response()->json($folders);
     }
 
-    public function store(Request $request)
+    public function store(StoreFolderRequest $request)
     {
         $input = $request->all();
         $folder = Folder::create($input);
