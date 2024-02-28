@@ -1,6 +1,92 @@
+:root {
+    --nav-container-width: 42vw; /* Define the variable */
+  }
+  
+  @media (max-width: 768px) {
+    :root {
+      --nav-container-width: 60vw; /* Change the variable value for smaller screens */
+    }
+  }
+  @media (max-width: 1650px) {
+    :root {
+      --nav-container-width: 40vw; /* Change the variable value for smaller screens */
+    }
+  }
+  @media (max-width: 1390px) {
+    :root {
+      --nav-container-width: 45vw; /* Change the variable value for smaller screens */
+    }
+  }
+  @media (max-width: 1200px) {
+    :root {
+      --nav-container-width: 52vw; /* Change the variable value for smaller screens */
+    }
+  }
+  @media (max-width: 991px) {
+    :root {
+      --nav-container-width: 64vw; /* Change the variable value for smaller screens */
+    }
+  }
+  @media (max-width: 768px) {
+    :root {
+      --nav-container-width: 80vw; /* Change the variable value for smaller screens */
+    }
+  }
+
 .is-blur {
     opacity: 0.5;
 }
 .nav-item.active {
     font-weight: bold;
 }
+.xxx{
+    padding: 0.2rem calc(-500px + var(--nav-container-width)) !important;
+}
+.fff {
+    position: absolute;
+    right: 0 !important;
+}
+.circular-button {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes the button circular */
+    border: none;
+    background-color: #7667b8; /* Example background color */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .circular-button:hover {
+    background-color: #0056b3; /* Example color on hover */
+  }
+  .signout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #333; /* Adjust color as needed */
+    font-size: 16px;
+    position: relative; /* Position the text relative to the button */
+  }
+  
+  .signout-icon {
+    margin-right: 5px; /* Adjust spacing between icon and text */
+    font-size: 24px; /* Increase the icon size */
+  }
+  
+  .logout-text {
+    position: absolute; /* Position the text absolutely */
+    top: 50%; /* Position it in the middle vertically */
+    left: 100%; /* Position it to the right of the button */
+    transform: translateY(-50%); /* Adjust to vertically center the text */
+    opacity: 0; /* Initially hide the text */
+    transition: opacity 0.3s; /* Add transition for smooth effect */
+  }
+  
+  .signout-button:hover .logout-text {
+    opacity: 1; /* Show the text on hover */
+  }
+  

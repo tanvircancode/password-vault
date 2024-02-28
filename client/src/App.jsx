@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate,useNavigate } from "react-router-dom";
 import Layout from "./Pages/Layout";
 import Home from "./Pages/Home";
-import Login from "./Pages/LoginPage";
-import Register from "./Pages/RegisterPage";
 import Tools from "./Pages/Tools";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
